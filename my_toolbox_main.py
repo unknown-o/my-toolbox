@@ -17,6 +17,7 @@ os.chdir("/www/server/panel")
 
 sys.path.append("class/")
 import public
+import panelTask
 
 if __name__ != '__main__':
     from BTPanel import cache,session,redirect
@@ -155,7 +156,8 @@ class my_toolbox_main:
         with open("/www/temp.sh", 'w') as f:
             f.write(args.input_r)
         f.close
-        os.popen('python3 /www/server/panel/plugin/my_toolbox/exec_shell.py &')
+        t = panelTask.bt_task()
+        t.create_task("命令执行",0,'python3 /www/server/panel/plugin/my_toolbox/exec_shell.py')
         return 1
         
     def request_page(self,args):
