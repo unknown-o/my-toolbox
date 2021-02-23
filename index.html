@@ -1,6 +1,4 @@
 <style>
-    /*样式写这里*/
-    
     .my_toolbox-table table tbody tr td span {
         overflow: hidden;
         text-overflow: ellipsis;
@@ -19,7 +17,6 @@
 </style>
 <div class="bt-form">
     <div class="bt-w-main">
-        <!--菜单部分-->
         <div class="bt-w-menu">
             <p onclick="my_toolbox.port_scan()">端口扫描</p>
             <p onclick="my_toolbox.hosts_edit()">Hosts编辑</p>
@@ -30,13 +27,12 @@
             <p onclick="my_toolbox.sitemap()">网站地图生成</p>
             <p onclick="my_toolbox.about_plugin()">关于本插件</p>
         </div>
-        <!--内容部分-->
         <div class="bt-w-con pd15">
             <div class="plugin_body"></div>
         </div>
     </div>
 </div>
-
+<script type="text/javascript" src="../my_toolbox/static/console-image.js"></script>
 <script type="text/javascript">
     $('.layui-layer-page').css({
         'width': '900px'
@@ -77,10 +73,8 @@
             $('.plugin_body').html(body);
         },
 
-
         hosts_edit: function(p) {
             request_plugin('my_toolbox', 'read_hosts', {}, function(rdata) {
-                //console.log(rdata);
                 rdataArr = rdata.split(/[(\r\n)\r\n]+/);
                 MyTBody = '';
 
@@ -168,7 +162,7 @@
                 '<div style="line-height:34px"><textarea id="result" readonly="" class="txtsjs bt-input-text" name="sBody" style="margin: 0px;width: 760px; height:300px;background-color: #333;color:#fff; padding:0 5px">当您点击\'请求\'后，这里将会显示请求到网页的httpCode和源代码</textarea></div>' +
                 "<div class='line'><span class='tname'>网页地址</span>" +
                 "		<div class='info-r'>" +
-                "			<input id='url' placeholder='https://xxox.top' type='text' class='bt-input-text mr5' value='' style='width: 430px;'><button class='btn btn-default btn-sm' onclick=\"request_page()\">请求！</button>" +
+                "			<input id='url' placeholder='https://www.wunote.cn' type='text' class='bt-input-text mr5' value='' style='width: 430px;'><button class='btn btn-default btn-sm' onclick=\"request_page()\">请求！</button>" +
                 "			<br />" +
                 "			<span style='color: rgb(153, 153, 153);'>网页过慢可能引起请求超时报错！</span>" +
                 "		</div>" +
@@ -182,7 +176,7 @@
                 '<div style="line-height:34px"><textarea id="result" readonly="" style="margin: 0px;width: 760px; height:300px;background-color: #333;color:#fff; padding:0 5px" name="sBody" style=\'\'>当您点击\'开始\'后，插件将会自动开始创建sitemap(目前最多只支持一层目录,以后将会最高支持3级目录)，创建完成后，点击下载即可。另外，如果生成失败，请尝试自行查看此处报错信息，自己把缺少的pip包装上即可。</textarea></div>' +
                 "<div class='line'><span class='tname'>网站地址</span>" +
                 "		<div class='info-r'>" +
-                "			<input id='url' placeholder='https://xxox.top' type='text' class='bt-input-text mr5' value='' style='width: 430px;'><button class='btn btn-default btn-sm' onclick=\"sitemap_made()\">开始！</button> <a id='download_button'class='btn btn-success btn-sm' style='display: none;' href='http://" + window.location.host + "/my_toolbox/static/sitemap.xml' download='sitemap.xml'>下载网站地图</a><br>" +
+                "			<input id='url' placeholder='https://www.wunote.cn' type='text' class='bt-input-text mr5' value='' style='width: 430px;'><button class='btn btn-default btn-sm' onclick=\"sitemap_made()\">开始！</button> <a id='download_button'class='btn btn-success btn-sm' style='display: none;' href='http://" + window.location.host + "/my_toolbox/static/sitemap.xml' download='sitemap.xml'>下载网站地图</a><br>" +
                 "			<br />" +
                 "			<span style='color: rgb(153, 153, 153);'>网页过慢可能引起请求超时报错！</span>" +
                 "		</div>" +
@@ -632,11 +626,5 @@
         });
     }
 
-    //第一次打开窗口时调用
-    //最近特别站蕉橘，加份狗粮吧（审核大大千万要过审啊 /doge
     $('.plugin_body').html("<center><img src=\"/my_toolbox/static/62270332_p1.jpg\"><img src=\"/my_toolbox/static/62270332_p0.jpg\"></center><h2 style='text-align:center;margin-top:20%;'>欢迎使用!您可以在侧边栏选择工具！</h2>");
-    console.log('哟，进来吃狗粮了？/doge');
-    console.log("%c\n     ", "font-size:200px;background:url('http://" + window.location.host + "/my_toolbox/static/62270332_p1.jpg') no-repeat 0 0");
-    console.log("%c\n     ", "font-size:230px;background:url('http://" + window.location.host + "/my_toolbox/static/62270332_p0.jpg') no-repeat 0 0");
-    console.log('如果天使有声音，那么一定是镜音的天籁！');
 </script>
