@@ -194,7 +194,7 @@
             body = '<H3>短链接生成</H3><br><div class=\'soft-man-con bt-form\'><br>' +
                 "<div class='line'><span class='tname'>网页地址</span>" +
                 "		<div class='info-r'>" +
-                "			<input id='url' placeholder='https://www.wunote.cn' type='text' class='bt-input-text mr5' value='' style='width: 430px;'><button class='btn btn-default btn-sm' onclick='short_url_creat()'>生成!</button>" +
+                "			<input id='url_wx' placeholder='https://www.wunote.cn' type='text' class='bt-input-text mr5' value='' style='width: 430px;'><button class='btn btn-default btn-sm' onclick='short_url_creat(\"wx\")'>生成!</button>" +
                 "			<br />" +
                 "			<span style='color: rgb(153, 153, 153);'>此处生成的是微信专属短链接，使用的是微信官方接口</span>" +
                 "		</div>" +
@@ -202,7 +202,7 @@
                 "</div>" +
                 "<div class='line'><span class='tname'>网页地址</span>" +
                 "		<div class='info-r'>" +
-                "			<input id='url' placeholder='https://api.unknown-o.com' type='text' class='bt-input-text mr5' value='' style='width: 430px;'><button class='btn btn-default btn-sm' onclick='short_url_creat()'>生成!</button>" +
+                "			<input id='url_n' placeholder='https://api.unknown-o.com' type='text' class='bt-input-text mr5' value='' style='width: 430px;'><button class='btn btn-default btn-sm' onclick='short_url_creat(\"n\")'>生成!</button>" +
                 "			<br />" +
                 "			<span style='color: rgb(153, 153, 153);'>此处生成的是通用短链，但使用的是第三方API，稳定性不做保证</span>" +
                 "		</div>" +
@@ -404,8 +404,8 @@
         });
     }
 
-    function short_url_creat() {
-        if (document.getElementById('url').value.length == 0) {
+    function short_url_creat(type) {
+        if (document.getElementById('url_' + type).value.length == 0) {
             layer.msg('请先填写需要生成短链接的URL！', {
                 icon: 2
             });
@@ -416,13 +416,14 @@
             time: 0
         });
         request_plugin('my_toolbox', 'short_url', {
-            url: document.getElementById('url').value
+            url: document.getElementById('url_' + type).value,
+            type: type
         }, function(rdata) {
-            rdata = eval('(' + rdata + ')');
+            document.getElementById('url_' + type).value = '';
             layer.open({
                 id: 1,
                 title: '生成结果',
-                content: '您的短链接: ' + rdata.shorturl,
+                content: '您的短链接: ' + rdata.result,
                 btn: ['OK！'],
                 btn1: function(index, layero) {
                     layer.close(index);

@@ -18,7 +18,7 @@ os.chdir("/www/server/panel")
 sys.path.append("class/")
 import public
 import panelTask
-
+import hashlib
 if __name__ != '__main__':
     from BTPanel import cache,session,redirect
 
@@ -99,10 +99,11 @@ class my_toolbox_main:
         return {'message':'添加hosts成功！','status':1}
         
     def short_url(self,args):
-        url = 'https://www.charfun.com/api/shorturl'
-        data = {'longurl':args.url}
-        r =requests.post(url,data)
-        return r.text
+        url = 'https://api.unknown-o.com/shorturl/'
+        nowTime=int(time.time())
+        data = {'key':hashlib.md5(('KagamineYes!'+str(nowTime)).encode("utf-8")).hexdigest(),'timestamp':nowTime,'type':args.type,'url':args.url}
+        r =json.loads(requests.post(url,data).text)
+        return {'status':1,'result':r['result']}
         
     def get_shell_result(self,args):
         if(os.path.exists("/www/server/panel/plugin/my_toolbox/result.shell.tmp")):
