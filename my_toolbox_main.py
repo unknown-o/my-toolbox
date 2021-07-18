@@ -66,15 +66,14 @@ class my_toolbox_main:
             if(not line):
                 break
             if(not line == "\n"):
-                hostsArr.append({"ip":line.split(" ", 1)[0].strip(), "domain":line.split(" ", 1)[1].strip(), "original":line})
+                hostsArr.append({"ip":line.split(" ", 1)[0].strip(), "domain":line.split(" ", 1)[1].strip(), "original":line.strip("\n")})
         return {'msg': "查询成功！", "data": hostsArr, 'status': 1}
 
-    def add_hosts(self, args):
-        file = r'/etc/hosts'
-        with open(file, 'a') as f:
-            f.write('\n')
-            f.write(args.ip+' '+args.domain)
-        return {'message': '添加hosts成功！', 'status': 1}
+    def addHosts(self, args):
+        with open('/etc/hosts', 'a') as hostsFile:
+            hostsFile.write('\n')
+            hostsFile.write(args.ip+' '+args.domain)
+        return {'msg': '添加hosts成功！', 'status': 1}
 
     def short_url(self, args):
         url = 'https://api.unknown-o.com/shorturl/'

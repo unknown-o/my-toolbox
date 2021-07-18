@@ -90,7 +90,7 @@
                 </div>
                 <div id="hostsList" style="display: none;">
                     <H3>Hosts编辑
-                        <button class='btn btn-default btn-sm btn-success' onclick='addHosts()'>添加Hosts</button>
+                        <button class='btn btn-default btn-sm btn-success' onclick='editHosts()'>添加Hosts</button>
                     </H3><br>
                     <div style="max-height:413px;overflow:auto;border:#ddd 1px solid;">
                         <div class="divtable">
@@ -107,6 +107,23 @@
                             </table>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="hostsTemplate" style="display: none;">
+        <div class="row" style="width: 420px;  margin-left:7px; margin-top:10px;">
+            <div class="col-sm-12">
+                <div class="input-group">
+                    <span class="input-group-addon">IP</span>
+                    <input id="hostsIP" class="form-control" placeholder="1.1.1.1">
+                </div>
+            </div>
+            <div class="col-sm-12" style="margin-top: 10px">
+                <div class="input-group">
+                    <span class="input-group-addon">域名</span>
+                    <input id="hostsDomain" class="form-control" placeholder="www.wunote.cn">
                 </div>
             </div>
         </div>
@@ -220,7 +237,7 @@
                         var $trTemp = $("<tr></tr>")
                         $trTemp.append("<td>" + rdata.data[i].ip + "</td>")
                         $trTemp.append("<td>" + rdata.data[i].domain + "</td>")
-                        $trTemp.append("<td><button class='btn btn-success btn-sm' onclick='editHosts(\"" + rdata.data[i].original + "\")'>修改</button> <button class='btn btn-danger btn-sm' onclick='deleteHosts(\"" + rdata.data[i].original + "\")'>删除</button></td>")
+                        $trTemp.append("<td><button class='btn btn-success btn-sm' onclick='editHosts(\"" + rdata.data[i].ip + "\",\"" + rdata.data[i].domain + "\",\"" + rdata.data[i].original + "\")'>修改</button> <button class='btn btn-danger btn-sm' onclick='deleteHosts(\"" + rdata.data[i].original + "\")'>删除</button></td>")
                         $("#hostsFormBody").append($trTemp);
                     }
                 }
@@ -230,6 +247,26 @@
                 })
             }
         })
+    }
+
+    function editHosts(ip, domain, original) {
+        console.log(original)
+        layer.open({
+            id: 1,
+            type: 1,
+            title: 'Hosts编辑',
+            skin: 'layui-layer-rim',
+            area: ['450px', 'auto'],
+            content: $("#hostsTemplate").html().replaceAll("hosts","temp"),
+            btn: ['保存', '取消'],
+            btn1: function (index, layero) {
+            },
+            btn2: function (index, layero) {
+                layer.close(index);
+            }
+        });
+        $("#tempIP").val(ip)
+        $("#tempDomain").val(domain)
     }
 
     var my_toolbox = {
@@ -364,61 +401,6 @@
             }, 1670);
         }
 
-    }
-
-    function start_scan() {
-        if (document.getElementById('IP').value.length == 0) {
-            layer.msg('IP未填写，无法扫描~~', {
-                icon: 2
-            });
-            return false;
-        }
-        var index = layer.msg('正在扫描，请耐心等待', {
-            icon: 16,
-            time: 0
-        });
-        request_plugin('my_toolbox', 'start_scan', {
-            ip: document.getElementById('IP').value,
-            port_start: document.getElementById('port_start').value,
-            port_end: document.getElementById('port_end').value
-        }, function (rdata) {
-            console.log(rdata)
-        });
-        var id = setInterval("get_scan_result()", "3000");
-        document.cookie = "scanIntervalID=" + id;
-
-    }
-
-    function get_scan_result() {
-        request_plugin('my_toolbox', 'get_scan_result', {}, function (rdata) {
-            if (rdata.status == 1) {
-                console.log(rdata)
-                layer.open({
-                    title: '扫描结果',
-                    content: rdata.message
-                });
-                clearInterval(parseInt(getCookie('scanIntervalID')));
-            }
-        });
-    }
-
-    function doge() {
-        layer.open({
-            id: 1,
-            title: '如果天使有声音',
-            content: '<center><img src="/my_toolbox/static/62270332_p1.jpg"></center>',
-            btn: ['饱了！'],
-            btn1: function (index, layero) {
-                layer.open({
-                    title: '那么一定是镜音的天籁！',
-                    content: '<center><img src="/my_toolbox/static/62270332_p0.jpg"></center>',
-                    btn: ['饱了！'],
-                    btn1: function (index, layero) {
-                        layer.close(index);
-                    }
-                });
-            }
-        });
     }
 
     function sitemap_made() {
