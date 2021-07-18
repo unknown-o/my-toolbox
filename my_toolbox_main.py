@@ -99,9 +99,9 @@ class my_toolbox_main:
         return {'status': 1, 'result': r['result']}
 
     def getExecuteResult(self, args):
-        if(os.popen("echo `ps ax | grep -i '/www/temp.sh' | sed 's/^\([0-9]\{1,\}\).*/\1/g' | head -n 1`").read() == ""):
-            if(and os.path.exists("/www/server/panel/plugin/my_toolbox/tmp/executeCommand.tmp"))：
-                executeCommandResult = open("/www/server/panel/plugin/my_toolbox/tmp/executeCommand.tmp").open()
+        if(os.popen("echo $(ps -ef | grep '/www/temp.sh' | grep -v grep | awk '{print $2}')").read() == "\n"):
+            if(os.path.exists("/www/server/panel/plugin/my_toolbox/tmp/executeCommand.tmp")):
+                executeCommandResult = open("/www/server/panel/plugin/my_toolbox/tmp/executeCommand.tmp").read()
                 if(executeCommandResult == ""):
                     msg = "执行成功？但是没有任何返回！请自行检查命令是否运行成功！"
                 else:
@@ -139,7 +139,7 @@ class my_toolbox_main:
     def executeCommand(self, args):
         if(os.path.exists("/www/server/panel/plugin/my_toolbox/tmp/executeCommand.tmp")):
             os.remove('/www/server/panel/plugin/my_toolbox/tmp/executeCommand.tmp')
-        public.ExecShell('kill -9 ' + str(os.popen("echo `ps ax | grep -i '/www/temp.sh' | sed 's/^\([0-9]\{1,\}\).*/\1/g' | head -n 1`").read()))
+        public.ExecShell('kill -9 ' + str(os.popen("echo $(ps -ef | grep '/www/temp.sh' | grep -v grep | awk '{print $2}')").read()))
         with open("/www/temp.sh", 'w') as bashCommandFile:
             bashCommandFile.write(args.bashCommand)
         task = panelTask.bt_task()
