@@ -220,7 +220,7 @@
                         var $trTemp = $("<tr></tr>")
                         $trTemp.append("<td>" + rdata.data[i].ip + "</td>")
                         $trTemp.append("<td>" + rdata.data[i].domain + "</td>")
-                        $trTemp.append("<td>" + rdata.data[i].domain + "</td>")
+                        $trTemp.append("<td><button class='btn btn-success btn-sm' onclick='editHosts(\"" + rdata.data[i].original + "\")'>修改</button> <button class='btn btn-danger btn-sm' onclick='deleteHosts(\"" + rdata.data[i].original + "\")'>删除</button></td>")
                         $("#hostsFormBody").append($trTemp);
                     }
                 }
@@ -233,51 +233,6 @@
     }
 
     var my_toolbox = {
-
-        hosts_edit: function (p) {
-            request_plugin('my_toolbox', 'read_hosts', {}, function (rdata) {
-                rdataArr = rdata.split(/[(\r\n)\r\n]+/);
-                MyTBody = '';
-
-                body = '';
-                for (var i = 0; i < rdataArr.length; i++) {
-                    body = body + rdataArr[i] + '<br>';
-                    Harr = rdataArr[i].split(' ');
-                    HostsC = '';
-                    for (var a = 1; a < Harr.length; a++) {
-                        IP = Harr[0];
-                        HostsC = HostsC + ' ' + Harr[a];
-                    }
-                    if (HostsC !== '') {
-                        MyTBody = MyTBody + "    <tr>" +
-                            "      <td>" + IP + "</td>" +
-                            "      <td>" + HostsC + "</td>" +
-                            "      <td><button class='btn btn-default btn-sm' onclick='edit_hosts(\"" + IP + '","' + HostsC + '","' + i + "\")'>修改</button> <button class='btn btn-default btn-sm' onclick='del_hosts(\"" + i + "\")'>删除</button></td>" +
-                            "    </tr>"
-                    }
-                }
-                body = "<H3>Hosts编辑 &nbsp;<button class='btn btn-default btn-sm' onclick='add_hosts()'>添加</button></H3><br>" +
-                    '<div class="divtable"><table class="table table-hover">' +
-                    "  <thead>" +
-                    "    <tr>" +
-                    "      <th>IP地址</th>" +
-                    "      <th>域名</th>" +
-                    "      <th>操作</th>" +
-                    "    </tr> " +
-                    "  </thead>" +
-                    "  <tbody>" +
-                    MyTBody +
-                    "  </tbody>" +
-                    "</table></div>" +
-                    "<br><ul class='help-info-text c7 mtb15'>" +
-                    "	<li>本功能仅适用于Hosts比较整洁的（没有注释之类的）</li>" +
-                    "	<li>每次操作后都会在/etc/hosts.t.bak存在文件备份（下一次操作后前一次的自动被覆盖）</li>" +
-                    "</ul>"
-                $('.plugin_body').html(body);
-            });
-
-        },
-
         link: function () {
             body = '<H3>软链接-创建</H3><br><div class=\'soft-man-con bt-form\'><br>'
             body = body + "<div class='line'><span class='tname'>源目录</span>" +

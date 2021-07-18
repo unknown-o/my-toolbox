@@ -24,29 +24,12 @@ sys.path.append("class/")
 if __name__ != '__main__':
     from BTPanel import cache, session, redirect
 
-
-def try_a(variable, a):
-    try:
-        if(variable[a] == ''):
-            return 0
-        else:
-            return 1
-    except:
-        return 0
-
-
 class my_toolbox_main:
     __plugin_path = "/www/server/panel/plugin/my_toolbox/"
     __config = None
 
     def __init__(self):
         pass
-
-    def _check(self, args):
-        return True
-
-    def index(self, args):
-        return self.get_logs(args)
 
     def startScanPort(self, args):
         if(os.popen('command -v nmap').read() == '' or not os.path.exists("/www/server/panel/pyenv/bin/python")):
@@ -123,9 +106,6 @@ class my_toolbox_main:
         else:
             return {'message': 'execing', 'status': 0}
 
-    def five_star(self, args):
-        return 0
-
     def sitemap_made(self, args):
         if(os.path.exists("/www/server/panel/plugin/my_toolbox/static/sitemap.xml")):
             os.remove('/www/server/panel/plugin/my_toolbox/static/sitemap.xml')
@@ -199,30 +179,3 @@ class my_toolbox_main:
             f.write(hosts)
             f.write('\n')
         return {'message': '删除hosts成功！', 'status': 1}
-
-    def __get_config(self, key=None, force=False):
-        if not self.__config or force:
-            config_file = self.__plugin_path + 'config.json'
-            if not os.path.exists(config_file):
-                return None
-            f_body = public.ReadFile(config_file)
-            if not f_body:
-                return None
-            self.__config = json.loads(f_body)
-
-        if key:
-            if key in self.__config:
-                return self.__config[key]
-            return None
-        return self.__config
-
-    def __set_config(self, key=None, value=None):
-        if not self.__config:
-            self.__config = {}
-
-        if key:
-            self.__config[key] = value
-
-        config_file = self.__plugin_path + 'config.json'
-        public.WriteFile(config_file, json.dumps(self.__config))
-        return True
