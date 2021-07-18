@@ -250,7 +250,6 @@
     }
 
     function editHosts(ip, domain, original) {
-        console.log(original)
         layer.open({
             id: 1,
             type: 1,
@@ -287,6 +286,17 @@
         });
         $("#tempIP").val(ip)
         $("#tempDomain").val(domain)
+    }
+
+    function deleteHosts(original) {
+        requestPlugin("delHosts", {
+            original: original
+        }, function (rdata) {
+            getHostsList()
+            layer.msg(rdata.msg, {
+                icon: rdata.status ? 1 : 2
+            })
+        })
     }
 
     var my_toolbox = {
