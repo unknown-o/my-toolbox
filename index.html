@@ -6,7 +6,7 @@
         width: 580px;
         display: block;
     }
-    
+
     .plugin_about {
         padding: 15px 30px;
         line-height: 26px;
@@ -18,17 +18,50 @@
 <div class="bt-form">
     <div class="bt-w-main">
         <div class="bt-w-menu">
-            <p onclick="my_toolbox.port_scan()">端口扫描</p>
-            <p onclick="my_toolbox.hosts_edit()">Hosts编辑</p>
-            <p onclick="my_toolbox.link()">软链接操作</p>
-            <p onclick="my_toolbox.linux_command()">命令执行</p>
-            <p onclick="my_toolbox.request_page()">请求网页</p>
-            <p onclick="my_toolbox.short_url()">短链接生成</p>
-            <p onclick="my_toolbox.sitemap()">网站地图生成</p>
-            <p onclick="my_toolbox.about_plugin()">关于本插件</p>
+            <p>端口扫描</p>
+            <p>Hosts编辑</p>
+            <p>软链接操作</p>
+            <p>命令执行</p>
+            <p>请求网页</p>
+            <p>短链接生成</p>
+            <p>网站地图生成</p>
+            <p>关于本插件</p>
         </div>
         <div class="bt-w-con pd15">
-            <div class="plugin_body"></div>
+            <div class="plugin_body">
+                <H3>端口扫描</H3><br>
+                <div class='soft-man-con bt-form'><br>
+                    <div class='line'><span class='tname'>目标IP</span>
+                        <div class='info-r'>
+                            <input id='IP' placeholder='127.0.0.1' type='text' class='bt-input-text mr5' value=''
+                                style='width: 430px;'>
+                            <br />
+                            <span style='color: rgb(153, 153, 153);'>输入需要扫描开放端口的服务器IP</span>
+                        </div>
+                    </div>
+                    <div class='line'><span class='tname'>扫描范围</span>
+                        <div class='info-r'>
+                            <input id='port_start' placeholder='1' type='number' class='bt-input-text mr5'
+                                style='width: 100px;'>
+                            - &nbsp;<input id='port_end' placeholder='65535' type='number' class='bt-input-text mr5'
+                                style='width: 100px;'>
+                            <br />
+                            <span style='color: rgb(153, 153, 153);'>扫描端口范围，范围越小耗时越少</span>
+                        </div>
+                    </div>
+                    <div class='line'>
+                        <span class='tname'></span>
+                        <br>
+                        <div class='info-r'>
+                            <button class='btn btn-default btn-sm' onclick='start_scan()'>开始扫描</button>
+                        </div>
+                    </div><br>
+                    <ul class='help-info-text c7 mtb15'>
+                        <li>本功能基于nmap，如果未安装此软件包或系统不支持此命令，本功能将无法使用</li>
+                        <li>扫描时间理论上是无限的，如果您比较着急可以设定1-1000端口。大部分常用端口都在这里</li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -38,12 +71,41 @@
         'width': '900px'
     });
 
-    $(".bt-w-menu p").click(function() {
+    $(".bt-w-menu p").click(function () {
+        $("#ruleEdit").hide(100)
+        var i = $(this).index();
         $(this).addClass('bgw').siblings().removeClass('bgw')
+        $(".plugin_body > div").hide(200).eq(i).show(200);
+        switch (i) {
+            case 0:
+                portScan();
+                break;
+            case 1:
+                hostsEdit();
+                break;
+            case 2:
+                softLink()
+                break;
+            case 3:
+                commandExecution()
+                break;
+            case 4:
+                requestPage();
+                break;
+            case 5:
+                shortLink()
+                break;
+            case 6:
+                sitemap();
+                break;
+            case 7:
+                aboutPlugin();
+                break;
+        }
     });
 
     var my_toolbox = {
-        port_scan: function() {
+        port_scan: function () {
             body = '<H3>端口扫描</H3><br><div class=\'soft-man-con bt-form\'><br>'
             body = body + "<div class='line'><span class='tname'>目标IP</span>" +
                 "		<div class='info-r'>" +
@@ -73,8 +135,8 @@
             $('.plugin_body').html(body);
         },
 
-        hosts_edit: function(p) {
-            request_plugin('my_toolbox', 'read_hosts', {}, function(rdata) {
+        hosts_edit: function (p) {
+            request_plugin('my_toolbox', 'read_hosts', {}, function (rdata) {
                 rdataArr = rdata.split(/[(\r\n)\r\n]+/);
                 MyTBody = '';
 
@@ -117,7 +179,7 @@
 
         },
 
-        link: function() {
+        link: function () {
             body = '<H3>软链接-创建</H3><br><div class=\'soft-man-con bt-form\'><br>'
             body = body + "<div class='line'><span class='tname'>源目录</span>" +
                 "		<div class='info-r'>" +
@@ -145,7 +207,7 @@
             $('.plugin_body').html(body);
         },
 
-        linux_command: function() {
+        linux_command: function () {
             var my_body = '<H3>命令执行</H3><br><br>' +
                 '<div style="line-height:34px"><textarea id="r_input" class="txtsjs bt-input-text" placeholder="免SSH即可执行Liunx命令哦！另外，执行目录在/www/哦！" name="sBody" style=\'width: 760px; height:300px;\'></textarea></div>' +
                 "<br><button class='btn btn-default btn-sm' onclick=\"exec_d()\">执行！</button><br>" +
@@ -157,7 +219,7 @@
             $('.plugin_body').html(my_body);
         },
 
-        request_page: function() {
+        request_page: function () {
             var my_body = '<H3>请求网页</H3><br><br>' +
                 '<div style="line-height:34px"><textarea id="result" readonly="" class="txtsjs bt-input-text" name="sBody" style="margin: 0px;width: 760px; height:300px;background-color: #333;color:#fff; padding:0 5px">当您点击\'请求\'后，这里将会显示请求到网页的httpCode和源代码</textarea></div>' +
                 "<div class='line'><span class='tname'>网页地址</span>" +
@@ -171,7 +233,7 @@
             $('.plugin_body').html(my_body);
         },
 
-        sitemap: function() {
+        sitemap: function () {
             var my_body = '<H3>网站地图生成</H3><br><br>' +
                 '<div style="line-height:34px"><textarea id="result" readonly="" style="margin: 0px;width: 760px; height:300px;background-color: #333;color:#fff; padding:0 5px" name="sBody" style=\'\'>当您点击\'开始\'后，插件将会自动开始创建sitemap(目前最多只支持一层目录,以后将会最高支持3级目录)，创建完成后，点击下载即可。另外，如果生成失败，请尝试自行查看此处报错信息，自己把缺少的pip包装上即可。</textarea></div>' +
                 "<div class='line'><span class='tname'>网站地址</span>" +
@@ -184,7 +246,7 @@
             $('.plugin_body').html(my_body);
         },
 
-        short_url: function() {
+        short_url: function () {
             body = '<H3>短链接生成</H3><br><div class=\'soft-man-con bt-form\'><br>' +
                 "<div class='line'><span class='tname'>网页地址</span>" +
                 "		<div class='info-r'>" +
@@ -210,7 +272,7 @@
             $('.plugin_body').html(body);
         },
 
-        about_plugin: function() {
+        about_plugin: function () {
             var index = layer.msg('正在处理,请稍后...', {
                 icon: 16,
                 time: 0
@@ -240,22 +302,22 @@
     function plugin_egg() {
         var img = new Image();
         img.src = '/my_toolbox/static/78530939_p1.png';
-        img.onerror = function() {
+        img.onerror = function () {
             console.log('Image loading failed')
             return false;
         };
 
-        img.onload = function() {
-            setTimeout(function() {
+        img.onload = function () {
+            setTimeout(function () {
                 document.getElementById('aboutImg').src = '/my_toolbox/static/78530939_p1.png';
             }, 1500);
-            setTimeout(function() {
+            setTimeout(function () {
                 document.getElementById('aboutImg').src = '/my_toolbox/static/about.png';
             }, 1600);
-            setTimeout(function() {
+            setTimeout(function () {
                 document.getElementById('aboutImg').src = '/my_toolbox/static/78530939_p1.png';
             }, 1670);
-            setTimeout(function() {
+            setTimeout(function () {
                 layer.msg('Kagamine Yes！', {
                     icon: 1
                 })
@@ -279,7 +341,7 @@
             ip: document.getElementById('IP').value,
             port_start: document.getElementById('port_start').value,
             port_end: document.getElementById('port_end').value
-        }, function(rdata) {
+        }, function (rdata) {
             console.log(rdata)
         });
         var id = setInterval("get_scan_result()", "3000");
@@ -288,7 +350,7 @@
     }
 
     function get_scan_result() {
-        request_plugin('my_toolbox', 'get_scan_result', {}, function(rdata) {
+        request_plugin('my_toolbox', 'get_scan_result', {}, function (rdata) {
             if (rdata.status == 1) {
                 console.log(rdata)
                 layer.open({
@@ -306,12 +368,12 @@
             title: '如果天使有声音',
             content: '<center><img src="/my_toolbox/static/62270332_p1.jpg"></center>',
             btn: ['饱了！'],
-            btn1: function(index, layero) {
+            btn1: function (index, layero) {
                 layer.open({
                     title: '那么一定是镜音的天籁！',
                     content: '<center><img src="/my_toolbox/static/62270332_p0.jpg"></center>',
                     btn: ['饱了！'],
-                    btn1: function(index, layero) {
+                    btn1: function (index, layero) {
                         layer.close(index);
                     }
                 });
@@ -332,18 +394,18 @@
         });
         request_plugin('my_toolbox', 'sitemap_made', {
             url: document.getElementById('url').value
-        }, function(rdata) {
+        }, function (rdata) {
             document.getElementById('result').value = rdata
             if (rdata == '') {
                 console.log(rdata);
-                setTimeout(function() {
+                setTimeout(function () {
                     layer.msg('请求后端失败！', {
                         icon: 2
                     }), 3000
                 });
             } else {
                 document.getElementById('download_button').style.display = "inline";
-                setTimeout(function() {
+                setTimeout(function () {
                     layer.msg('请求后端成功！', {
                         icon: 1
                     }), 3000
@@ -365,9 +427,9 @@
         });
         request_plugin('my_toolbox', 'request_page', {
             url: document.getElementById('url').value
-        }, function(rdata) {
+        }, function (rdata) {
             if (rdata.status == false) {
-                setTimeout(function() {
+                setTimeout(function () {
                     layer.msg('抱歉，程序出现异常！错误信息已被成功的打印到console中，如有需要您可以打开console查看！', {
                         icon: rdata.status
                     }), 3000
@@ -376,7 +438,7 @@
                 return false
             }
             document.getElementById('result').value = rdata.result
-            setTimeout(function() {
+            setTimeout(function () {
                 layer.msg(rdata.message, {
                     icon: rdata.status
                 }), 3000
@@ -388,8 +450,8 @@
         request_plugin('my_toolbox', 'add_link', {
             s_fl: document.getElementById('s_fl').value,
             m_fl: document.getElementById('m_fl').value
-        }, function(rdata) {
-            setTimeout(function() {
+        }, function (rdata) {
+            setTimeout(function () {
                 layer.msg(rdata.message, {
                     icon: rdata.status ? 1 : 2
                 }), 3000
@@ -412,14 +474,14 @@
         request_plugin('my_toolbox', 'short_url', {
             url: document.getElementById('url_' + type).value,
             type: type
-        }, function(rdata) {
+        }, function (rdata) {
             document.getElementById('url_' + type).value = '';
             layer.open({
                 id: 1,
                 title: '生成结果',
                 content: '您的短链接: ' + rdata.result,
                 btn: ['OK！'],
-                btn1: function(index, layero) {
+                btn1: function (index, layero) {
                     layer.close(index);
                 }
             });
@@ -427,14 +489,14 @@
     }
 
     function five_star() {
-        request_plugin('my_toolbox', 'five_star', '', function(rdata) {
+        request_plugin('my_toolbox', 'five_star', '', function (rdata) {
             if (rdata == 0) {
                 layer.open({
                     id: 1,
                     title: '给个五星呗~~~',
                     content: '<center><img src="/my_toolbox/static/len.jpg"></center><p>看在本宝宝那么<del>善良美丽纯洁可爱</del>努力的分子上，给个五星不为过吧~ >~<</p>',
                     btn: ['OK！'],
-                    btn1: function(index, layero) {
+                    btn1: function (index, layero) {
                         layer.close(index);
                     }
                 });
@@ -465,12 +527,12 @@
                 '</div>' +
                 '</div>',
             btn: ['保存', '取消'],
-            btn1: function(index, layero) {
+            btn1: function (index, layero) {
                 request_plugin('my_toolbox', 'add_hosts', {
                     ip: document.getElementById('a_ip').value,
                     domain: document.getElementById('domain').value
-                }, function(rdata) {
-                    setTimeout(function() {
+                }, function (rdata) {
+                    setTimeout(function () {
                         layer.msg(rdata.message, {
                             icon: rdata.status ? 1 : 2
                         }), 3000
@@ -480,7 +542,7 @@
                     layer.close(index);
                 });
             },
-            btn2: function(index, layero) {
+            btn2: function (index, layero) {
                 layer.close(index);
             }
 
@@ -509,17 +571,17 @@
                 '</div>' +
                 '</div>',
             btn: ['保存', '取消'],
-            btn1: function(index, layero) {
+            btn1: function (index, layero) {
                 request_plugin('my_toolbox', 'del_hosts', {
                     line: line
-                }, function(rdata) {
+                }, function (rdata) {
                     console.log(rdata);
                 });
                 request_plugin('my_toolbox', 'add_hosts', {
                     ip: document.getElementById('a_ip').value,
                     domain: document.getElementById('domain').value
-                }, function(rdata) {
-                    setTimeout(function() {
+                }, function (rdata) {
+                    setTimeout(function () {
                         layer.msg(rdata.message, {
                             icon: rdata.status ? 1 : 2
                         }), 3000
@@ -528,7 +590,7 @@
                     layer.close(index);
                 });
             },
-            btn2: function(index, layero) {
+            btn2: function (index, layero) {
                 layer.close(index);
             }
 
@@ -548,7 +610,7 @@
         }
         request_plugin('my_toolbox', 'exec_d', {
             input_r: document.getElementById('r_input').value
-        }, function(rdata) {
+        }, function (rdata) {
             console.log(rdata);
         });
         var id = setInterval("get_shell_result()", "3000");
@@ -556,7 +618,7 @@
     }
 
     function get_shell_result() {
-        request_plugin('my_toolbox', 'get_shell_result', {}, function(rdata) {
+        request_plugin('my_toolbox', 'get_shell_result', {}, function (rdata) {
             if (rdata.status == 3) {
                 clearInterval(parseInt(getCookie('shellIntervalID')));
                 return false
@@ -577,11 +639,11 @@
             title: 'Hosts删除',
             content: '确定要删除这条hosts？',
             btn: ['保存', '取消'],
-            yes: function(index, layero) {
+            yes: function (index, layero) {
                 request_plugin('my_toolbox', 'del_hosts', {
                     line: line
-                }, function(rdata) {
-                    setTimeout(function() {
+                }, function (rdata) {
+                    setTimeout(function () {
                         layer.msg(rdata.message, {
                             icon: rdata.status ? 1 : 2
                         }), 3000
@@ -590,7 +652,7 @@
                     layer.close(index);
                 });
             },
-            btn2: function(index, layero) {
+            btn2: function (index, layero) {
                 layer.close(index);
             }
 
@@ -605,7 +667,7 @@
             url: '/plugin?action=a&s=' + function_name + '&name=' + plugin_name,
             data: args,
             timeout: timeout,
-            success: function(rdata) {
+            success: function (rdata) {
                 if (!callback) {
                     layer.msg(rdata.msg, {
                         icon: rdata.status ? 1 : 2
@@ -614,7 +676,7 @@
                 }
                 return callback(rdata);
             },
-            error: function(ex) {
+            error: function (ex) {
                 if (!callback) {
                     layer.msg('请求过程发现错误!', {
                         icon: 2
@@ -626,5 +688,5 @@
         });
     }
 
-    $('.plugin_body').html("<center><img src=\"/my_toolbox/static/62270332_p1.jpg\"><img src=\"/my_toolbox/static/62270332_p0.jpg\"></center><h2 style='text-align:center;margin-top:20%;'>欢迎使用!您可以在侧边栏选择工具！</h2>");
+    //$('.plugin_body').html("<center><img src=\"/my_toolbox/static/62270332_p1.jpg\"><img src=\"/my_toolbox/static/62270332_p0.jpg\"></center><h2 style='text-align:center;margin-top:20%;'>欢迎使用!您可以在侧边栏选择工具！</h2>");
 </script>

@@ -86,17 +86,7 @@ class my_toolbox_main:
             return {'message': 'scaning', 'status': 0}
 
     def read_hosts(self, args):
-        file = open("/etc/hosts")
-        hosts = ''
-        a = 0
-        while 1:
-            line = file.readline()
-            if not line:
-                break
-            if(not line == '\n'):
-                hosts = hosts+line
-        file.close()
-        return hosts
+        return open("/etc/hosts").read()
 
     def add_hosts(self, args):
         file = r'/etc/hosts'
