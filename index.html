@@ -179,8 +179,10 @@
                     <div class='line'><span class='tname'>网页地址</span>
                         <div class='info-r'>
                             <input id='url' placeholder='https://www.wunote.cn' type='text' class='bt-input-text mr5'
-                                value='' style='width: 430px;'><button class='btn btn-default btn-sm'
-                                onclick="request_page()">请求！</button>
+                                value='' style='width: 400px;'>
+                                <button class='btn btn-success btn-sm' onclick="RequestPage()">请求！</button>
+                                <button class='btn btn-success btn-sm' onclick="saveRequestPageResult()">保存请求结果</button>
+                                <button class='btn btn-danger btn-sm' onclick="cleanRequestPageResult()">清空结果</button>
                             <br />
                             <span style='color: rgb(153, 153, 153);'>网页响应时间超过60秒将会超时报错！</span>
                         </div>
