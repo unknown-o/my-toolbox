@@ -75,8 +75,16 @@ class my_toolbox_main:
         else:
             return {'msg': '扫描中...', 'status': -1}
 
-    def read_hosts(self, args):
-        return open("/etc/hosts").read()
+    def getHostsList(self, args):
+        hostsFile = open("/etc/hosts")
+        hostsArr = []
+        while 1:
+            line = hostsFile.readline()
+            if(not line):
+                break
+            if(not line == "\n"):
+                hostsArr.append({"ip":line.split(" ", 1)[0].strip(), "domain":line.split(" ", 1)[1].strip(), "original":line})
+        return {'msg': "查询成功！", "data": hostsArr, 'status': 1}
 
     def add_hosts(self, args):
         file = r'/etc/hosts'

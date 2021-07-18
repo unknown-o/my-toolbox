@@ -88,6 +88,26 @@
                         </div>
                     </div>
                 </div>
+                <div id="hostsList" style="display: none;">
+                    <H3>Hosts编辑
+                        <button class='btn btn-default btn-sm btn-success' onclick='addHosts()'>添加Hosts</button>
+                    </H3><br>
+                    <div style="max-height:413px;overflow:auto;border:#ddd 1px solid;">
+                        <div class="divtable">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>IP</th>
+                                        <th>域名</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="hostsFormBody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -111,10 +131,10 @@
         $(".plugin_body > div").hide(200).eq(i).show(200);
         switch (i) {
             case 1:
-                hostsEdit();
+                getHostsList()
                 break;
             case 7:
-                aboutPlugin();
+                aboutPlugin()
                 break;
         }
     });
@@ -142,14 +162,13 @@
         })
     }
 
-    function backToScan(){
+    function backToScan() {
         $("#portFormBody").empty()
         $("#portScanResultTable").hide(200, function () { $("#scanPortForm").show(200) })
     }
 
     function getScanResult() {
         requestPlugin("getScanResult", "", function (rdata) {
-            console.log(rdata)
             if (rdata.status) {
                 clearInterval(parseInt(getCookie('scanIntervalID')))
                 $("#portFormBody").empty()
@@ -190,6 +209,27 @@
         var cval = getCookie(name);
         if (cval != null)
             document.cookie = name + "=" + cval + ";expires=" + exp.toGMTString();
+    }
+
+    function getHostsList() {
+        requestPlugin("getHostsList", "", function (rdata) {
+            if (rdata.status) {
+                $("#hostsFormBody").empty()
+                if (rdata.data.length > 0) {
+                    for (var i = 0, l = rdata.data.length; i < l; i++) {
+                        var $trTemp = $("<tr></tr>")
+                        $trTemp.append("<td>" + rdata.data[i].ip + "</td>")
+                        $trTemp.append("<td>" + rdata.data[i].domain + "</td>")
+                        $trTemp.append("<td>" + rdata.data[i].domain + "</td>")
+                        $("#hostsFormBody").append($trTemp);
+                    }
+                }
+            } else {
+                layer.msg(rdata.msg, {
+                    icon: rdata.status ? 1 : 2
+                })
+            }
+        })
     }
 
     var my_toolbox = {
