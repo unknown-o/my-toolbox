@@ -1,12 +1,12 @@
 #!/usr/bin/python
 # coding: utf-8
-# +-------------------------------------------------------------------
-# | 我的工具箱
-# +-------------------------------------------------------------------
-# | Copyright (c) 2015-2099 宝塔软件(https://www.wunote.cn) All rights reserved.
-# +-------------------------------------------------------------------
+# +--------------------------------------------------------------------------------
+# | 我的工具箱                                                                   
+# +--------------------------------------------------------------------------------
+# | Copyright (c) 2015-2099 UnknownO(https://unknown-o.com) All rights reserved        
+# +--------------------------------------------------------------------------------
 # | Author: 吴先森 <i@mr-wu.top>
-# +-------------------------------------------------------------------
+# +--------------------------------------------------------------------------------
 
 import hashlib
 import panelTask
@@ -76,9 +76,6 @@ class my_toolbox_main:
         return {'msg': '编辑hosts成功！', 'status': 1}
 
     def delHosts(self, args):
-        if(os.path.exists("/etc/hosts.bak")):
-            os.remove('/etc/hosts.bak')
-        os.system('cp /etc/hosts /etc/hosts.t.bak')
         hostsFileOld = open("/etc/hosts")
         hostsNew = ''
         while(1):
@@ -86,7 +83,7 @@ class my_toolbox_main:
             if(not line):
                 break
             if(not line == '\n'):
-                if(not line == args.original):
+                if(not args.original in line):
                     hostsNew = hostsNew + line
         hostsFileOld.close()
         with open("/etc/hosts", 'w') as f:
@@ -169,10 +166,8 @@ class my_toolbox_main:
         except:
             return {'message': '错误！未知原因引起请求程序出错崩溃！', 'result': "HttpCode: "+str(response.status_code)+"\n\n"+response.text, 'status': 2}
 
-    def add_link(self, args):
-        if(not os.path.exists(args.s_fl)):
-            return {'message': '不存在源目录"'+args.s_fl+'"!', 'status': 0}
-        if(not os.path.exists(args.m_fl)):
-            return {'message': '不存在目标目录"'+args.m_fl+'"!', 'status': 0}
-        os.system('ln -s '+args.s_fl+' '+args.m_fl)
-        return {'message': '成功创建软链接！', 'status': 1}
+    def addSoftLink(self, args):
+        if(not (os.path.exists(args.source) and os.path.exists(args.softSource))):
+            return {'msg': '输入数据存在错误！', 'status': -1}
+        os.system('ln -s ' + args.source+' ' + args.softSource)
+        return {'msg': '成功创建软链接！', 'status': 1}
