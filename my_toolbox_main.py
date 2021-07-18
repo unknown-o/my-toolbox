@@ -49,7 +49,7 @@ class my_toolbox_main:
         return self.get_logs(args)
 
     def startScanPort(self, args):
-        if(os.popen('command -v nmap').read() == '' and not os.path.exists("/www/server/panel/pyenv/bin/python")):
+        if(os.popen('command -v nmap').read() == '' or not os.path.exists("/www/server/panel/pyenv/bin/python")):
             return {'msg': '环境缺失，暂时不能使用本功能！', 'status': -1}
         public.ExecShell('kill -9 ' + str(os.popen("echo `ps ax | grep -i '/plugin/my_toolbox/nmap.py' | sed 's/^\([0-9]\{1,\}\).*/\1/g' | head -n 1`").read()))
         if(os.path.exists("/www/server/panel/plugin/my_toolbox/tmp/portScan.tmp")):
@@ -57,7 +57,7 @@ class my_toolbox_main:
         if(not (int(args.portStart) > 0 and int(args.portEnd) < 65535) or args.serverIp == "" or args.portStart >= args.portEnd):
             return {'msg': '输入数据存在错误', 'status': -1}
         task = panelTask.bt_task()
-        task.create_task("扫描端口",0,"/www/server/panel/pyenv/bin/python /www/server/panel/plugin/my_toolbox/nmap.py" + args.serverIp + " " + args.portStart + " " + args.portEnd)
+        task.create_task("扫描端口",0,"/www/server/panel/pyenv/bin/python /www/server/panel/plugin/my_toolbox/nmap.py " + args.portStart + " " + args.portEnd + " " + args.serverIp)
         return {'msg': '成功创建任务', 'status': 1}
 
     def getScanResult(self, args):
@@ -71,7 +71,7 @@ class my_toolbox_main:
                 line = portScanResult.readline()
             portScanResult.close()
             os.remove('/www/server/panel/plugin/my_toolbox/tmp/portScan.tmp')
-            return {'msg': "扫描完成", data:portScanResultArr, 'status': 1}
+            return {'msg': "扫描完成", "data": portScanResultArr, 'status': 1}
         else:
             return {'msg': '扫描中...', 'status': -1}
 
