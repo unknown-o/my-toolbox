@@ -73,7 +73,25 @@ class my_toolbox_main:
         with open('/etc/hosts', 'a') as hostsFile:
             hostsFile.write('\n')
             hostsFile.write(args.ip+' '+args.domain)
-        return {'msg': '添加hosts成功！', 'status': 1}
+        return {'msg': '编辑hosts成功！', 'status': 1}
+
+    def delHosts(self, args):
+        if(os.path.exists("/etc/hosts.bak")):
+            os.remove('/etc/hosts.bak')
+        os.system('cp /etc/hosts /etc/hosts.t.bak')
+        hostsFileOld = open("/etc/hosts")
+        hostsNew = ''
+        while(1):
+            line = hostsFileOld.readline()
+            if(not line):
+                break
+            if(not line == '\n'):
+                if(not line == args.original):
+                    hostsNew = hostsNew + line
+        hostsFileOld.close()
+        with open("/etc/hosts", 'w') as f:
+            f.write(hostsNew)
+        return {'msg': '成功删除此条hosts', 'status': 1}
 
     def short_url(self, args):
         url = 'https://api.unknown-o.com/shorturl/'
@@ -158,23 +176,3 @@ class my_toolbox_main:
             return {'message': '不存在目标目录"'+args.m_fl+'"!', 'status': 0}
         os.system('ln -s '+args.s_fl+' '+args.m_fl)
         return {'message': '成功创建软链接！', 'status': 1}
-
-    def del_hosts(self, args):
-        os.system('rm -rf /etc/hosts.t.bak')
-        os.system('cp /etc/hosts /etc/hosts.t.bak')
-        file = open("/etc/hosts")
-        hosts = ''
-        a = 0
-        while 1:
-            line = file.readline()
-            if(not line == '\n'):
-                if(not a == int(args.line)):
-                    hosts = hosts+line
-                a += 1
-            if not line:
-                break
-        file.close()
-        with open("/etc/hosts", 'w') as f:
-            f.write(hosts)
-            f.write('\n')
-        return {'message': '删除hosts成功！', 'status': 1}

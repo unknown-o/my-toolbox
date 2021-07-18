@@ -257,9 +257,29 @@
             title: 'Hosts编辑',
             skin: 'layui-layer-rim',
             area: ['450px', 'auto'],
-            content: $("#hostsTemplate").html().replaceAll("hosts","temp"),
+            content: $("#hostsTemplate").html().replaceAll("hosts", "temp"),
             btn: ['保存', '取消'],
             btn1: function (index, layero) {
+                if (original != undefined) {
+                    requestPlugin("delHosts", {
+                        original: original
+                    }, function (rdata) {
+                        getHostsList()
+                        layer.msg(rdata.msg, {
+                            icon: rdata.status ? 1 : 2
+                        })
+                    })
+                }
+                requestPlugin("addHosts", {
+                    ip: $("#tempIP").val(),
+                    domain: $("#tempDomain").val()
+                }, function (rdata) {
+                    getHostsList()
+                    layer.msg(rdata.msg, {
+                        icon: rdata.status ? 1 : 2
+                    })
+                })
+                layer.close(index);
             },
             btn2: function (index, layero) {
                 layer.close(index);
