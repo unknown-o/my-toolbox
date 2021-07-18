@@ -98,27 +98,19 @@ class my_toolbox_main:
         r = json.loads(requests.post(url, data).text)
         return {'status': 1, 'result': r['result']}
 
-    def get_shell_result(self, args):
-        if(os.path.exists("/www/server/panel/plugin/my_toolbox/result.shell.tmp")):
-            file = open("/www/server/panel/plugin/my_toolbox/result.shell.tmp")
-            result = ''
-            a = 0
-            while 1:
-                line = file.readline()
-                if not line:
-                    break
-                result = result+line
-            file.close()
-            if(result == 'MyToolbox：It has been successfully obtained!'):
-                return {'message': 'fail', 'status': 3}
-            with open("/www/server/panel/plugin/my_toolbox/result.shell.tmp", 'w') as f:
-                f.write('MyToolbox：It has been successfully obtained!')
-            if(result == ''):
-                return {'message': '执行成功!但是您执行的脚本并没有任何反馈哦!请自行确认是否执行成功!', 'status': 1}
+    def getExecuteResult(self, args):
+        if(os.popen("echo `ps ax | grep -i '/www/temp.sh' | sed 's/^\([0-9]\{1,\}\).*/\1/g' | head -n 1`").read() == ""):
+            if(and os.path.exists("/www/server/panel/plugin/my_toolbox/tmp/executeCommand.tmp"))：
+                executeCommandResult = open("/www/server/panel/plugin/my_toolbox/tmp/executeCommand.tmp").open()
+                if(executeCommandResult == ""):
+                    msg = "执行成功？但是没有任何返回！请自行检查命令是否运行成功！"
+                else:
+                    msg = "执行成功！" 
+                return {"msg": msg, "result":executeCommandResult, "status":1}
             else:
-                return {'message': result.replace("\n", "<br>"), 'status': 1}
+                return {"msg": "抱歉，找不到运行结果！执行命令失败？", "result":"", "status":2}
         else:
-            return {'message': 'execing', 'status': 0}
+            return {'msg': '正在执行中...', 'status': -1}
 
     def sitemap_made(self, args):
         if(os.path.exists("/www/server/panel/plugin/my_toolbox/static/sitemap.xml")):
@@ -144,16 +136,15 @@ class my_toolbox_main:
                 file.close()
         return result
 
-    def exec_d(self, args):
-        if(os.path.exists("/www/server/panel/plugin/my_toolbox/result.shell.tmp")):
-            os.remove('/www/server/panel/plugin/my_toolbox/result.shell.tmp')
-        with open("/www/temp.sh", 'w') as f:
-            f.write(args.input_r)
-        f.close
-        t = panelTask.bt_task()
-        t.create_task(
-            "命令执行", 0, 'python3 /www/server/panel/plugin/my_toolbox/exec_shell.py')
-        return 1
+    def executeCommand(self, args):
+        if(os.path.exists("/www/server/panel/plugin/my_toolbox/tmp/executeCommand.tmp")):
+            os.remove('/www/server/panel/plugin/my_toolbox/tmp/executeCommand.tmp')
+        public.ExecShell('kill -9 ' + str(os.popen("echo `ps ax | grep -i '/www/temp.sh' | sed 's/^\([0-9]\{1,\}\).*/\1/g' | head -n 1`").read()))
+        with open("/www/temp.sh", 'w') as bashCommandFile:
+            bashCommandFile.write(args.bashCommand)
+        task = panelTask.bt_task()
+        task.create_task("命令执行", 0, 'python3 /www/server/panel/plugin/my_toolbox/execBashCommand.py')
+        return {'msg': '成功创建任务', 'status': 1}
 
     def request_page(self, args):
         try:
