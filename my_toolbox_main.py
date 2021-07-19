@@ -111,16 +111,23 @@ class my_toolbox_main:
         else:
             return {'msg': '正在执行中...', 'status': -1}
 
-    def sitemapMade(self, args):
+    def getSitemapGenerationStatus(self, args):
+        if(os.path.exists("/www/server/panel/plugin/my_toolbox/static/sitemap.xml")):
+            data = open("/www/server/panel/plugin/my_toolbox/static/sitemap.xml").read()
+            return {'msg': "生成成功", "data": data, 'status': 1}
+        else:
+            return {'msg': '扫描中...', 'status': -1}
+
+    def sitemapGeneration(self, args):
         if(not os.path.exists("/www/server/panel/pyenv/bin/python")):
             return {'msg': '不是python3版本的宝塔，暂时无法使用本功能！', 'status': -1}
         public.ExecShell('kill -9 ' + str(os.popen("echo `ps ax | grep -i '/plugin/my_toolbox/sitemap.py' | sed 's/^\([0-9]\{1,\}\).*/\1/g' | head -n 1`").read()))
         if(os.path.exists("/www/server/panel/plugin/my_toolbox/static/sitemap.xml")):
             os.remove('/www/server/panel/plugin/my_toolbox/static/sitemap.xml')
-        if(int(args.num) < 15 and args.url == ""):
+        if(int(args.maxNumber) < 15 and args.url == ""):
             return {'msg': '输入数据存在错误', 'status': -1}
         task = panelTask.bt_task()
-        task.create_task("扫描端口",0,"/www/server/panel/pyenv/bin/python /www/server/panel/plugin/my_toolbox/sitemap.py " + args.url + " " + str(args.num))
+        task.create_task("创建网站地图",0,"/www/server/panel/pyenv/bin/python /www/server/panel/plugin/my_toolbox/sitemap.py " + args.url + " " + str(args.maxNumber))
         return {'msg': '成功创建任务', 'status': 1}
 
     def executeCommand(self, args):
