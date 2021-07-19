@@ -111,29 +111,17 @@ class my_toolbox_main:
         else:
             return {'msg': '正在执行中...', 'status': -1}
 
-    def sitemap_made(self, args):
+    def sitemapMade(self, args):
+        if(not os.path.exists("/www/server/panel/pyenv/bin/python")):
+            return {'msg': '不是python3版本的宝塔，暂时无法使用本功能！', 'status': -1}
+        public.ExecShell('kill -9 ' + str(os.popen("echo `ps ax | grep -i '/plugin/my_toolbox/sitemap.py' | sed 's/^\([0-9]\{1,\}\).*/\1/g' | head -n 1`").read()))
         if(os.path.exists("/www/server/panel/plugin/my_toolbox/static/sitemap.xml")):
             os.remove('/www/server/panel/plugin/my_toolbox/static/sitemap.xml')
-        if(os.path.exists("/www/server/panel/pyenv/bin/python")):
-            result = os.popen(
-                '/www/server/panel/pyenv/bin/python /www/server/panel/plugin/my_toolbox/sitemap.py '+args.url).read()
-        else:
-            if(os.popen('command -v python3').read() == ''):
-                return 'Python3环境缺失！请手动安装！'
-            else:
-                result = os.popen(
-                    'python3 /www/server/panel/plugin/my_toolbox/sitemap.py '+args.url).read()
-        if(result == ''):
-            if(os.path.exists("/www/server/panel/plugin/my_toolbox/static/sitemap.xml")):
-                file = open(
-                    "/www/server/panel/plugin/my_toolbox/static/sitemap.xml")
-                while 1:
-                    line = file.readline()
-                    if not line:
-                        break
-                    result = result+line
-                file.close()
-        return result
+        if(int(args.num) < 15 and args.url == ""):
+            return {'msg': '输入数据存在错误', 'status': -1}
+        task = panelTask.bt_task()
+        task.create_task("扫描端口",0,"/www/server/panel/pyenv/bin/python /www/server/panel/plugin/my_toolbox/sitemap.py " + args.url + " " + str(args.num))
+        return {'msg': '成功创建任务', 'status': 1}
 
     def executeCommand(self, args):
         if(os.path.exists("/www/server/panel/plugin/my_toolbox/tmp/executeCommand.tmp")):
