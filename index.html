@@ -30,7 +30,7 @@
         </div>
         <div class="bt-w-con pd15">
             <div class="plugin_body">
-                <div id="scanPort">
+                <div id="scanPort" style="display: none;">
                     <div id="scanPortForm">
                         <H3>端口扫描</H3><br>
                         <div class='soft-man-con bt-form'><br>
@@ -293,8 +293,15 @@
                     </div>
                 </div>
             </div>
+            <div id="mainPage">
+                <br><br>
+                <center>
+                    <img src="/my_toolbox/static/62270332_p1.jpg">
+                    <img src="/my_toolbox/static/62270332_p0.jpg">
+                </center>
+                <h2 style='text-align:center;margin-top:15%;'>欢迎使用!您可以在侧边栏选择工具！</h2>
+            </div>
         </div>
-
     </div>
     <div id="fatalError" style="display: none;">
         <br>
@@ -311,6 +318,7 @@
     });
 
     $(".bt-w-menu p").click(function() {
+        $("#mainPage").hide(100)
         $("#commandExecutionResult").hide(100)
         var i = $(this).index();
         $(this).addClass('bgw').siblings().removeClass('bgw')
@@ -783,6 +791,4 @@
             }
         });
     }
-
-    //$('.plugin_body').html("<center><img src=\"/my_toolbox/static/62270332_p1.jpg\"><img src=\"/my_toolbox/static/62270332_p0.jpg\"></center><h2 style='text-align:center;margin-top:20%;'>欢迎使用!您可以在侧边栏选择工具！</h2>");
 </script>
