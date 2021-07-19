@@ -90,13 +90,12 @@ class my_toolbox_main:
             f.write(hostsNew)
         return {'msg': '成功删除此条hosts', 'status': 1}
 
-    def short_url(self, args):
+    def createShortLink(self, args):
         url = 'https://api.unknown-o.com/shorturl/'
         nowTime = int(time.time())
-        data = {'key': hashlib.md5(('KagamineYes!'+str(nowTime)).encode(
-            "utf-8")).hexdigest(), 'timestamp': nowTime, 'type': args.type, 'url': args.url}
-        r = json.loads(requests.post(url, data).text)
-        return {'status': 1, 'result': r['result']}
+        data = {'key': hashlib.md5(('KagamineYes!'+str(nowTime)).encode("utf-8")).hexdigest(), 'timestamp': nowTime, 'type': "n", 'url': args.url}
+        response = json.loads(requests.post(url, data).text)
+        return {'status': 1, 'result': response['result']}
 
     def getExecuteResult(self, args):
         if(os.popen("echo $(ps -ef | grep '/www/temp.sh' | grep -v grep | awk '{print $2}')").read() == "\n"):

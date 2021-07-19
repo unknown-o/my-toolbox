@@ -480,6 +480,7 @@
 
     function cleanRequestPageResult() {
         $("#requestPageResult").val("")
+        $("#requestPageUrl").val("")
     }
 
     function createShortLink() {
@@ -487,6 +488,7 @@
             url: $("#longURL").val()
         }, function (rdata) {
             if (rdata.status) {
+                $("#longURL").val("")
                 layer.open({
                     id: 1,
                     title: '生成结果',
