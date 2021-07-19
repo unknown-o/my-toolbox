@@ -146,14 +146,17 @@ class my_toolbox_main:
         task.create_task("命令执行", 0, 'python3 /www/server/panel/plugin/my_toolbox/execBashCommand.py')
         return {'msg': '成功创建任务', 'status': 1}
 
-    def request_page(self, args):
+    def requestPage(self, args):
         try:
-            response = requests.get(args.url)
+            headers = {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36 Edg/91.0.864.70',
+            }
+            response = requests.get(args.url, headers=headers,timeout=(60,60))
             response.encoding = "utf-8"
-            if(response.status_code == 200):
-                return {'message': '请求网页成功！', 'result': "HttpCode: "+str(response.status_code)+"\n\n"+response.text, 'status': 1}
-            else:
-                return {'message': '警告！httpCode并非200！', 'result': "HttpCode: "+str(response.status_code)+"\n\n"+response.text, 'status': 7}
+            result = "HTTP状态码:" + str(response.status_code) + "\n"
+            result = result + "页面打开耗时:" + str(response.elapsed.total_seconds()*1000) + "ms\n"
+            result = result + "页面HTML内容:\n" + response.text
+            return {'msg': '成功创建任务',"data": result ,'status': 1}
         except:
             return {'message': '错误！未知原因引起请求程序出错崩溃！', 'result': "HttpCode: "+str(response.status_code)+"\n\n"+response.text, 'status': 2}
 
