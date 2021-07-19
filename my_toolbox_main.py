@@ -131,13 +131,15 @@ class my_toolbox_main:
         return {'msg': '成功创建任务', 'status': 1}
 
     def executeCommand(self, args):
+        if(not os.path.exists("/www/server/panel/pyenv/bin/python")):
+            return {'msg': '不是python3版本的宝塔，暂时无法使用本功能！', 'status': -1}
         if(os.path.exists("/www/server/panel/plugin/my_toolbox/tmp/executeCommand.tmp")):
             os.remove('/www/server/panel/plugin/my_toolbox/tmp/executeCommand.tmp')
         public.ExecShell('kill -9 ' + str(os.popen("echo $(ps -ef | grep '/www/temp.sh' | grep -v grep | awk '{print $2}')").read()))
         with open("/www/temp.sh", 'w') as bashCommandFile:
             bashCommandFile.write(args.bashCommand)
         task = panelTask.bt_task()
-        task.create_task("命令执行", 0, 'python3 /www/server/panel/plugin/my_toolbox/execBashCommand.py')
+        task.create_task("命令执行", 0, '/www/server/panel/pyenv/bin/python /www/server/panel/plugin/my_toolbox/execBashCommand.py')
         return {'msg': '成功创建任务', 'status': 1}
 
     def requestPage(self, args):
