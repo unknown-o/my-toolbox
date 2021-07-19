@@ -311,6 +311,7 @@
         requestPlugin("getSitemapGenerationStatus", "", function(rdata) {
             if (rdata.status) {
                 clearInterval(parseInt(getCookie('sitemapGenerationIntervalID')))
+                delCookie('sitemapGenerationIntervalID')
                 $("#sitemapGenerationResult").val(rdata.data)
                 $("#downloadSitemapBTN").show(200)
             } else {
@@ -369,6 +370,7 @@
         requestPlugin("getScanResult", "", function(rdata) {
             if (rdata.status) {
                 clearInterval(parseInt(getCookie('scanIntervalID')))
+                delCookie('scanIntervalID')
                 $("#portFormBody").empty()
                 if (rdata.data.length > 0) {
                     for (var i = 0, l = rdata.data.length; i < l; i++) {
@@ -532,6 +534,7 @@
                 layer.msg(rdata.msg, {
                     icon: rdata.status ? 1 : 2
                 })
+                delCookie('executeCommandIntervalID')
                 clearInterval(parseInt(getCookie('executeCommandIntervalID')))
             } else {
                 var index = layer.msg('正在执行命令中，请耐心等待！', {
