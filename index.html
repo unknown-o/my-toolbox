@@ -520,32 +520,6 @@
             $('.plugin_body').html(my_body);
         },
 
-        short_url: function () {
-            body = '<H3>短链接生成</H3><br><div class=\'soft-man-con bt-form\'><br>' +
-                "<div class='line'><span class='tname'>网页地址</span>" +
-                "		<div class='info-r'>" +
-                "			<input id='url_wx' placeholder='https://www.wunote.cn' type='text' class='bt-input-text mr5' value='' style='width: 430px;'><button class='btn btn-default btn-sm' onclick='short_url_creat(\"wx\")'>生成!</button>" +
-                "			<br />" +
-                "			<span style='color: rgb(153, 153, 153);'>此处生成的是微信专属短链接，使用的是微信官方接口</span>" +
-                "		</div>" +
-                "	</div>" +
-                "</div>" +
-                "<div class='line'><span class='tname'>网页地址</span>" +
-                "		<div class='info-r'>" +
-                "			<input id='url_n' placeholder='https://api.unknown-o.com' type='text' class='bt-input-text mr5' value='' style='width: 430px;'><button class='btn btn-default btn-sm' onclick='short_url_creat(\"n\")'>生成!</button>" +
-                "			<br />" +
-                "			<span style='color: rgb(153, 153, 153);'>此处生成的是通用短链，但使用的是第三方API，稳定性不做保证</span>" +
-                "		</div>" +
-                "	</div>" +
-                "</div>" +
-                "<ul class='help-info-text c7 mtb15'>" +
-                "	<li>如果使用的是微信专属短链，那么只能在微信中访问</li>" +
-                "	<li>如果使用的是通用短链，那么可以在所有平台访问，但稳定性不做保证</li>" +
-                "	<li>日后本人可能还会开发一套自己的短链接系统，当然可能会红的很快的，因为腾讯的举报机制...</li>" +
-                "</ul>"
-            $('.plugin_body').html(body);
-        },
-
         about_plugin: function () {
             var index = layer.msg('正在处理,请稍后...', {
                 icon: 16,

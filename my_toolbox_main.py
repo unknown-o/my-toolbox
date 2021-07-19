@@ -150,7 +150,7 @@ class my_toolbox_main:
             headers = {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36 Edg/91.0.864.70',
             }
-            response = requests.get(args.url, headers=headers,timeout=(60,60))
+            response = requests.get(args.url, headers=headers, timeout=(60,60))
             response.encoding = "utf-8"
             result = "HTTP状态码:" + str(response.status_code) + "\n"
             result = result + "页面打开耗时:" + str(response.elapsed.total_seconds()*1000) + "ms\n"
