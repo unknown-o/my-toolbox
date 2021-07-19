@@ -259,6 +259,16 @@
                         </div>
                     </div>
                 </div>
+                <div id="aboutPlugin" style="display: none;">
+                    <br>
+                    <center>
+                        <img id="aboutImg" style="width:300px; height:300px; border-radius:100%; overflow:hidden;" src="/my_toolbox/static/about.png" alt="Unknown-O" />
+                        <br><br>
+                        <p style='color:Grey;font-size:20px;'>为退烧而生</p><br>
+                        <p style='color:Grey;font-size:15px;'>程序版本:V1.6.0</p><br>
+                        <p style='color:Grey;font-size:15px;'>作者邮箱:i@mr-wu.top</p><br><a class='btn btn-success btn-sm' href='https://www.wunote.cn' target='_blank'>作者博客</a> <a class='btn btn-success btn-sm' href='https://www.bt.cn/bbs/thread-52772-1-1.html' target='_blank'>论坛讨论</a>
+                    </center>
+                </div>
             </div>
             <div id="commandExecutionResult" style="display: none;">
                 <H3>执行结果 <button class='btn btn-success btn-sm' onclick="backToPreviousPage()">返回上一个</button></H3><br>
@@ -672,37 +682,43 @@
         })
     }
 
-    var my_toolbox = {
-        about_plugin: function() {
-            var index = layer.msg('正在处理,请稍后...', {
-                icon: 16,
-                time: 0
-            });
-            layer.close(index);
-            var main_page = '<br><center><img id="aboutImg" style="width:300px; height:300px; border-radius:100%; overflow:hidden;" src="/my_toolbox/static/about.png" alt="Unknown-O" /></center><br>' +
-                "<center><p style='color:Grey;font-size:20px;'>为退烧而生</p><br><p style='color:Grey;font-size:15px;'>程序版本:V1.2.6</p><br><p style='color:Grey;font-size:15px;'>作者邮箱:i@mr-wu.top</p><br><a class='btn btn-success btn-sm' href='https://www.wunote.cn' target='_blank'>作者博客</a> <a class='btn btn-success btn-sm' href='https://www.bt.cn/bbs/thread-52772-1-1.html' target='_blank'>论坛求助</a></center>"
-            $('.plugin_body').html(main_page);
-            plugin_egg();
-        }
+    function aboutPlugin() {
+        requestPlugin('displayOnce', {
+            item: 'fiveStar'
+        }, function(rdata) {
+            if (rdata.result) {
+                layer.open({
+                    id: 1,
+                    title: '给个五星呗~~~',
+                    content: '<center><img style="border-radius:16%; overflow:hidden;" src="/my_toolbox/static/rin.gif"><br><br><p style="color:Grey;font-size:15px;">23333，给个五星呗！</p></center>',
+                    btn: ['OK！'],
+                    btn1: function(index, layero) {
+                        pluginEgg()
+                        layer.close(index);
+                    }
+                });
+            } else {
+                pluginEgg()
+            }
+        })
     }
 
-    function plugin_egg() {
+    function pluginEgg() {
         var img = new Image();
-        img.src = '/my_toolbox/static/78530939_p1.png';
+        img.src = '/my_toolbox/static/78530939_p1.png'
         img.onerror = function() {
             console.log('Image loading failed')
             return false;
         };
-
         img.onload = function() {
             setTimeout(function() {
-                document.getElementById('aboutImg').src = '/my_toolbox/static/78530939_p1.png';
+                $("#aboutImg").attr('src', '/my_toolbox/static/78530939_p1.png')
             }, 1500);
             setTimeout(function() {
-                document.getElementById('aboutImg').src = '/my_toolbox/static/about.png';
+                $("#aboutImg").attr('src', '/my_toolbox/static/about.png')
             }, 1600);
             setTimeout(function() {
-                document.getElementById('aboutImg').src = '/my_toolbox/static/78530939_p1.png';
+                $("#aboutImg").attr('src', '/my_toolbox/static/78530939_p1.png')
             }, 1670);
             setTimeout(function() {
                 layer.msg('Kagamine Yes！', {
@@ -710,7 +726,6 @@
                 })
             }, 1670);
         }
-
     }
 
     function requestPlugin(function_name, args, callback, timeout) {
