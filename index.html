@@ -22,7 +22,7 @@
             <p>Hosts编辑</p>
             <p>软链接操作</p>
             <p>命令执行</p>
-            <p>压力测试</p>
+            <p>网站压力测试</p>
             <p>请求网页</p>
             <p>短链接生成</p>
             <p>网站地图生成</p>
@@ -144,24 +144,54 @@
                     </div>
                 </div>
                 <div id="commandExecution" style="display: none;">
-                    <div id="commandExecutionForm">
-                        <H3>命令执行</H3><br><br>
-                        <div style="line-height:34px"><textarea id="bashCommand" class="txtsjs bt-input-text" placeholder="echo Vocaloid is ALIVE" name="sBody" style='width: 755px; height:300px;'></textarea></div>
-                        <br><button class='btn btn-success btn-sm' onclick="executeCommand()">执行命令</button>
-                        <button class='btn btn-danger btn-sm' onclick="cleanCommandBox()">清空命令</button><br>
-                        <ul class='help-info-text c7 mtb15'>
-                            <li>本功能可以让你不需要连接SSH也可以通过Linux命令连接服务器</li>
-                            <li>本页面命令执行时间为无限，可以执行需要很长时间的命令，并且不会卡死宝塔</li>
-                            <li>如果上一次运行的命令还没有执行完成就执行下一个命令，上一个命令将会被强制结束</li>
-                        </ul>
+                    <H3>命令执行</H3><br><br>
+                    <div style="line-height:34px"><textarea id="bashCommand" class="txtsjs bt-input-text" placeholder="echo Vocaloid is ALIVE" name="sBody" style='width: 755px; height:300px;'></textarea></div>
+                    <br><button class='btn btn-success btn-sm' onclick="executeCommand('commandExecution')">执行命令</button>
+                    <button class='btn btn-danger btn-sm' onclick="cleanCommandBox()">清空命令</button><br>
+                    <ul class='help-info-text c7 mtb15'>
+                        <li>本功能可以让你不需要连接SSH也可以通过Linux命令连接服务器</li>
+                        <li>本页面命令执行时间为无限，可以执行需要很长时间的命令，并且不会卡死宝塔</li>
+                        <li>如果上一次运行的命令还没有执行完成就执行下一个命令，上一个命令将会被强制结束</li>
+                    </ul>
+                </div>
+                <div id="websiteStressTest" style="display: none;">
+                    <H3>网站压力测试</H3><br><br>
+                    <div class='line'>
+                        <span class='tname'>请求数量</span>
+                        <div class='info-r'>
+                            <input id='numberOfRequests' placeholder='10000' type='text' class='bt-input-text mr5' value='' style='width: 430px;'>
+                            <br />
+                            <span style='color: rgb(153, 153, 153);'>总计发送多少个请求</span>
+                        </div>
                     </div>
-                    <div id="commandExecutionResult" style="display: none;">
-                        <H3>执行结果 <button class='btn btn-success btn-sm' onclick="backToCommandExecution()">返回上一个</button></H3><br>
-                        <textarea readonly='' id="executionResult" style='margin: 0px;width: 755px;height: 425px;background-color: #333;color:#fff; padding:0 5px'></textarea>
-                        <ul class="help-info-text c7 mtb15">
-                            <li>虽然我讨厌热热乎乎的东西，我却想要拥抱你~~</li>
-                        </ul>
+                    <div class='line'>
+                        <span class='tname'>并发数量</span>
+                        <div class='info-r'>
+                            <input id='concurrentNumber' placeholder='50' type='text' class='bt-input-text mr5' value='' style='width: 430px;'>
+                            <br />
+                            <span style='color: rgb(153, 153, 153);'>建议不要太大，一般普通博客并发并发不会超过50</span>
+                        </div>
                     </div>
+                    <div class='line'>
+                        <span class='tname'>网页地址</span>
+                        <div class='info-r'>
+                            <input id='stressTestURL' placeholder='https://kagamine.top' type='text' class='bt-input-text mr5' value='' style='width: 430px;'>
+                            <br />
+                            <span style='color: rgb(153, 153, 153);'>服务器压测不仅会对目标网站造成较大压力，也会给本服务器造成压力</span>
+                        </div>
+                    </div>
+                    <br>
+                    <div class='line'>
+                        <span class='tname'></span>
+                        <div class='info-r'>
+                            <button class='btn btn-danger btn-sm' onclick='startWebsiteStressTest()'>开始压测</button>
+                        </div>
+                    </div><br><br><br><br><br><br><br>
+                    <ul class='help-info-text c7 mtb15'>
+                        <li>注意：启动本功能后，如果使用“命令执行”功能，将会导致压测停止</li>
+                        <li>可爱是天使的声音，是一次就无法忘记，是红色跳动的精灵，是每天都关禁闭</li>
+                        <li>蒙德城最可爱的萝莉 —— 可莉；璃月风神 —— 七七</li>
+                    </ul>
                 </div>
                 <div id="requestPage" style="display: none;">
                     <H3>请求网页</H3><br><br>
@@ -189,12 +219,11 @@
                             <br />
                             <span style='color: rgb(153, 153, 153);'>此处将调用外部api进行短链生成（不由作者运营，稳定性不做保证）</span>
                         </div>
-                        <br>
-                        <div class='line'>
-                            <span class='tname'></span>
-                            <div class='info-r'>
-                                <button class='btn btn-success btn-sm' onclick='createShortLink()'>生成短链接</button>
-                            </div>
+                    </div>
+                    <div class='line'>
+                        <span class='tname'></span>
+                        <div class='info-r'>
+                            <button class='btn btn-success btn-sm' onclick='createShortLink()'>生成短链接</button>
                         </div>
                     </div><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
                     <ul class='help-info-text c7 mtb15'>
@@ -231,23 +260,31 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <div id="hostsTemplate" style="display: none;">
-        <div class="row" style="width: 420px;  margin-left:7px; margin-top:10px;">
-            <div class="col-sm-12">
-                <div class="input-group">
-                    <span class="input-group-addon">IP</span>
-                    <input id="hostsIP" class="form-control" placeholder="1.1.1.1">
+            <div id="commandExecutionResult" style="display: none;">
+                <H3>执行结果 <button class='btn btn-success btn-sm' onclick="backToPreviousPage()">返回上一个</button></H3><br>
+                <textarea readonly='' id="executionResult" style='margin: 0px;width: 755px;height: 425px;background-color: #333;color:#fff; padding:0 5px'></textarea>
+                <ul class="help-info-text c7 mtb15">
+                    <li>虽然我讨厌热热乎乎的东西，我却想要拥抱你~~</li>
+                </ul>
+            </div>
+            <div id="hostsTemplate" style="display: none;">
+                <div class="row" style="width: 420px;  margin-left:7px; margin-top:10px;">
+                    <div class="col-sm-12">
+                        <div class="input-group">
+                            <span class="input-group-addon">IP</span>
+                            <input id="hostsIP" class="form-control" placeholder="1.1.1.1">
+                        </div>
+                    </div>
+                    <div class="col-sm-12" style="margin-top: 10px">
+                        <div class="input-group">
+                            <span class="input-group-addon">域名</span>
+                            <input id="hostsDomain" class="form-control" placeholder="www.wunote.cn">
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="col-sm-12" style="margin-top: 10px">
-                <div class="input-group">
-                    <span class="input-group-addon">域名</span>
-                    <input id="hostsDomain" class="form-control" placeholder="www.wunote.cn">
-                </div>
-            </div>
         </div>
+
     </div>
     <div id="fatalError" style="display: none;">
         <br>
@@ -264,6 +301,7 @@
     });
 
     $(".bt-w-menu p").click(function() {
+        $("#commandExecutionResult").hide(100)
         var i = $(this).index();
         $(this).addClass('bgw').siblings().removeClass('bgw')
         $(".plugin_body > div").hide(200).eq(i).show(200);
@@ -276,6 +314,11 @@
                 break;
         }
     });
+
+    function startWebsiteStressTest() {
+        $("#bashCommand").val("ab -c " + $("#concurrentNumber").val() + " -n " + $("#numberOfRequests").val() + " " + $("#stressTestURL").val())
+        executeCommand("websiteStressTest")
+    }
 
     function sitemapGeneration() {
         if (parseInt($("#maxNumber").val()) > 8) {
@@ -360,11 +403,22 @@
         })
     }
 
-    function backToCommandExecution() {
+    function backToPreviousPage(type) {
         $("#executionResult").val("")
-        $("#commandExecutionResult").hide(200, function() {
-            $("#commandExecutionForm").show(200)
-        })
+        switch ($("#commandExecutionResult").attr("from")) {
+            case "commandExecution":
+                $("#commandExecutionResult").hide(200, function() {
+                    $("#commandExecution").show(200)
+                })
+                break;
+            case "websiteStressTest":
+                $("#commandExecutionResult").hide(200, function() {
+                    $("#websiteStressTest").show(200)
+                })
+                break
+            default:
+                break;
+        }
     }
 
     function getScanResult() {
@@ -504,7 +558,7 @@
         })
     }
 
-    function executeCommand() {
+    function executeCommand(type) {
         if ($("#bashCommand").val() == "") {
             $("#bashCommand").val("echo Vocaloid is ALIVE")
         }
@@ -516,27 +570,41 @@
             })
             if (rdata.status) {
                 executeCommandIntervalID = setInterval(function() {
-                    getExecuteResult()
+                    getExecuteResult(type)
                 }, 3000)
                 document.cookie = "executeCommandIntervalID=" + executeCommandIntervalID
             }
         })
+        $("#bashCommand").val("")
     }
 
-    function getExecuteResult() {
+    function getExecuteResult(type) {
         requestPlugin("getExecuteResult", "", function(rdata) {
             if (rdata.status) {
                 if (rdata.status == 1) {
+                    $("#commandExecutionResult").attr("from", type);
                     $("#executionResult").val(rdata.result)
-                    $("#commandExecutionForm").hide(200, function() {
-                        $("#commandExecutionResult").show(200)
-                    })
+                    switch (type) {
+                        case "commandExecution":
+                            $("#commandExecution").hide(200, function() {
+                                $("#commandExecutionResult").show(200)
+                            })
+                            break;
+                        case "websiteStressTest":
+                            $("#websiteStressTest").hide(200, function() {
+                                $("#commandExecutionResult").show(200)
+                            })
+                            break
+                        default:
+                            break;
+                    }
+
                 }
                 layer.msg(rdata.msg, {
                     icon: rdata.status ? 1 : 2
                 })
-                delCookie('executeCommandIntervalID')
                 clearInterval(parseInt(getCookie('executeCommandIntervalID')))
+                delCookie('executeCommandIntervalID')
             } else {
                 var index = layer.msg('正在执行命令中，请耐心等待！', {
                     icon: 16,

@@ -20,7 +20,6 @@ Install()
 		apt-get update
 		apt-get install apache2-utils -y
 		apt-get install nmap -y
-		fi
 		echo '如果安装失败，请手动安装下试试？'
 	fi
 
