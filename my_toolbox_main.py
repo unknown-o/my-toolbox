@@ -139,6 +139,10 @@ class my_toolbox_main:
             displayOnceFlag.close()
             return {'result': 1, 'status': 1}
 
+    def logWrite(self, args):
+        public.WriteLog(args.logType,args.logDetail)
+        return {'msg': '写入成功', 'status': 1}
+
     def executeCommand(self, args):
         if(not os.path.exists("/www/server/panel/pyenv/bin/python")):
             return {'msg': '不是python3版本的宝塔，暂时无法使用本功能！', 'status': -1}
