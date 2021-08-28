@@ -6,7 +6,7 @@
         width: 580px;
         display: block;
     }
-    
+
     .plugin_about {
         padding: 15px 30px;
         line-height: 26px;
@@ -22,6 +22,7 @@
             <p>Hosts编辑</p>
             <p>软链接操作</p>
             <p>命令执行</p>
+            <p>日志写入</p>
             <p>网站压力测试</p>
             <p>请求网页</p>
             <p>短链接生成</p>
@@ -36,15 +37,18 @@
                         <div class='soft-man-con bt-form'><br>
                             <div class='line'><span class='tname'>目标IP</span>
                                 <div class='info-r'>
-                                    <input id='serverIp' placeholder='127.0.0.1' type='text' class='bt-input-text mr5' value='' style='width: 430px;'>
+                                    <input id='serverIp' placeholder='127.0.0.1' type='text' class='bt-input-text mr5'
+                                        value='' style='width: 430px;'>
                                     <br />
                                     <span style='color: rgb(153, 153, 153);'>输入需要扫描开放端口的服务器IP</span>
                                 </div>
                             </div>
                             <div class='line'><span class='tname'>扫描范围</span>
                                 <div class='info-r'>
-                                    <input id='portStart' placeholder='1' type='number' class='bt-input-text mr5' style='width: 100px;'> - &nbsp;
-                                    <input id='portEnd' placeholder='65535' type='number' class='bt-input-text mr5' style='width: 100px;'>
+                                    <input id='portStart' placeholder='1' type='number' class='bt-input-text mr5'
+                                        style='width: 100px;'> - &nbsp;
+                                    <input id='portEnd' placeholder='65535' type='number' class='bt-input-text mr5'
+                                        style='width: 100px;'>
                                     <br />
                                     <span style='color: rgb(153, 153, 153);'>扫描端口范围，范围越小耗时越少</span>
                                 </div>
@@ -53,7 +57,8 @@
                                 <span class='tname'></span>
                                 <br>
                                 <div class='info-r'>
-                                    <button class='btn btn-success btn-sm' id="startScanBTN" onclick='startScan()'>开始扫描</button>
+                                    <button class='btn btn-success btn-sm' id="startScanBTN"
+                                        onclick='startScan()'>开始扫描</button>
                                 </div>
                             </div><br><br><br><br><br><br><br><br><br><br>
                             <ul class='help-info-text c7 mtb15'>
@@ -118,14 +123,16 @@
                     <div class='soft-man-con bt-form'><br>
                         <div class='line'><span class='tname'>源目录</span>
                             <div class='info-r'>
-                                <input id='sourceDirectory' placeholder='/www/kagamine' type='text' class='bt-input-text mr5' value='' style='width: 430px;'>
+                                <input id='sourceDirectory' placeholder='/www/kagamine' type='text'
+                                    class='bt-input-text mr5' value='' style='width: 430px;'>
                                 <br />
                                 <span style='color: rgb(153, 153, 153);'>请填写一个存在的目录的绝对途径，否则可能出错</span>
                             </div>
                         </div>
                         <div class='line'><span class='tname'>目标目录</span>
                             <div class='info-r'>
-                                <input id='softSourceDirectory' placeholder='/www/kagamine1' type='text' class='bt-input-text mr5' value='' style='width: 430px;'>
+                                <input id='softSourceDirectory' placeholder='/www/kagamine1' type='text'
+                                    class='bt-input-text mr5' value='' style='width: 430px;'>
                                 <br />
                                 <span style='color: rgb(153, 153, 153);'>请填写一个存在的目录的绝对途径，否则可能出错</span>
                             </div>
@@ -145,8 +152,10 @@
                 </div>
                 <div id="commandExecution" style="display: none;">
                     <H3>命令执行</H3><br><br>
-                    <textarea id="bashCommand" class="txtsjs bt-input-text" placeholder="echo Vocaloid is ALIVE" name="sBody" style='line-height:20px; width: 755px; height:300px;'></textarea>
-                    <br><br><br><button class='btn btn-success btn-sm' id="executeCommandBTN" onclick="executeCommand('commandExecution')">执行命令</button>
+                    <textarea id="bashCommand" class="txtsjs bt-input-text" placeholder="echo Vocaloid is ALIVE"
+                        name="sBody" style='line-height:20px; width: 755px; height:300px;'></textarea>
+                    <br><br><br><button class='btn btn-success btn-sm' id="executeCommandBTN"
+                        onclick="executeCommand('commandExecution')">执行命令</button>
                     <button class='btn btn-danger btn-sm' onclick="cleanCommandBox()">清空命令</button><br>
                     <ul class='help-info-text c7 mtb15'>
                         <li>本功能可以让你不需要连接SSH也可以通过Linux命令连接服务器</li>
@@ -154,12 +163,47 @@
                         <li>如果上一次运行的命令还没有执行完成就执行下一个命令，上一个命令将会被强制结束</li>
                     </ul>
                 </div>
+                <div id="shortURL" style="display: none;">
+                    <H3>日志写入</H3><br><br>
+                    <div class='line'>
+                        <span class='tname'>操作类型</span>
+                        <div class='info-r'>
+                            <input id='logType' placeholder='维护网站' type='text' class='bt-input-text mr5' value=''
+                                style='width: 200px;'>
+                            <br />
+                            <span style='color: rgb(153, 153, 153);'>日志的详细信息，就是安全板块，面板操作日志的“操作类型”栏目</span>
+                        </div>
+                    </div>
+                    <div class='line'>
+                        <span class='tname'>操作详情</span>
+                        <div class='info-r'>
+                            <input id='logDetail' placeholder='在2021/12/27月，我维护了网站' type='text'
+                                class='bt-input-text mr5' value='' style='width: 430px;'>
+                            <br />
+                            <span style='color: rgb(153, 153, 153);'>日志的详细信息，就是安全板块，面板操作日志的“详情”栏目</span>
+                        </div>
+                    </div>
+                    <div class='line'>
+                        <span class='tname'></span>
+                        <div class='info-r'>
+                            <button class='btn btn-success btn-sm' id="createShortLinkBTN"
+                                onclick='logWrite()'>写入面板日志</button>
+                        </div>
+                    </div><br><br><br><br><br><br><br><br><br><br><br>
+                    <ul class='help-info-text c7 mtb15'>
+                        <li>此处你可以将您对面板的操作手动写入面板日志</li>
+                        <li>我本以为我不过是个旁观者 直到我感觉到如此真实的触碰</li>
+                        <li>当我看到人们含泪的微笑 我便不再是个匆匆过客</li>
+                        <li>如果不曾知晓生离死别的伤痛，又该将什么铭记于心</li>
+                    </ul>
+                </div>
                 <div id="websiteStressTest" style="display: none;">
                     <H3>网站压力测试</H3><br><br>
                     <div class='line'>
                         <span class='tname'>请求数量</span>
                         <div class='info-r'>
-                            <input id='numberOfRequests' placeholder='10000' type='text' class='bt-input-text mr5' value='' style='width: 430px;'>
+                            <input id='numberOfRequests' placeholder='10000' type='text' class='bt-input-text mr5'
+                                value='' style='width: 430px;'>
                             <br />
                             <span style='color: rgb(153, 153, 153);'>总计发送多少个请求</span>
                         </div>
@@ -167,7 +211,8 @@
                     <div class='line'>
                         <span class='tname'>并发数量</span>
                         <div class='info-r'>
-                            <input id='concurrentNumber' placeholder='50' type='text' class='bt-input-text mr5' value='' style='width: 430px;'>
+                            <input id='concurrentNumber' placeholder='50' type='text' class='bt-input-text mr5' value=''
+                                style='width: 430px;'>
                             <br />
                             <span style='color: rgb(153, 153, 153);'>建议不要太大，一般普通博客并发并发不会超过50</span>
                         </div>
@@ -175,7 +220,8 @@
                     <div class='line'>
                         <span class='tname'>网页地址</span>
                         <div class='info-r'>
-                            <input id='stressTestURL' placeholder='https://kagamine.top' type='text' class='bt-input-text mr5' value='' style='width: 430px;'>
+                            <input id='stressTestURL' placeholder='https://kagamine.top' type='text'
+                                class='bt-input-text mr5' value='' style='width: 430px;'>
                             <br />
                             <span style='color: rgb(153, 153, 153);'>服务器压测不仅会对目标网站造成较大压力，也会给本服务器造成压力</span>
                         </div>
@@ -184,7 +230,8 @@
                     <div class='line'>
                         <span class='tname'></span>
                         <div class='info-r'>
-                            <button class='btn btn-danger btn-sm' id="startWebsiteStressTestBTN" onclick='startWebsiteStressTest()'>开始压测</button>
+                            <button class='btn btn-danger btn-sm' id="startWebsiteStressTestBTN"
+                                onclick='startWebsiteStressTest()'>开始压测</button>
                         </div>
                     </div><br><br><br><br><br><br><br>
                     <ul class='help-info-text c7 mtb15'>
@@ -195,19 +242,23 @@
                 </div>
                 <div id="requestPage" style="display: none;">
                     <H3>请求网页</H3><br><br>
-                    <textarea id="requestPageResult" readonly="" class="txtsjs bt-input-text" name="sBody" style="line-height:20px;margin: 0px;width: 760px; height:310px;background-color: #333;color:#fff; padding:0 5px">HTTP状态码:200&#10;页面打开耗时:12.27ms&#10;页面HTML内容:&#10;<html>&#10;<head>&#10;    <title>Kagamine</title>&#10;    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">&#10;    <meta name="keywords" content="镜音双子,Kagamine,镜音连,镜音铃" />&#10;    <meta name="description" content="这个页面是个示例页面" />&#10;</head>&#10;<body>&#10;    <p>镜面双生，最美和音</p>&#10;</body>&#10;</html>&#10;</textarea>
+                    <textarea id="requestPageResult" readonly="" class="txtsjs bt-input-text" name="sBody"
+                        style="line-height:20px;margin: 0px;width: 760px; height:310px;background-color: #333;color:#fff; padding:0 5px">HTTP状态码:200&#10;页面打开耗时:12.27ms&#10;页面HTML内容:&#10;<html>&#10;<head>&#10;    <title>Kagamine</title>&#10;    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">&#10;    <meta name="keywords" content="镜音双子,Kagamine,镜音连,镜音铃" />&#10;    <meta name="description" content="这个页面是个示例页面" />&#10;</head>&#10;<body>&#10;    <p>镜面双生，最美和音</p>&#10;</body>&#10;</html>&#10;</textarea>
                     <div class='line'>
                         <span class='tname'>网页地址</span>
                         <div class='info-r'>
-                            <input id='requestPageUrl' placeholder='https://www.wunote.cn' type='text' class='bt-input-text mr5' value='' style='width: 400px;'>
-                            <button class='btn btn-success btn-sm' id="requestPageBTN" onclick="requestPage()">请求！</button>
+                            <input id='requestPageUrl' placeholder='https://www.wunote.cn' type='text'
+                                class='bt-input-text mr5' value='' style='width: 400px;'>
+                            <button class='btn btn-success btn-sm' id="requestPageBTN"
+                                onclick="requestPage()">请求！</button>
                             <button class='btn btn-danger btn-sm' onclick="cleanRequestPageResult()">清空结果</button>
                             <br />
                             <span style='color: rgb(153, 153, 153);'>网页响应时间超过60秒将会超时报错！</span>
                         </div>
                     </div><br>
                     <ul class="help-info-text c7 mtb15">
-                        <li>此处请求网页的UA为Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36 Edg/91.0.864.70</li>
+                        <li>此处请求网页的UA为Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)
+                            Chrome/91.0.4472.124 Safari/537.36 Edg/91.0.864.70</li>
                     </ul>
                 </div>
                 <div id="shortURL" style="display: none;">
@@ -215,7 +266,8 @@
                     <div class='line'>
                         <span class='tname'>网页地址</span>
                         <div class='info-r'>
-                            <input id='longURL' placeholder='https://kagamine.top' type='text' class='bt-input-text mr5' value='' style='width: 430px;'>
+                            <input id='longURL' placeholder='https://kagamine.top' type='text' class='bt-input-text mr5'
+                                value='' style='width: 430px;'>
                             <br />
                             <span style='color: rgb(153, 153, 153);'>此处将调用外部api进行短链生成（不由作者运营，稳定性不做保证）</span>
                         </div>
@@ -223,7 +275,8 @@
                     <div class='line'>
                         <span class='tname'></span>
                         <div class='info-r'>
-                            <button class='btn btn-success btn-sm' id="createShortLinkBTN" onclick='createShortLink()'>生成短链接</button>
+                            <button class='btn btn-success btn-sm' id="createShortLinkBTN"
+                                onclick='createShortLink()'>生成短链接</button>
                         </div>
                     </div><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
                     <ul class='help-info-text c7 mtb15'>
@@ -235,7 +288,9 @@
                 <div id="sitemapGeneration" style="display: none;">
                     <H3>网站地图生成</H3><br><br>
                     <div style="line-height:34px">
-                        <textarea id="sitemapGenerationResult" readonly="" style="line-height:20px; margin: 0px; width: 760px; height:250px; background-color: #333; color:#fff; padding:0 5px" name="sBody">「薪炎永燃」&#10; 为世界上所有的美好而战！</textarea>
+                        <textarea id="sitemapGenerationResult" readonly=""
+                            style="line-height:20px; margin: 0px; width: 760px; height:250px; background-color: #333; color:#fff; padding:0 5px"
+                            name="sBody">「薪炎永燃」&#10; 为世界上所有的美好而战！</textarea>
                     </div>
                     <div class='line'><span class='tname'>最大层数</span>
                         <div class='info-r'>
@@ -246,7 +301,8 @@
                     </div>
                     <div class='line'><span class='tname'>网站地址</span>
                         <div class='info-r'>
-                            <input id='sitemapURL' placeholder='https://www.wunote.cn' type='text' class='bt-input-text mr5' value='' style='width: 430px;'>
+                            <input id='sitemapURL' placeholder='https://www.wunote.cn' type='text'
+                                class='bt-input-text mr5' value='' style='width: 430px;'>
                             <br />
                             <span style='color: rgb(153, 153, 153);'>PS：开始生成后，可能产生大量非并发的请求！</span>
                         </div>
@@ -254,25 +310,31 @@
                     <div class='line'>
                         <span class='tname'></span>
                         <div class='info-r'>
-                            <button class='btn btn-success btn-sm' id="sitemapGenerationBTN" onclick='sitemapGeneration()'>开始生成</button>
-                            <button class='btn btn-success btn-sm' style="display: none;" id="downloadSitemapBTN" onclick='downloadSitemap()'>下载网站地图</button>
+                            <button class='btn btn-success btn-sm' id="sitemapGenerationBTN"
+                                onclick='sitemapGeneration()'>开始生成</button>
+                            <button class='btn btn-success btn-sm' style="display: none;" id="downloadSitemapBTN"
+                                onclick='downloadSitemap()'>下载网站地图</button>
                         </div>
                     </div>
                 </div>
                 <div id="aboutPlugin" style="display: none;">
                     <br>
                     <center>
-                        <img id="aboutImg" style="width:300px; height:300px; border-radius:100%; overflow:hidden;" src="/my_toolbox/static/about.png" alt="Unknown-O" />
+                        <img id="aboutImg" style="width:300px; height:300px; border-radius:100%; overflow:hidden;"
+                            src="/my_toolbox/static/about.png" alt="Unknown-O" />
                         <br><br>
                         <p style='color:Grey;font-size:20px;'>为退烧而生</p><br>
                         <p style='color:Grey;font-size:15px;'>程序版本:V1.6.0</p><br>
-                        <p style='color:Grey;font-size:15px;'>作者邮箱:i@mr-wu.top</p><br><a class='btn btn-success btn-sm' href='https://www.wunote.cn' target='_blank'>作者博客</a> <a class='btn btn-success btn-sm' href='https://www.bt.cn/bbs/thread-52772-1-1.html' target='_blank'>论坛讨论</a>
+                        <p style='color:Grey;font-size:15px;'>作者邮箱:i@mr-wu.top</p><br><a class='btn btn-success btn-sm'
+                            href='https://www.wunote.cn' target='_blank'>作者博客</a> <a class='btn btn-success btn-sm'
+                            href='https://www.bt.cn/bbs/thread-52772-1-1.html' target='_blank'>论坛讨论</a>
                     </center>
                 </div>
             </div>
             <div id="commandExecutionResult" style="display: none;">
                 <H3>执行结果 <button class='btn btn-success btn-sm' onclick="backToPreviousPage()">返回上一个</button></H3><br>
-                <textarea readonly='' id="executionResult" style='margin: 0px;width: 755px;height: 425px;background-color: #333;color:#fff; padding:0 5px'></textarea>
+                <textarea readonly='' id="executionResult"
+                    style='margin: 0px;width: 755px;height: 425px;background-color: #333;color:#fff; padding:0 5px'></textarea>
                 <ul class="help-info-text c7 mtb15">
                     <li>虽然我讨厌热热乎乎的东西，我却想要拥抱你~~</li>
                 </ul>
@@ -317,7 +379,7 @@
         'width': '900px'
     });
 
-    $(".bt-w-menu p").click(function() {
+    $(".bt-w-menu p").click(function () {
         $("#mainPage").hide(100)
         $("#commandExecutionResult").hide(100)
         var i = $(this).index();
@@ -356,13 +418,13 @@
         requestPlugin("sitemapGeneration", {
             url: $("#sitemapURL").val(),
             maxNumber: $("#maxNumber").val()
-        }, function(rdata) {
+        }, function (rdata) {
             task_stat()
             layer.msg(rdata.msg, {
                 icon: rdata.status ? 1 : 2
             })
             if (rdata.status) {
-                sitemapGenerationIntervalID = setInterval(function() {
+                sitemapGenerationIntervalID = setInterval(function () {
                     getSitemapGenerationResult()
                 }, 3000)
                 document.cookie = "sitemapGenerationIntervalID=" + sitemapGenerationIntervalID
@@ -372,7 +434,7 @@
     }
 
     function getSitemapGenerationResult() {
-        requestPlugin("getSitemapGenerationStatus", "", function(rdata) {
+        requestPlugin("getSitemapGenerationStatus", "", function (rdata) {
             if (rdata.status) {
                 $("#sitemapGenerationBTN").attr("disabled", false)
                 clearInterval(parseInt(getCookie('sitemapGenerationIntervalID')))
@@ -404,13 +466,13 @@
             serverIp: $("#serverIp").val(),
             portStart: $("#portStart").val(),
             portEnd: $("#portEnd").val()
-        }, function(rdata) {
+        }, function (rdata) {
             task_stat()
             layer.msg(rdata.msg, {
                 icon: rdata.status ? 1 : 2
             })
             if (rdata.status) {
-                scanIntervalID = setInterval(function() {
+                scanIntervalID = setInterval(function () {
                     getScanResult()
                 }, 3000)
                 document.cookie = "scanIntervalID=" + scanIntervalID
@@ -421,7 +483,7 @@
 
     function backToScan() {
         $("#portFormBody").empty()
-        $("#portScanResultTable").hide(200, function() {
+        $("#portScanResultTable").hide(200, function () {
             $("#scanPortForm").show(200)
         })
     }
@@ -430,12 +492,12 @@
         $("#executionResult").val("")
         switch ($("#commandExecutionResult").attr("from")) {
             case "commandExecution":
-                $("#commandExecutionResult").hide(200, function() {
+                $("#commandExecutionResult").hide(200, function () {
                     $("#commandExecution").show(200)
                 })
                 break;
             case "websiteStressTest":
-                $("#commandExecutionResult").hide(200, function() {
+                $("#commandExecutionResult").hide(200, function () {
                     $("#websiteStressTest").show(200)
                 })
                 break
@@ -445,7 +507,7 @@
     }
 
     function getScanResult() {
-        requestPlugin("getScanResult", "", function(rdata) {
+        requestPlugin("getScanResult", "", function (rdata) {
             if (rdata.status) {
                 $("#startScanBTN").attr("disabled", false)
                 clearInterval(parseInt(getCookie('scanIntervalID')))
@@ -459,7 +521,7 @@
                         $trTemp.append("<td>" + rdata.data[i].type + "</td>")
                         $("#portFormBody").append($trTemp);
                     }
-                    $("#scanPortForm").hide(200, function() {
+                    $("#scanPortForm").hide(200, function () {
                         $("#portScanResultTable").show(200)
                     })
                 } else {
@@ -500,7 +562,7 @@
     }
 
     function getHostsList() {
-        requestPlugin("getHostsList", "", function(rdata) {
+        requestPlugin("getHostsList", "", function (rdata) {
             if (rdata.status) {
                 $("#hostsFormBody").empty()
                 if (rdata.data.length > 0) {
@@ -529,11 +591,11 @@
             area: ['450px', 'auto'],
             content: $("#hostsTemplate").html().replaceAll("hosts", "temp"),
             btn: ['保存', '取消'],
-            btn1: function(index, layero) {
+            btn1: function (index, layero) {
                 if (original != undefined) {
                     requestPlugin("delHosts", {
                         original: original
-                    }, function(rdata) {
+                    }, function (rdata) {
                         getHostsList()
                         layer.msg(rdata.msg, {
                             icon: rdata.status ? 1 : 2
@@ -543,7 +605,7 @@
                 requestPlugin("addHosts", {
                     ip: $("#tempIP").val(),
                     domain: $("#tempDomain").val()
-                }, function(rdata) {
+                }, function (rdata) {
                     getHostsList()
                     layer.msg(rdata.msg, {
                         icon: rdata.status ? 1 : 2
@@ -551,7 +613,7 @@
                 })
                 layer.close(index);
             },
-            btn2: function(index, layero) {
+            btn2: function (index, layero) {
                 layer.close(index);
             }
         });
@@ -562,7 +624,7 @@
     function deleteHosts(original) {
         requestPlugin("delHosts", {
             original: original
-        }, function(rdata) {
+        }, function (rdata) {
             getHostsList()
             layer.msg(rdata.msg, {
                 icon: rdata.status ? 1 : 2
@@ -574,7 +636,7 @@
         requestPlugin("addSoftLink", {
             source: $("#sourceDirectory").val(),
             softSource: $("#softSourceDirectory").val()
-        }, function(rdata) {
+        }, function (rdata) {
             getHostsList()
             layer.msg(rdata.msg, {
                 icon: rdata.status ? 1 : 2
@@ -590,14 +652,14 @@
         $("#startWebsiteStressTestBTN").attr("disabled", true)
         requestPlugin("executeCommand", {
             bashCommand: $("#bashCommand").val()
-        }, function(rdata) {
+        }, function (rdata) {
             task_stat()
             layer.msg(rdata.msg, {
                 icon: rdata.status ? 1 : 2
             })
             if (rdata.status) {
-                executeCommandIntervalID = setInterval(function() {
-                    getExecuteResult(type,rdata.logFileName)
+                executeCommandIntervalID = setInterval(function () {
+                    getExecuteResult(type, rdata.logFileName)
                 }, 3000)
                 document.cookie = "executeCommandIntervalID=" + executeCommandIntervalID
             }
@@ -605,8 +667,8 @@
         $("#bashCommand").val("")
     }
 
-    function getExecuteResult(type,logFileName) {
-        requestPlugin("getExecuteResult", {logFileName:logFileName}, function(rdata) {
+    function getExecuteResult(type, logFileName) {
+        requestPlugin("getExecuteResult", { logFileName: logFileName }, function (rdata) {
             if (rdata.status) {
                 if (rdata.status == 1) {
                     $("#executeCommandBTN").attr("disabled", false)
@@ -615,12 +677,12 @@
                     $("#executionResult").val(rdata.result)
                     switch (type) {
                         case "commandExecution":
-                            $("#commandExecution").hide(200, function() {
+                            $("#commandExecution").hide(200, function () {
                                 $("#commandExecutionResult").show(200)
                             })
                             break;
                         case "websiteStressTest":
-                            $("#websiteStressTest").hide(200, function() {
+                            $("#websiteStressTest").hide(200, function () {
                                 $("#commandExecutionResult").show(200)
                             })
                             break
@@ -651,7 +713,7 @@
         $("#requestPageBTN").attr("disabled", true)
         requestPlugin("requestPage", {
             url: $("#requestPageUrl").val()
-        }, function(rdata) {
+        }, function (rdata) {
             $("#requestPageBTN").attr("disabled", false)
             if (rdata.status) {
                 $("#requestPageResult").val(rdata.data)
@@ -672,7 +734,7 @@
         $("#createShortLinkBTN").attr("disabled", true)
         requestPlugin("createShortLink", {
             url: $("#longURL").val()
-        }, function(rdata) {
+        }, function (rdata) {
             $("#createShortLinkBTN").attr("disabled", false)
             if (rdata.status) {
                 $("#longURL").val("")
@@ -681,7 +743,7 @@
                     title: '生成结果',
                     content: '您的短链接: ' + rdata.result,
                     btn: ['OK！'],
-                    btn1: function(index, layero) {
+                    btn1: function (index, layero) {
                         layer.close(index);
                     }
                 })
@@ -696,14 +758,14 @@
     function aboutPlugin() {
         requestPlugin('displayOnce', {
             item: 'fiveStar'
-        }, function(rdata) {
+        }, function (rdata) {
             if (rdata.result) {
                 layer.open({
                     id: 1,
                     title: '给个五星呗~~~',
                     content: '<center><img style="border-radius:16%; overflow:hidden;" src="/my_toolbox/static/rin.gif"><br><br><p style="color:Grey;font-size:15px;">23333，给个五星呗！</p></center>',
                     btn: ['OK！'],
-                    btn1: function(index, layero) {
+                    btn1: function (index, layero) {
                         pluginEgg()
                         layer.close(index);
                     }
@@ -717,21 +779,21 @@
     function pluginEgg() {
         var img = new Image();
         img.src = '/my_toolbox/static/78530939_p1.png'
-        img.onerror = function() {
+        img.onerror = function () {
             console.log('Image loading failed')
             return false;
         };
-        img.onload = function() {
-            setTimeout(function() {
+        img.onload = function () {
+            setTimeout(function () {
                 $("#aboutImg").attr('src', '/my_toolbox/static/78530939_p1.png')
             }, 1500);
-            setTimeout(function() {
+            setTimeout(function () {
                 $("#aboutImg").attr('src', '/my_toolbox/static/about.png')
             }, 1600);
-            setTimeout(function() {
+            setTimeout(function () {
                 $("#aboutImg").attr('src', '/my_toolbox/static/78530939_p1.png')
             }, 1670);
-            setTimeout(function() {
+            setTimeout(function () {
                 layer.msg('Kagamine Yes！', {
                     icon: 1
                 })
@@ -752,7 +814,7 @@
             data: args,
             timeout: timeout,
             async: true,
-            success: function(rdata) {
+            success: function (rdata) {
                 layer.close(index)
                 if (rdata.status) {
                     if (rdata.status == -1) {
@@ -761,7 +823,7 @@
                     if (callback) {
                         return callback(rdata)
                     } else {
-                        setTimeout(function() {
+                        setTimeout(function () {
                             layer.msg(rdata.msg, {
                                 icon: rdata.status ? 1 : 2
                             })
@@ -779,7 +841,7 @@
                     })
                 }
             },
-            error: function(ex) {
+            error: function (ex) {
                 layer.close(index)
                 if (!callback) {
                     layer.msg('请求过程发现错误!', {
