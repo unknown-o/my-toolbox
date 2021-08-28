@@ -357,6 +357,7 @@
             url: $("#sitemapURL").val(),
             maxNumber: $("#maxNumber").val()
         }, function(rdata) {
+            task_stat()
             layer.msg(rdata.msg, {
                 icon: rdata.status ? 1 : 2
             })
@@ -404,6 +405,7 @@
             portStart: $("#portStart").val(),
             portEnd: $("#portEnd").val()
         }, function(rdata) {
+            task_stat()
             layer.msg(rdata.msg, {
                 icon: rdata.status ? 1 : 2
             })
@@ -589,6 +591,7 @@
         requestPlugin("executeCommand", {
             bashCommand: $("#bashCommand").val()
         }, function(rdata) {
+            task_stat()
             layer.msg(rdata.msg, {
                 icon: rdata.status ? 1 : 2
             })
