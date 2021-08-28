@@ -149,10 +149,10 @@ class my_toolbox_main:
             bashCommandFile.write(args.bashCommand)
             bashCommandFile.write("\necho finsh > /www/server/panel/plugin/my_toolbox/tmp/executeCommand.tmp")
         task = panelTask.bt_task()
-        task.create_task("命令执行", 0, 'bash /www/temp.sh')
         logList = os.listdir('/www/server/panel/tmp/')
         logList.sort(key=lambda x:int(x[:-4]))
-        return {'msg': '成功创建任务', "logFileName":logList[-1], 'status': 1}
+        task.create_task("命令执行", 0, 'bash /www/temp.sh')
+        return {'msg': '成功创建任务', "logFileName":str(int(logList[-1].split(".")[0])+1)+".log", 'status': 1}
 
     def requestPage(self, args):
         try:
