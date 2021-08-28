@@ -100,7 +100,7 @@ class my_toolbox_main:
     def getExecuteResult(self, args):
         if(os.popen("echo $(ps -ef | grep '/www/temp.sh' | grep -v grep | awk '{print $2}')").read() == "\n"):
             if(os.path.exists("/www/server/panel/plugin/my_toolbox/tmp/executeCommand.tmp")):
-                executeCommandResult = open("/www/server/panel/plugin/my_toolbox/tmp/executeCommand.tmp").read()
+                executeCommandResult = open("/www/server/panel/tmp/" + args.logFileName).read()
                 if(executeCommandResult == ""):
                     msg = "执行成功？但是没有任何返回！请自行检查命令是否运行成功！"
                 else:
@@ -147,9 +147,12 @@ class my_toolbox_main:
         public.ExecShell('kill -9 ' + str(os.popen("echo $(ps -ef | grep '/www/temp.sh' | grep -v grep | awk '{print $2}')").read()))
         with open("/www/temp.sh", 'w') as bashCommandFile:
             bashCommandFile.write(args.bashCommand)
+            bashCommandFile.write("\necho finsh > /www/server/panel/plugin/my_toolbox/tmp/executeCommand.tmp")
         task = panelTask.bt_task()
-        task.create_task("命令执行", 0, '/www/server/panel/pyenv/bin/python /www/server/panel/plugin/my_toolbox/execBashCommand.py')
-        return {'msg': '成功创建任务', 'status': 1}
+        task.create_task("命令执行", 0, 'bash /www/temp.sh')
+        logList = os.listdir('/www/server/panel/tmp/')
+        logList.sort(key=lambda x:int(x[:-4]))
+        return {'msg': '成功创建任务', "logFileName":logList[-1], 'status': 1}
 
     def requestPage(self, args):
         try:

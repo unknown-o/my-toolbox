@@ -597,7 +597,7 @@
             })
             if (rdata.status) {
                 executeCommandIntervalID = setInterval(function() {
-                    getExecuteResult(type)
+                    getExecuteResult(type,rdata.logFileName)
                 }, 3000)
                 document.cookie = "executeCommandIntervalID=" + executeCommandIntervalID
             }
@@ -605,8 +605,8 @@
         $("#bashCommand").val("")
     }
 
-    function getExecuteResult(type) {
-        requestPlugin("getExecuteResult", "", function(rdata) {
+    function getExecuteResult(type,logFileName) {
+        requestPlugin("getExecuteResult", {logFileName:logFileName}, function(rdata) {
             if (rdata.status) {
                 if (rdata.status == 1) {
                     $("#executeCommandBTN").attr("disabled", false)
@@ -766,9 +766,6 @@
                                 icon: rdata.status ? 1 : 2
                             })
                         }, 10)
-                        if (rdata.parameter == "noFatalError") {
-                            console.log(rdata)
-                        }
                         return true
                     }
                 } else {
