@@ -58,6 +58,9 @@ class my_toolbox_main:
         else:
             return {'msg': '扫描中...', 'status': -1}
 
+    def getHostsFile(self, args):
+        return {'msg': "查询成功！", "data": open("/etc/hosts").read(), 'status': 1}
+
     def getHostsList(self, args):
         hostsFile = open("/etc/hosts")
         hostsArr = []
