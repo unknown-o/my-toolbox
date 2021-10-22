@@ -580,6 +580,13 @@
         return num;
     }
 
+    function setCookie(cname, cvalue, exdays) {
+        var d = new Date();
+        d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+        var expires = "expires=" + d.toGMTString();
+        document.cookie = cname + "=" + cvalue + "; " + expires;
+    }
+
     function getCookie(name) {
         var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
         if (arr = document.cookie.match(reg))
@@ -836,24 +843,21 @@
     }
 
     function aboutPlugin() {
-        requestPlugin('displayOnce', {
-            item: 'fiveStar'
-        }, function (rdata) {
-            if (rdata.result) {
-                layer.open({
-                    id: 1,
-                    title: '给个五星呗~~~',
-                    content: '<center><img style="border-radius:16%; overflow:hidden;" src="/my_toolbox/static/rin.gif"><br><br><p style="color:Grey;font-size:15px;">23333，给个五星呗！</p></center>',
-                    btn: ['OK！'],
-                    btn1: function (index, layero) {
-                        pluginEgg()
-                        layer.close(index);
-                    }
-                });
-            } else {
-                pluginEgg()
-            }
-        })
+        if (getCookie("myToolboxFiveStar") == "kagamine") {
+            pluginEgg()
+        } else {
+            layer.open({
+                id: 1,
+                title: '给个五星呗~~~',
+                content: '<center><img style="border-radius:16%; overflow:hidden;" src="/my_toolbox/static/rin.gif"><br><br><p style="color:Grey;font-size:15px;">23333，给个五星呗！</p></center>',
+                btn: ['OK！'],
+                btn1: function (index, layero) {
+                    pluginEgg()
+                    setCookie("myToolboxFiveStar", "kagamine", 7)
+                    layer.close(index)
+                }
+            })
+        }
     }
 
     function pluginEgg() {
