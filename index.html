@@ -774,7 +774,9 @@
                         default:
                             break;
                     }
-
+                } else if (rdata.status == 2) {
+                    $("#executeCommandBTN").attr("disabled", false)
+                    $("#startWebsiteStressTestBTN").attr("disabled", false)
                 }
                 layer.msg(rdata.msg, {
                     icon: rdata.status ? 1 : 2
