@@ -612,8 +612,6 @@
         })
     }
 
-
-
     function editHosts(ip, domain, original) {
         layer.open({
             id: 1,
@@ -688,6 +686,16 @@
             $("#hostEditTextbox").val(rdata.data)
         })
         $("#bashCommand").val()
+    }
+
+    function saveHostsFile(){
+        requestPlugin("saveHostsFile", {data:$("#hostEditTextbox").val()}, function (rdata) {
+            getHostsFile()
+            getHostsList()
+            layer.msg(rdata.msg, {
+                icon: rdata.status ? 1 : 2
+            })
+        })
     }
 
     function addSoftLink() {

@@ -61,6 +61,12 @@ class my_toolbox_main:
     def getHostsFile(self, args):
         return {'msg': "查询成功！", "data": open("/etc/hosts").read(), 'status': 1}
 
+    def saveHostsFile(self, args):
+        os.system("cp /etc/hosts /etc/hosts.bak")
+        with open('/etc/hosts', 'w') as hostsFile:
+            hostsFile.write(args.data)
+        return {'msg': '编辑hosts成功！', 'status': 1}
+
     def getHostsList(self, args):
         hostsFile = open("/etc/hosts")
         hostsArr = []
