@@ -96,8 +96,9 @@
                 </div>
                 <div id="hostsList" style="display: none;">
                     <H3>Hosts编辑
-                        <button class='btn btn-default btn-sm btn-success' onclick='editHosts()'>添加Hosts</button> 
-                        <button class='btn btn-default btn-sm btn-success' onclick='switchToHostsFileEdit()'>编辑源文件</button>
+                        <button class='btn btn-default btn-sm btn-success' onclick='editHosts()'>添加Hosts</button>
+                        <button class='btn btn-default btn-sm btn-success'
+                            onclick='switchToHostsFileEdit()'>编辑源文件</button>
                     </H3><br>
                     <div style="max-height:402px;overflow:auto;border:#ddd 1px solid;">
                         <div class="divtable">
@@ -332,49 +333,54 @@
                     </center>
                 </div>
             </div>
-            <div id="commandExecutionResult" style="display: none;">
-                <H3>执行结果 <button class='btn btn-success btn-sm' onclick="backToPreviousPage()">返回上一页</button></H3><br>
-                <textarea readonly='' id="executionResult"
-                    style='margin: 0px;width: 755px;height: 425px;background-color: #333;color:#fff; padding:0 5px'></textarea>
-                <ul class="help-info-text c7 mtb15">
-                    <li>虽然我讨厌热热乎乎的东西，我却想要拥抱你~~</li>
-                </ul>
-            </div>
-            <div id="hostsEditor" style="display: none;">
-                <H3>Hosts编辑 <button class='btn btn-success btn-sm' onclick="backToHostsList()">返回上一页</button></H3><br><br>
-                <textarea id="hostEditTextbox" class="txtsjs bt-input-text" placeholder="162.159.208.43 kagamine.top"
-                    name="sBody" style='line-height:20px; width: 755px; height:310px;'></textarea>
-                <br><br><button class='btn btn-success btn-sm' id="saveHostsFileBTN"
-                    onclick="saveHostsFile()">保存</button><br>
-                <ul class='help-info-text c7 mtb15'>
-                    <li>此处可以直接编辑hosts源文件</li>
-                    <li>我们将那一天相同的星星做成记号，重叠声音~~</li>
-                    <li>浮出的憧憬如果能像自己地吐露出浓浓渗透出的后悔的话，会该有多么轻松呢？</li>
-                </ul>
-            </div>
-            <div id="hostsTemplate" style="display: none;">
-                <div class="row" style="width: 420px; margin-left:7px; margin-top:10px;">
-                    <div class="col-sm-12">
-                        <div class="input-group">
-                            <span class="input-group-addon">IP</span>
-                            <input id="hostsIP" class="form-control" placeholder="1.1.1.1">
+            <div id="extraPage">
+                <div id="commandExecutionResult" style="display: none;">
+                    <H3>执行结果 <button class='btn btn-success btn-sm' onclick="backToPreviousPage()">返回上一页</button></H3>
+                    <br>
+                    <textarea readonly='' id="executionResult"
+                        style='margin: 0px;width: 755px;height: 425px;background-color: #333;color:#fff; padding:0 5px'></textarea>
+                    <ul class="help-info-text c7 mtb15">
+                        <li>虽然我讨厌热热乎乎的东西，我却想要拥抱你~~</li>
+                    </ul>
+                </div>
+                <div id="hostsEditor" style="display: none;">
+                    <H3>Hosts编辑 <button class='btn btn-success btn-sm' onclick="backToHostsList()">返回上一页</button></H3>
+                    <br><br>
+                    <textarea id="hostEditTextbox" class="txtsjs bt-input-text"
+                        placeholder="162.159.208.43 kagamine.top" name="sBody"
+                        style='line-height:20px; width: 755px; height:310px;'></textarea>
+                    <br><br><button class='btn btn-success btn-sm' id="saveHostsFileBTN"
+                        onclick="saveHostsFile()">保存</button><br>
+                    <ul class='help-info-text c7 mtb15'>
+                        <li>此处可以直接编辑hosts源文件</li>
+                        <li>我们将那一天相同的星星做成记号，重叠声音~~</li>
+                        <li>浮出的憧憬如果能像自己地吐露出浓浓渗透出的后悔的话，会该有多么轻松呢？</li>
+                    </ul>
+                </div>
+                <div id="hostsTemplate" style="display: none;">
+                    <div class="row" style="width: 420px; margin-left:7px; margin-top:10px;">
+                        <div class="col-sm-12">
+                            <div class="input-group">
+                                <span class="input-group-addon">IP</span>
+                                <input id="hostsIP" class="form-control" placeholder="1.1.1.1">
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-sm-12" style="margin-top: 10px">
-                        <div class="input-group">
-                            <span class="input-group-addon">域名</span>
-                            <input id="hostsDomain" class="form-control" placeholder="www.wunote.cn">
+                        <div class="col-sm-12" style="margin-top: 10px">
+                            <div class="input-group">
+                                <span class="input-group-addon">域名</span>
+                                <input id="hostsDomain" class="form-control" placeholder="www.wunote.cn">
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div id="mainPage">
-                <br><br>
-                <center>
-                    <img src="/my_toolbox/static/62270332_p1.jpg">
-                    <img src="/my_toolbox/static/62270332_p0.jpg">
-                </center>
-                <h2 style='text-align:center;margin-top:15%;'>欢迎使用，您可以在侧边栏选择工具！</h2>
+                <div id="mainPage">
+                    <br><br>
+                    <center>
+                        <img src="/my_toolbox/static/62270332_p1.jpg">
+                        <img src="/my_toolbox/static/62270332_p0.jpg">
+                    </center>
+                    <h2 style='text-align:center;margin-top:15%;'>欢迎使用，您可以在侧边栏选择工具！</h2>
+                </div>
             </div>
         </div>
     </div>
@@ -393,8 +399,7 @@
     });
 
     $(".bt-w-menu p").click(function () {
-        $("#mainPage").hide(100)
-        $("#commandExecutionResult").hide(100)
+        $("#extraPage").children('div').hide(100)
         var i = $(this).index();
         $(this).addClass('bgw').siblings().removeClass('bgw')
         $(".plugin_body > div").hide(200).eq(i).show(200);
@@ -504,14 +509,14 @@
         })
     }
 
-    function switchToHostsFileEdit(){
+    function switchToHostsFileEdit() {
         getHostsFile()
         $("#hostsList").hide(200, function () {
             $("#hostsEditor").show(200)
         })
     }
 
-    function backToHostsList(){
+    function backToHostsList() {
         getHostsList()
         $("#hostsEditor").hide(200, function () {
             $("#hostsList").show(200)
@@ -681,15 +686,15 @@
         })
     }
 
-    function getHostsFile(){
+    function getHostsFile() {
         requestPlugin("getHostsFile", "", function (rdata) {
             $("#hostEditTextbox").val(rdata.data)
         })
         $("#bashCommand").val()
     }
 
-    function saveHostsFile(){
-        requestPlugin("saveHostsFile", {data:$("#hostEditTextbox").val()}, function (rdata) {
+    function saveHostsFile() {
+        requestPlugin("saveHostsFile", { data: $("#hostEditTextbox").val() }, function (rdata) {
             getHostsFile()
             getHostsList()
             layer.msg(rdata.msg, {
