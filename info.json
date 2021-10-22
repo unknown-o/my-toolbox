@@ -2,7 +2,7 @@
     "title": "我的工具箱",
     "name": "my_toolbox",
     "ps": "聚集了一些实用的小工具,反正也免费,下载来看看呗?",
-    "versions": "1.6.6",
+    "versions": "1.7.0",
     "checks": "/www/server/panel/plugin/my_toolbox",
     "author": "吴先森",
     "home": "https://www.wunote.cn"
