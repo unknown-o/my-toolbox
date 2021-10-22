@@ -10,8 +10,7 @@ Install()
 {
 	
 	echo '正在安装...'
-	#==================================================================
-	#依赖安装开始
+    mkdir -p /www/server/panel/plugin/my_toolbox/tmp
 	if [ -f "/usr/bin/yum" ] && [ -d "/etc/yum.repos.d" ]; then
 		yum install nmap -y
 		yum -y install httpd-tools
@@ -22,9 +21,6 @@ Install()
 		apt-get install nmap -y
 		echo '如果安装失败，请手动安装下试试？'
 	fi
-
-	#依赖安装结束
-	#==================================================================
 	/www/server/panel/pyenv/bin/pip install bs4
 	/www/server/panel/pyenv/bin/pip install requests
 	echo '================================================'
