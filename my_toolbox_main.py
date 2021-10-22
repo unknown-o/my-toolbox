@@ -136,7 +136,7 @@ class my_toolbox_main:
         if(int(args.maxNumber) < 15 and args.url == ""):
             return {'msg': '输入数据存在错误', 'status': -1}
         task = panelTask.bt_task()
-        task.create_task("创建网站地图",0,"/www/server/panel/pyenv/bin/python /www/server/panel/plugin/my_toolbox/sitemap.py " + args.url + " " + str(args.maxNumber))
+        task.create_task("创建网站地图",0,"/www/server/panel/pyenv/bin/python /www/server/panel/plugin/my_toolbox/sitemap.py '" + args.url + "' " + str(args.maxNumber))
         return {'msg': '成功创建任务', 'status': 1}
 
     def displayOnce(self, args):
