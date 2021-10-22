@@ -428,6 +428,8 @@
                     getSitemapGenerationResult()
                 }, 3000)
                 document.cookie = "sitemapGenerationIntervalID=" + sitemapGenerationIntervalID
+            } else {
+                $("#sitemapGenerationBTN").attr("disabled", false)
             }
 
         })
@@ -476,8 +478,9 @@
                     getScanResult()
                 }, 3000)
                 document.cookie = "scanIntervalID=" + scanIntervalID
+            } else {
+                $("#startScanBTN").attr("disabled", false)
             }
-
         })
     }
 
@@ -674,6 +677,9 @@
                     getExecuteResult(type, rdata.logFileName)
                 }, 3000)
                 document.cookie = "executeCommandIntervalID=" + executeCommandIntervalID
+            } else {
+                $("#executeCommandBTN").attr("disabled", false)
+                $("#startWebsiteStressTestBTN").attr("disabled", false)
             }
         })
         $("#bashCommand").val("")
@@ -813,16 +819,16 @@
         }
     }
 
-    function requestPlugin(function_name, args, callback, timeout) {
+    function requestPlugin(functionName, args, callback, timeout) {
         var index = layer.msg('正在处理,请稍后...', {
             icon: 16,
             time: 0
         })
-        plugin_name = 'my_toolbox'
+        pluginName = 'my_toolbox'
         if (!timeout) timeout = 36000;
         $.ajax({
             type: 'POST',
-            url: '/plugin?action=a&s=' + function_name + '&name=' + plugin_name,
+            url: '/plugin?action=a&s=' + functionName + '&name=' + pluginName,
             data: args,
             timeout: timeout,
             async: true,
