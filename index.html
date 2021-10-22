@@ -728,6 +728,12 @@
     }
 
     function requestPage() {
+        if ($("#requestPageUrl").val() == "") {
+            layer.msg("请输入你要请求的网页地址~", {
+                icon: 3
+            })
+            return false
+        }
         $("#requestPageBTN").attr("disabled", true)
         requestPlugin("requestPage", {
             url: $("#requestPageUrl").val()
