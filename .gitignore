@@ -1,2 +1,3 @@
-/__pycache__/
-/tmp/
+__pycache__/
+tmp/
+static/sitemap.xml
