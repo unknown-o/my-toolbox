@@ -145,7 +145,7 @@
                                         <th>可用操作</th>
                                     </tr>
                                 </thead>
-                                <tbody id="diskFormBody">
+                                <tbody id="partitionFormBody">
                                 </tbody>
                             </table>
                         </div>
@@ -474,7 +474,7 @@
                     $("#mainPage").show(200)
                 })
                 warning("数据无价，谨慎操作！<br>* 当前本功能处于公测阶段，可能存在未发现的问题，请谨慎使用！<br><br>本工具涉及到磁盘格式化、挂载、卸载等操作，可能导致数据丢失！<br>如果遇到数据丢失情况，请立即停止任何写入操作并关闭服务器，然后与专业的数据恢复公司联系！<br><br>由于本插件造成的数据丢失等问题，插件开发者（吴先森）和宝塔（bt.cn）不负任何责任！", function () {
-                    getDiskList()
+                    getPartitionList()
                     $("#mainPage").hide(200, function () {
                         $("#diskTools").show(200)
                     })
@@ -532,7 +532,7 @@
                         mountPoint: mountPoint,
                         options: options
                     }, function (rdata) {
-                        getDiskList()
+                        getPartitionList()
                         layer.msg(rdata.msg, {
                             icon: rdata.status ? 1 : 2
                         })
@@ -543,12 +543,12 @@
         })
     }
 
-    function umountDisk(disk) {
-        warning("注意！此操作可能导致数据丢失！！<br><br>本次操作将卸载分区[" + disk + "]<br><br>被卸载的磁盘不会被格式化，重新挂载后数据仍然存在<br>如需重新挂载，请使用“手动挂载分区”功能挂载！<br><br>是否继续操作？", function () {
-            requestPlugin("umountDisk", {
-                disk: disk
+    function umountPartition(partition) {
+        warning("注意！此操作可能导致数据丢失！！<br><br>本次操作将卸载分区[" + partition + "]<br><br>被卸载的磁盘不会被格式化，重新挂载后数据仍然存在<br>如需重新挂载，请使用“手动挂载分区”功能挂载！<br><br>是否继续操作？", function () {
+            requestPlugin("umountPartition", {
+                partition: partition
             }, function (rdata) {
-                getDiskList()
+                getPartitionList()
                 layer.msg(rdata.msg, {
                     icon: rdata.status ? 1 : 2
                 })
@@ -563,7 +563,7 @@
                 mountPoint: mountPoint,
                 filesystem: filesystem
             }, function (rdata) {
-                getDiskList()
+                getPartitionList()
                 layer.msg(rdata.msg, {
                     icon: rdata.status ? 1 : 2
                 })
@@ -588,7 +588,7 @@
                         mountPoint: mountPoint,
                         options: options
                     }, function (rdata) {
-                        getDiskList()
+                        getPartitionList()
                         layer.msg(rdata.msg, {
                             icon: rdata.status ? 1 : 2
                         })
@@ -812,10 +812,10 @@
         })
     }
 
-    function getDiskList() {
-        requestPlugin("getDiskList", "", function (rdata) {
+    function getPartitionList() {
+        requestPlugin("getPartitionList", "", function (rdata) {
             if (rdata.status) {
-                $("#diskFormBody").empty()
+                $("#partitionFormBody").empty()
                 if (rdata.data.length > 0) {
                     for (var i = 0, l = rdata.data.length; i < l; i++) {
                         var $trTemp = $("<tr></tr>")
@@ -826,9 +826,9 @@
                         if (rdata.data[i].mount_point == "/") {
                             $trTemp.append("<td>不允许操作</td>")
                         } else {
-                            $trTemp.append("<td><button class='btn btn-danger btn-sm' onclick='formatPartition(\"" + rdata.data[i].partition + "\",\"" + rdata.data[i].mount_point + "\",\"" + rdata.data[i].file_system + "\")'>格式化磁盘</button> <button class='btn btn-danger btn-sm' onclick='umountDisk(\"" + rdata.data[i].partition + "\")'>卸载磁盘</button></td>")
+                            $trTemp.append("<td><button class='btn btn-danger btn-sm' onclick='formatPartition(\"" + rdata.data[i].partition + "\",\"" + rdata.data[i].mount_point + "\",\"" + rdata.data[i].file_system + "\")'>格式化磁盘</button> <button class='btn btn-danger btn-sm' onclick='umountPartition(\"" + rdata.data[i].partition + "\")'>卸载磁盘</button></td>")
                         }
-                        $("#diskFormBody").append($trTemp);
+                        $("#partitionFormBody").append($trTemp);
                     }
                 }
             } else {
