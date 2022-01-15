@@ -536,6 +536,19 @@
         })
     }
 
+    function umountDisk(disk){
+        warning("注意！此操作可能导致数据丢失！！<br><br>本次操作将卸载分区[" + disk + "]<br><br>被卸载的磁盘不会被格式化，重新挂载后数据仍然存在<br>如需重新挂载，请使用“手动挂载分区”功能挂载！<br><br>是否继续操作？", function () {
+                    requestPlugin("umountDisk", {
+                        disk: disk
+                    }, function (rdata) {
+                        getDiskList()
+                        layer.msg(rdata.msg, {
+                            icon: rdata.status ? 1 : 2
+                        })
+                    })
+                })
+    }
+
     function sitemapGeneration() {
         if (parseInt($("#maxNumber").val()) > 8) {
             layer.msg("为减少服务器压力，不允许创建操作8层的sitemap生成任务！", {

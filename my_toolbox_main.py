@@ -62,14 +62,21 @@ class my_toolbox_main:
     def mountNewDisk(self, args):
         if(args.disk in open("/etc/fstab").read()):
             return {'msg': '此磁盘已经被挂载！', 'status': -1}
+        if(not args.filesystem in os.popen("cat /proc/filesystems").read()):
+            return {'msg': '您的系统不支持文件系统[' + args.filesystem + ']', 'status': -1}
+        if(not args.filesystem in os.popen("fdisk -l " + args.disk).read()):
+            return {'msg': '此硬盘已存在分区，不允许执行本操作！！', 'status': -1}
         result = os.popen('echo -e "n\\np\\n\\n\\n\\nw\\n" | fdisk /dev/' + args.disk).read()
-        result = result + "\n" + os.popen('mkfs -t ' + args.filesystem + ' /dev/' + args.disk + '1').read()
+        result = result + "\n" + os.popen('mkfs -f -t ' + args.filesystem + ' /dev/' + args.disk + '1').read()
         if(not os.path.exists(args.mountPoint)):
             os.makedirs(args.mountPoint) 
         with open("/etc/fstab", 'a') as f:
             f.write("\n/dev/" + args.disk + "1    " + args.mountPoint + "    " + args.filesystem + "    " + args.options + "    0    0")
-        os.popen("mount -a").read()
-        return {'msg': "挂载成功！", "data": result, 'status': 1}
+        os.popen("mount -a")
+        if(args.disk in os.popen("df -h").read()):
+            return {'msg': "挂载成功！", "data": result, 'status': 1}
+        else:
+            return {'msg': "出现了一个错误，挂载失败！", "data": result, 'status': 1}
 
     def getHostsFile(self, args):
         return {'msg': "查询成功！", "data": open("/etc/hosts").read(), 'status': 1}
@@ -107,6 +114,22 @@ class my_toolbox_main:
         except:
             return {'msg': "fstab文件存在语法错误！", "data": disksArr, 'status': -1}
         return {'msg': "查询成功！", "data": disksArr, 'status': 1}
+
+    def umountDisk(self, args):
+        fstabFileOld = open("/etc/fstab")
+        fstabNew = ''
+        while 1:
+            line = fstabFileOld.readline()
+            if(not line):
+                break
+            if(not line == '\n'):
+                if(not args.disk in line):
+                    fstabNew = fstabNew + line
+        fstabFileOld.close()
+        with open("/etc/fstab", 'w') as f:
+            f.write(fstabNew)
+        os.popen("umount -v " + args.disk)
+        return {'msg': '成功卸载分区[' + args.disk + ']！', 'status': 1}
 
     def addHosts(self, args):
         with open('/etc/hosts', 'a') as hostsFile:
