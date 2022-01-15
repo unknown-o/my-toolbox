@@ -129,7 +129,11 @@ class my_toolbox_main:
         with open("/etc/fstab", 'w') as f:
             f.write(fstabNew)
         os.popen("umount -v " + args.disk)
-        return {'msg': '成功卸载分区[' + args.disk + ']！', 'status': 1}
+        if(not args.disk in os.popen("df -h").read()):
+            return {'msg': '成功卸载分区[' + args.disk + ']！', 'status': 1}
+        else:
+            return {'msg': "出现了一个错误，卸载失败！", "data": result, 'status': 1}
+        
 
     def addHosts(self, args):
         with open('/etc/hosts', 'a') as hostsFile:
