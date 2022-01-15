@@ -20,6 +20,7 @@
         <div class="bt-w-menu">
             <p>端口扫描</p>
             <p>Hosts编辑</p>
+            <p>磁盘工具</p>
             <p>软链接操作</p>
             <p>命令执行</p>
             <p>日志写入</p>
@@ -119,6 +120,12 @@
                         <li>当你的天空下起大雨，那是我在为你炸乌云~~~</li>
                         <li>当你的发丝微乱有阵风吹过，那是我在远处想念你~~~</li>
                     </ul>
+                </div>
+                <div id="diskTools" style="display: none;">
+                    <H3>磁盘工具
+                        <button class='btn btn-default btn-sm btn-success' onclick='getDiskInfo()'>获取磁盘信息</button>
+                        <button class='btn btn-default btn-sm btn-success' onclick='mountNewDisk()'>自动挂载新硬盘</button>
+                    </H3><br>
                 </div>
                 <div id="softLink" style="display: none;">
                     <H3>软链接-创建</H3><br>
@@ -411,15 +418,43 @@
             case 1:
                 getHostsList()
                 break;
-            case 9:
+            case 2:
+                warning()
+                break;
+            case 10:
                 aboutPlugin()
                 break;
         }
     });
 
+    function warning() {
+        layer.open({
+            type: 1,
+            title: false,
+            closeBtn: false,
+            area: '500px;',
+            shade: 0.8,
+            id: 'warning',
+            btn: ['确定', '取消'],
+            btnAlign: 'c',
+            moveType: 1,
+            content: '<div style="padding: 50px; line-height: 22px; background-color: #EE2C2C; color: #fff; font-weight: 300;">数据无价，谨慎操作！<br><br>本工具涉及到磁盘格式化、挂载、卸载等操作，可能导致数据丢失！<br>如果遇到数据丢失情况，请立即停止任何写入操作并关闭服务器，然后与专业的数据恢复公司联系！<br><br>由于本插件造成的数据丢失等问题，插件开发者（吴先森）和宝塔（bt.cn）不负任何责任！</div>',
+            btn2: function (layero) {
+                $("#diskTools").hide(200, function () {
+                    $("#mainPage").show(200)
+                })
+            }
+        })
+    }
+
     function startWebsiteStressTest() {
         $("#bashCommand").val("ab -c " + $("#concurrentNumber").val() + " -n " + $("#numberOfRequests").val() + " " + $("#stressTestURL").val())
         executeCommand("websiteStressTest")
+    }
+
+    function getDiskInfo() {
+        $("#bashCommand").val("fdisk -l")
+        executeCommand("diskTools")
     }
 
     function sitemapGeneration() {
@@ -538,6 +573,11 @@
             case "websiteStressTest":
                 $("#commandExecutionResult").hide(200, function () {
                     $("#websiteStressTest").show(200)
+                })
+                break
+            case "diskTools":
+                $("#commandExecutionResult").hide(200, function () {
+                    $("#diskTools").show(200)
                 })
                 break
             default:
@@ -770,6 +810,11 @@
                             break;
                         case "websiteStressTest":
                             $("#websiteStressTest").hide(200, function () {
+                                $("#commandExecutionResult").show(200)
+                            })
+                            break
+                        case "diskTools":
+                            $("#diskTools").hide(200, function () {
                                 $("#commandExecutionResult").show(200)
                             })
                             break
