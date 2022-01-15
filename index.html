@@ -608,6 +608,7 @@
     }
 
     function getHostsList() {
+        console.log(111)
         requestPlugin("getHostsList", "", function (rdata) {
             if (rdata.status) {
                 $("#hostsFormBody").empty()
@@ -624,6 +625,7 @@
                 layer.msg(rdata.msg, {
                     icon: rdata.status ? 1 : 2
                 })
+                switchToHostsFileEdit()
             }
         })
     }
@@ -943,6 +945,4 @@
             }
         });
     }
-
-    getHostsFile()
 </script>

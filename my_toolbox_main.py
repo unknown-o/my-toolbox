@@ -70,12 +70,15 @@ class my_toolbox_main:
     def getHostsList(self, args):
         hostsFile = open("/etc/hosts")
         hostsArr = []
-        while 1:
-            line = hostsFile.readline()
-            if(not line):
-                break
-            if(line != "\n" and line[0] != "#"):
-                hostsArr.append({"ip":line.split(" ", 1)[0].strip(), "domain":line.split(" ", 1)[1].strip(), "original":line.strip("\n")})
+        try:
+            while 1:
+                line = hostsFile.readline()
+                if(not line):
+                    break
+                if(line != "\n" and line[0] != "#"):
+                    hostsArr.append({"ip":line.split(" ", 1)[0].strip(), "domain":line.split(" ", 1)[1].strip(), "original":line.strip("\n")})
+        except:
+            return {'msg': "hosts文件存在语法错误！请手动修复错误！", "data": hostsArr, 'status': -1}
         return {'msg': "查询成功！", "data": hostsArr, 'status': 1}
 
     def addHosts(self, args):
