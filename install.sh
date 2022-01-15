@@ -13,7 +13,7 @@ Install()
     mkdir -p /www/server/panel/plugin/my_toolbox/tmp
 	if [ -f "/usr/bin/yum" ] && [ -d "/etc/yum.repos.d" ]; then
 		yum install nmap -y
-		yum -y install httpd-tools
+		yum install httpd-tools -y
 		echo '如果安装失败，请尝试yum update或手动安装下试试？'
 	elif [ -f "/usr/bin/apt-get" ] && [ -f "/usr/bin/dpkg" ]; then
 		apt-get update
