@@ -14,6 +14,12 @@
         border-radius: 5px;
         border: 1px solid #ffffff;
     }
+
+    .line-limit-length {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
 </style>
 <div class="bt-form">
     <div id="pluginMain" class="bt-w-main">
@@ -798,14 +804,14 @@
                 if (rdata.data.length > 0) {
                     for (var i = 0, l = rdata.data.length; i < l; i++) {
                         var $trTemp = $("<tr></tr>")
-                        $trTemp.append("<td>" + rdata.data[i].partition + "</td>")
-                        $trTemp.append("<td>" + rdata.data[i].mount_point + "</td>")
+                        $trTemp.append("<td class='line-limit-length' title='" + rdata.data[i].partition + "' style='max-width:120px'>" + rdata.data[i].partition + "</td>")
+                        $trTemp.append("<td class='line-limit-length' title='" + rdata.data[i].mount_point + "' style='max-width:40px'>" + rdata.data[i].mount_point + "</td>")
                         $trTemp.append("<td>" + rdata.data[i].file_system + "</td>")
-                        $trTemp.append("<td>" + rdata.data[i].options + "</td>")
+                        $trTemp.append("<td class='line-limit-length' title='" + rdata.data[i].options + "' style='max-width:40px'>" + rdata.data[i].options + "</td>")
                         if (rdata.data[i].mount_point == "/") {
                             $trTemp.append("<td>不允许操作</td>")
                         } else {
-                            $trTemp.append("<td><button class='btn btn-success btn-sm' onclick='umountDisk(\"" + rdata.data[i].partition + "\")'>卸载磁盘</button></td>")
+                            $trTemp.append("<td><button class='btn btn-danger btn-sm' onclick='formatDisk(\"" + rdata.data[i].partition + "\",\"" + rdata.data[i].file_system + "\")'>格式化磁盘</button> <button class='btn btn-danger btn-sm' onclick='umountDisk(\"" + rdata.data[i].partition + "\")'>卸载磁盘</button></td>")
                         }
                         $("#diskFormBody").append($trTemp);
                     }
