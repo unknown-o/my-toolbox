@@ -81,6 +81,22 @@ class my_toolbox_main:
             return {'msg': "hosts文件存在语法错误！请手动修复错误！", "data": hostsArr, 'status': -1}
         return {'msg': "查询成功！", "data": hostsArr, 'status': 1}
 
+    def getDiskList(self, args):
+        fstabFile = open("/etc/fstab")
+        disksArr = []
+        if(1):
+            while 1:
+                line = fstabFile.readline()
+                if(not line):
+                    break
+                if(line != "\n" and line[0] != "#" and len(line.split(" ")) > 4 and "dev" in line.split(" ")[0]):
+                    disksArr.append({"disk":line.split(" ")[0].strip(), "mount_point":line.split(" ")[1].strip(), "file_system":line.split(" ")[2].strip(), "options":line.split(" ")[3].strip()})
+        """
+        except:
+            return {'msg': "fstab文件存在语法错误！", "data": disksArr, 'status': -1}
+            """
+        return {'msg': "查询成功！", "data": disksArr, 'status': 1}
+
     def addHosts(self, args):
         with open('/etc/hosts', 'a') as hostsFile:
             hostsFile.write('\n')

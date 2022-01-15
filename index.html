@@ -124,8 +124,30 @@
                 <div id="diskTools" style="display: none;">
                     <H3>磁盘工具
                         <button class='btn btn-default btn-sm btn-success' onclick='getDiskInfo()'>获取磁盘信息</button>
-                        <button class='btn btn-default btn-sm btn-success' onclick='mountNewDisk()'>自动挂载新硬盘</button>
+                        <button class='btn btn-default btn-sm btn-success' onclick='mountNewDisk()'>自动挂载未分区硬盘</button>
+                        <button class='btn btn-default btn-sm btn-success' onclick='mountNewPartition()'>手动挂载分区</button>
                     </H3><br>
+                    <div style="max-height:402px;overflow:auto;border:#ddd 1px solid;">
+                        <div class="divtable">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>磁盘地址</th>
+                                        <th>挂载点</th>
+                                        <th>文件系统</th>
+                                        <th>挂载参数</th>
+                                        <th>可用操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="diskFormBody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <ul class='help-info-text c7 mtb15'>
+                        <li>数据无价，谨慎操作！</li>
+                        <li>当前本功能处于公测阶段，可能存在未发现的问题，请谨慎使用！</li>
+                    </ul>
                 </div>
                 <div id="softLink" style="display: none;">
                     <H3>软链接-创建</H3><br>
@@ -438,8 +460,12 @@
             btn: ['确定', '取消'],
             btnAlign: 'c',
             moveType: 1,
-            content: '<div style="padding: 50px; line-height: 22px; background-color: #EE2C2C; color: #fff; font-weight: 300;">数据无价，谨慎操作！<br><br>本工具涉及到磁盘格式化、挂载、卸载等操作，可能导致数据丢失！<br>如果遇到数据丢失情况，请立即停止任何写入操作并关闭服务器，然后与专业的数据恢复公司联系！<br><br>由于本插件造成的数据丢失等问题，插件开发者（吴先森）和宝塔（bt.cn）不负任何责任！</div>',
-            btn2: function (layero) {
+            content: '<div style="padding: 50px; line-height: 22px; background-color: #EE2C2C; color: #fff; font-weight: 300;">数据无价，谨慎操作！<br>* 当前本功能处于公测阶段，可能存在未发现的问题，请谨慎使用！<br><br>本工具涉及到磁盘格式化、挂载、卸载等操作，可能导致数据丢失！<br>如果遇到数据丢失情况，请立即停止任何写入操作并关闭服务器，然后与专业的数据恢复公司联系！<br><br>由于本插件造成的数据丢失等问题，插件开发者（吴先森）和宝塔（bt.cn）不负任何责任！</div>',
+            yes: function (index) {
+                getDiskList()
+                layer.close(index)
+            },
+            btn2: function () {
                 $("#diskTools").hide(200, function () {
                     $("#mainPage").show(200)
                 })
@@ -666,6 +692,29 @@
                     icon: rdata.status ? 1 : 2
                 })
                 switchToHostsFileEdit()
+            }
+        })
+    }
+
+    function getDiskList() {
+        requestPlugin("getDiskList", "", function (rdata) {
+            if (rdata.status) {
+                $("#diskFormBody").empty()
+                if (rdata.data.length > 0) {
+                    for (var i = 0, l = rdata.data.length; i < l; i++) {
+                        var $trTemp = $("<tr></tr>")
+                        $trTemp.append("<td>" + rdata.data[i].disk + "</td>")
+                        $trTemp.append("<td>" + rdata.data[i].mount_point + "</td>")
+                        $trTemp.append("<td>" + rdata.data[i].file_system + "</td>")
+                        $trTemp.append("<td>" + rdata.data[i].options + "</td>")
+                        $trTemp.append("<td><button class='btn btn-success btn-sm' onclick='umountDisk(\"" + rdata.data[i].disk + "\")'>卸载磁盘</button></td>")
+                        $("#diskFormBody").append($trTemp);
+                    }
+                }
+            } else {
+                layer.msg(rdata.msg, {
+                    icon: rdata.status ? 1 : 2
+                })
             }
         })
     }
