@@ -60,12 +60,16 @@ class my_toolbox_main:
             return {'msg': '扫描中...', 'status': -1}
 
     def mountNewDisk(self, args):
+        if(not args.disk in os.popen("ls /dev").read()):
+            return {'msg': '不存在指定磁盘', 'status': -1}
         if(args.disk in open("/etc/fstab").read()):
             return {'msg': '此磁盘已经被挂载！', 'status': -1}
         if(not args.filesystem in os.popen("cat /proc/filesystems").read()):
             return {'msg': '您的系统不支持文件系统[' + args.filesystem + ']', 'status': -1}
-        if(not args.filesystem in os.popen("fdisk -l " + args.disk).read()):
+        if(not args.disk + '1' in os.popen("fdisk -l " + args.disk).read()):
             return {'msg': '此硬盘已存在分区，不允许执行本操作！！', 'status': -1}
+        if(args.mountPoint in os.popen("df -h").read() or args.disk in os.popen("df -h").read()):
+            return {'msg': '磁盘或挂载点已被使用！', 'status': -1}
         result = os.popen('echo -e "n\\np\\n\\n\\n\\nw\\n" | fdisk /dev/' + args.disk).read()
         result = result + "\n" + os.popen('mkfs -f -t ' + args.filesystem + ' /dev/' + args.disk + '1').read()
         if(not os.path.exists(args.mountPoint)):
@@ -73,10 +77,31 @@ class my_toolbox_main:
         with open("/etc/fstab", 'a') as f:
             f.write("\n/dev/" + args.disk + "1    " + args.mountPoint + "    " + args.filesystem + "    " + args.options + "    0    0")
         os.popen("mount -a")
+        time.sleep(1)
         if(args.disk in os.popen("df -h").read()):
             return {'msg': "挂载成功！", "data": result, 'status': 1}
         else:
-            return {'msg': "出现了一个错误，挂载失败！", "data": result, 'status': 1}
+            return {'msg': "出现了一个错误，挂载失败！", "data": result, 'status': -1}
+
+    def mountPartition(self, args):
+        if(not args.partition in os.popen("ls /dev").read()):
+            return {'msg': '不存在指定磁盘', 'status': -1}
+        if(args.partition in open("/etc/fstab").read()):
+            return {'msg': '此磁盘已经被挂载！', 'status': -1}
+        if(not args.filesystem in os.popen("cat /proc/filesystems").read()):
+            return {'msg': '您的系统不支持文件系统[' + args.filesystem + ']', 'status': -1}
+        if(args.mountPoint in os.popen("df -h").read() or args.partition in os.popen("df -h").read()):
+            return {'msg': '磁盘或挂载点已被使用！', 'status': -1}
+        if(not os.path.exists(args.mountPoint)):
+            os.makedirs(args.mountPoint) 
+        with open("/etc/fstab", 'a') as f:
+            f.write("\n/dev/" + args.partition + "    " + args.mountPoint + "    " + args.filesystem + "    " + args.options + "    0    0")
+        os.popen("mount -a")
+        time.sleep(1)
+        if(args.partition in os.popen("df -h").read()):
+            return {'msg': "挂载成功！", 'status': 1}
+        else:
+            return {'msg': "出现了一个错误，挂载失败！", 'status': -1}
 
     def getHostsFile(self, args):
         return {'msg': "查询成功！", "data": open("/etc/hosts").read(), 'status': 1}
