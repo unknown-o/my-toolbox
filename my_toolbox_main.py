@@ -157,9 +157,10 @@ class my_toolbox_main:
         if(not args.partition in os.popen("df -h").read()):
             return {'msg': '成功卸载分区[' + args.partition + ']！', 'status': 1}
         else:
-            return {'msg': "出现了一个错误，卸载失败！", "data": result, 'status': 1}
+            return {'msg': "出现了一个错误，卸载失败！", 'status': 1}
 
     def formatPartition(self, args):
+        fileList = os.popen("ls -la " + args.mountPoint).read()
         os.popen('umount ' + args.partition)
         result = os.popen('mkfs -F -t ' + args.filesystem + " " + args.partition).read()
         os.popen("mount " + args.partition + " " + args.mountPoint)
