@@ -125,7 +125,7 @@
                     <H3>磁盘工具
                         <button class='btn btn-default btn-sm btn-success' onclick='getDiskInfo()'>获取磁盘信息</button>
                         <button class='btn btn-default btn-sm btn-success' onclick='mountNewDisk()'>自动挂载未分区硬盘</button>
-                        <button class='btn btn-default btn-sm btn-success' onclick='mountNewPartition()'>手动挂载分区</button>
+                        <button class='btn btn-default btn-sm btn-success' onclick='mountPartition()'>手动挂载分区</button>
                     </H3><br>
                     <div style="max-height:402px;overflow:auto;border:#ddd 1px solid;">
                         <div class="divtable">
@@ -424,6 +424,29 @@
         </center>
         <br>
     </div>
+    <div id="mount-disk-dialog" style="display: none;">
+        <div class="col-sm-12" style="margin-top: 10px">
+            <div class="input-group">
+                <span style="width: 150px;" class="input-group-addon">磁盘地址</span>
+                <input id="template-disk-1" value="" type="text" class="form-control" placeholder="sdb">
+            </div>
+            <div class="input-group">
+                <span style="width: 150px;" class="input-group-addon">文件系统</span>
+                <input id="template-filesystem-1" value="ext4" type="text" class="form-control" placeholder="ext4">
+            </div>
+            <div class="input-group">
+                <span style="width: 150px;" class="input-group-addon">挂载点</span>
+                <input id="template-mount-point-1" value="" type="text" class="form-control" placeholder="/kagamine">
+            </div>
+            <div class="input-group">
+                <span style="width: 150px;" class="input-group-addon">挂载参数</span>
+                <input id="template-options-1" value="defaults" type="text" class="form-control" placeholder="defaults">
+            </div>
+            <ul class="help-info-text c7 mtb15">
+                <li>文件系统请输入您的系统支持的（比如ext4、xfs等）如果不知道系统支持的文件系统，可输入ext4</li>
+            </ul>
+        </div>
+    </div>
 </div>
 <script type="text/javascript" src="../my_toolbox/static/console-image.js"></script>
 <script type="text/javascript">
@@ -441,7 +464,9 @@
                 getHostsList()
                 break;
             case 2:
-                warning()
+                warning("数据无价，谨慎操作！<br>* 当前本功能处于公测阶段，可能存在未发现的问题，请谨慎使用！<br><br>本工具涉及到磁盘格式化、挂载、卸载等操作，可能导致数据丢失！<br>如果遇到数据丢失情况，请立即停止任何写入操作并关闭服务器，然后与专业的数据恢复公司联系！<br><br>由于本插件造成的数据丢失等问题，插件开发者（吴先森）和宝塔（bt.cn）不负任何责任！", function () {
+                    getDiskList()
+                })
                 break;
             case 10:
                 aboutPlugin()
@@ -449,7 +474,7 @@
         }
     });
 
-    function warning() {
+    function warning(text, callback) {
         layer.open({
             type: 1,
             title: false,
@@ -460,9 +485,9 @@
             btn: ['确定', '取消'],
             btnAlign: 'c',
             moveType: 1,
-            content: '<div style="padding: 50px; line-height: 22px; background-color: #EE2C2C; color: #fff; font-weight: 300;">数据无价，谨慎操作！<br>* 当前本功能处于公测阶段，可能存在未发现的问题，请谨慎使用！<br><br>本工具涉及到磁盘格式化、挂载、卸载等操作，可能导致数据丢失！<br>如果遇到数据丢失情况，请立即停止任何写入操作并关闭服务器，然后与专业的数据恢复公司联系！<br><br>由于本插件造成的数据丢失等问题，插件开发者（吴先森）和宝塔（bt.cn）不负任何责任！</div>',
+            content: '<div style="padding: 50px; line-height: 22px; background-color: #EE2C2C; color: #fff; font-weight: 300;">' + text + '</div>',
             yes: function (index) {
-                getDiskList()
+                callback()
                 layer.close(index)
             },
             btn2: function () {
@@ -481,6 +506,34 @@
     function getDiskInfo() {
         $("#bashCommand").val("fdisk -l")
         executeCommand("diskTools")
+    }
+
+    function mountNewDisk() {
+        layer.open({
+            title: '挂载硬盘',
+            area: ['800px', '350px'],
+            content: $("#mount-disk-dialog").html().replaceAll("template-", ""),
+            btn1: function (index) {
+                disk = $("#disk-1").val()
+                filesystem = $("#filesystem-1").val()
+                mountPoint = $("#mount-point-1").val()
+                options = $("#options-1").val()
+                warning("注意！此操作可能导致数据丢失！！<br><br>本次操作将会在硬盘[" + disk + "]上创建一个分区，并使用[" + filesystem + "]文件系统格式化此分区，最后挂载到挂载点[" + mountPoint + "]<br><br>本功能仅可在未分区硬盘中使用，否则可能导致意外的问题！<br>请勿将磁盘挂载到一些存在重要系统文件的目录，比如/、/bin、/etc等，如果挂载，将导致系统异常或数据丢失！<br>本工具暂时不支持迁移www目录功能，如果将磁盘直接挂载到/www，将会导致宝塔面板以及网站出现异常！<br><br>是否继续操作？", function () {
+                    requestPlugin("mountNewDisk", {
+                        disk: disk,
+                        filesystem: filesystem,
+                        mountPoint: mountPoint,
+                        options: options
+                    }, function (rdata) {
+                        getDiskList()
+                        layer.msg(rdata.msg, {
+                            icon: rdata.status ? 1 : 2
+                        })
+                    })
+                })
+                layer.close(index)
+            }
+        })
     }
 
     function sitemapGeneration() {

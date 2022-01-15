@@ -13,6 +13,7 @@ import panelTask
 import public
 import sys
 import os
+import re
 import json
 import time
 import requests
@@ -58,6 +59,18 @@ class my_toolbox_main:
         else:
             return {'msg': '扫描中...', 'status': -1}
 
+    def mountNewDisk(self, args):
+        if(args.disk in open("/etc/fstab").read()):
+            return {'msg': '此磁盘已经被挂载！', 'status': -1}
+        result = os.popen('echo -e "n\\np\\n\\n\\n\\nw\\n" | fdisk /dev/' + args.disk).read()
+        result = result + "\n" + os.popen('mkfs -t ' + args.filesystem + ' /dev/' + args.disk + '1').read()
+        if(not os.path.exists(args.mountPoint)):
+            os.makedirs(args.mountPoint) 
+        with open("/etc/fstab", 'a') as f:
+            f.write("\n/dev/" + args.disk + "1    " + args.mountPoint + "    " + args.filesystem + "    " + args.options + "    0    0")
+        os.popen("mount -a").read()
+        return {'msg': "挂载成功！", "data": result, 'status': 1}
+
     def getHostsFile(self, args):
         return {'msg': "查询成功！", "data": open("/etc/hosts").read(), 'status': 1}
 
@@ -86,7 +99,7 @@ class my_toolbox_main:
         disksArr = []
         if(1):
             while 1:
-                line = fstabFile.readline()
+                line = re.sub(' +', ' ', fstabFile.readline())
                 if(not line):
                     break
                 if(line != "\n" and line[0] != "#" and len(line.split(" ")) > 4 and "dev" in line.split(" ")[0]):
