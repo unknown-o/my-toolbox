@@ -74,7 +74,7 @@ class my_toolbox_main:
             line = hostsFile.readline()
             if(not line):
                 break
-            if(not line == "\n"):
+            if(line != "\n" and line[0] != "#"):
                 hostsArr.append({"ip":line.split(" ", 1)[0].strip(), "domain":line.split(" ", 1)[1].strip(), "original":line.strip("\n")})
         return {'msg': "查询成功！", "data": hostsArr, 'status': 1}
 
