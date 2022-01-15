@@ -66,7 +66,7 @@ class my_toolbox_main:
             return {'msg': '此磁盘已经被挂载！', 'status': -1}
         if(not args.filesystem in os.popen("cat /proc/filesystems").read()):
             return {'msg': '您的系统不支持文件系统[' + args.filesystem + ']', 'status': -1}
-        if(not args.disk + '1' in os.popen("fdisk -l " + args.disk).read()):
+        if(args.disk + '1' in os.popen("fdisk -l " + args.disk).read()):
             return {'msg': '此硬盘已存在分区，不允许执行本操作！！', 'status': -1}
         if(args.mountPoint in os.popen("df -h").read() or args.disk in os.popen("df -h").read()):
             return {'msg': '磁盘或挂载点已被使用！', 'status': -1}
@@ -85,7 +85,7 @@ class my_toolbox_main:
 
     def mountPartition(self, args):
         if(not args.partition in os.popen("ls /dev").read()):
-            return {'msg': '不存在指定磁盘', 'status': -1}
+            return {'msg': '不存在指定磁盘分区', 'status': -1}
         if(args.partition in open("/etc/fstab").read()):
             return {'msg': '此磁盘已经被挂载！', 'status': -1}
         if(not args.filesystem in os.popen("cat /proc/filesystems").read()):
