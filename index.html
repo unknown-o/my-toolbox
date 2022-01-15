@@ -132,7 +132,7 @@
                             <table class="table table-hover">
                                 <thead>
                                     <tr>
-                                        <th>磁盘地址</th>
+                                        <th>分区地址</th>
                                         <th>挂载点</th>
                                         <th>文件系统</th>
                                         <th>挂载参数</th>
@@ -798,11 +798,15 @@
                 if (rdata.data.length > 0) {
                     for (var i = 0, l = rdata.data.length; i < l; i++) {
                         var $trTemp = $("<tr></tr>")
-                        $trTemp.append("<td>" + rdata.data[i].disk + "</td>")
+                        $trTemp.append("<td>" + rdata.data[i].partition + "</td>")
                         $trTemp.append("<td>" + rdata.data[i].mount_point + "</td>")
                         $trTemp.append("<td>" + rdata.data[i].file_system + "</td>")
                         $trTemp.append("<td>" + rdata.data[i].options + "</td>")
-                        $trTemp.append("<td><button class='btn btn-success btn-sm' onclick='umountDisk(\"" + rdata.data[i].disk + "\")'>卸载磁盘</button></td>")
+                        if (rdata.data[i].mount_point == "/") {
+                            $trTemp.append("<td>不允许操作</td>")
+                        } else {
+                            $trTemp.append("<td><button class='btn btn-success btn-sm' onclick='umountDisk(\"" + rdata.data[i].partition + "\")'>卸载磁盘</button></td>")
+                        }
                         $("#diskFormBody").append($trTemp);
                     }
                 }
