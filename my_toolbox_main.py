@@ -71,7 +71,7 @@ class my_toolbox_main:
         if(args.mountPoint in os.popen("df -h").read() or args.disk in os.popen("df -h").read()):
             return {'msg': '磁盘或挂载点已被使用！', 'status': -1}
         result = os.popen('echo -e "n\\np\\n\\n\\n\\nw\\n" | fdisk /dev/' + args.disk).read()
-        result = result + "\n" + os.popen('mkfs -f -t ' + args.filesystem + ' /dev/' + args.disk + '1').read()
+        result = result + "\n" + os.popen('mkfs -F -t ' + args.filesystem + ' /dev/' + args.disk + '1').read()
         if(not os.path.exists(args.mountPoint)):
             os.makedirs(args.mountPoint) 
         with open("/etc/fstab", 'a') as f:
@@ -158,7 +158,12 @@ class my_toolbox_main:
             return {'msg': '成功卸载分区[' + args.disk + ']！', 'status': 1}
         else:
             return {'msg': "出现了一个错误，卸载失败！", "data": result, 'status': 1}
-        
+
+    def formatPartition(self, args):
+        os.popen('umount ' + args.partition)
+        result = os.popen('mkfs -F -t ' + args.filesystem + " " + args.partition).read()
+        os.popen("mount " + args.partition + " " + args.mountPoint)
+        return {'msg': '格式化完成！', 'data':result, 'status': 1}
 
     def addHosts(self, args):
         with open('/etc/hosts', 'a') as hostsFile:

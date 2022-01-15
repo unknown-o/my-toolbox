@@ -556,6 +556,21 @@
         })
     }
 
+    function formatPartition(partition, mountPoint, filesystem) {
+        warning("注意！您正在格式化分区！！<br><br>本次操作将格式化分区[" + partition + "]！<br><br>进行此操作后，此分区的数据将被全部清空！<br>如果您不小心格式化了存放有重要数据的磁盘，请立即停止写入并关闭服务器，然后联系专业数据恢复公司！<br><br>是否继续操作？", function () {
+            requestPlugin("formatPartition", {
+                partition: partition,
+                mountPoint: mountPoint,
+                filesystem: filesystem
+            }, function (rdata) {
+                getDiskList()
+                layer.msg(rdata.msg, {
+                    icon: rdata.status ? 1 : 2
+                })
+            })
+        })
+    }
+
     function mountPartition() {
         layer.open({
             title: '挂载分区',
@@ -811,7 +826,7 @@
                         if (rdata.data[i].mount_point == "/") {
                             $trTemp.append("<td>不允许操作</td>")
                         } else {
-                            $trTemp.append("<td><button class='btn btn-danger btn-sm' onclick='formatDisk(\"" + rdata.data[i].partition + "\",\"" + rdata.data[i].file_system + "\")'>格式化磁盘</button> <button class='btn btn-danger btn-sm' onclick='umountDisk(\"" + rdata.data[i].partition + "\")'>卸载磁盘</button></td>")
+                            $trTemp.append("<td><button class='btn btn-danger btn-sm' onclick='formatPartition(\"" + rdata.data[i].partition + "\",\"" + rdata.data[i].mount_point + "\",\"" + rdata.data[i].file_system + "\")'>格式化磁盘</button> <button class='btn btn-danger btn-sm' onclick='umountDisk(\"" + rdata.data[i].partition + "\")'>卸载磁盘</button></td>")
                         }
                         $("#diskFormBody").append($trTemp);
                     }
