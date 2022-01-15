@@ -510,7 +510,7 @@
     }
 
     function getDiskInfo() {
-        $("#bashCommand").val("fdisk -l")
+        $("#bashCommand").val("lsblk -f")
         executeCommand("diskTools")
     }
 
