@@ -416,7 +416,7 @@
             </div>
             <div class="input-group">
                 <span style="width: 150px;" class="input-group-addon">挂载点</span>
-                <input id="template-mount-point-1" value="" type="text" class="form-control" placeholder="/kagamine">
+                <input id="template-mount-point-1" value="/kagamine" type="text" class="form-control">
             </div>
             <div class="input-group">
                 <span style="width: 150px;" class="input-group-addon">挂载参数</span>
@@ -535,7 +535,7 @@
         layer.open({
             title: '格式化分区',
             area: ['800px', '350px'],
-            content: $("#mount-disk-dialog").html().replaceAll("template-", "").replaceAll("磁盘地址", "分区地址").replaceAll("sdb", partition),
+            content: $("#mount-disk-dialog").html().replaceAll("template-", "").replaceAll("磁盘地址", "分区地址").replaceAll("sdb", partition).replaceAll("/kagamine", mountPoint),
             btn1: function (index) {
                 partition = $("#disk-1").val()
                 filesystem = $("#filesystem-1").val()

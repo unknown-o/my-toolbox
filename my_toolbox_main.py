@@ -160,9 +160,9 @@ class my_toolbox_main:
             return {'msg': "出现了一个错误，卸载失败！", 'status': -1}
 
     def formatPartition(self, args):
-        fileList = os.popen("ls -la " + args.mountPoint).read()
-        os.popen('umount ' + args.partition)
-        result = os.popen('mkfs -F -t ' + args.filesystem + " " + args.partition).read()
+        fileList = os.popen("ls -la /dev/" + args.mountPoint).read()
+        os.popen('umount /dev/' + args.partition)
+        result = os.popen('mkfs -F -t ' + args.filesystem + " /dev/" + args.partition).read()
         os.popen("mount " + args.partition + " " + args.mountPoint)
         return {'msg': '格式化完成！', 'data':result, 'status': 1}
 
