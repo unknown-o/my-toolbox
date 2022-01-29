@@ -127,11 +127,7 @@
                     </ul>
                 </div>
                 <div id="diskTools" style="display: none;">
-                    <H3>磁盘工具
-                        <button class='btn btn-default btn-sm btn-success' onclick='getDiskInfo()'>获取磁盘信息</button>
-                        <button class='btn btn-default btn-sm btn-success' onclick='mountNewDisk()'>自动挂载未分区硬盘</button>
-                        <button class='btn btn-default btn-sm btn-success' onclick='mountPartition()'>手动挂载分区</button>
-                    </H3><br>
+                    <H3>磁盘工具</H3><br>
                     <div style="max-height:402px;overflow:auto;border:#ddd 1px solid;">
                         <div class="divtable">
                             <table class="table table-hover">
@@ -407,7 +403,7 @@
     <div id="mount-disk-dialog" style="display: none;">
         <div class="col-sm-12" style="margin-top: 10px">
             <div class="input-group">
-                <span style="width: 150px;" class="input-group-addon">磁盘地址</span>
+                <span style="width: 150px;" class="input-group-addon">磁盘名称</span>
                 <input id="template-disk-1" type="text" class="form-control" value="sdb">
             </div>
             <div class="input-group">
