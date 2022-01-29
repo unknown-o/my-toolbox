@@ -359,13 +359,20 @@ function getPartitionList() {
                         $trTemp.append("<td class='line-limit-length' title='分区' style='max-width:120px'>分区</td>")
                         $trTemp.append("<td class='line-limit-length' title='" + partitionInfo['mountpoint'] + "' style='max-width:40px'>" + partitionInfo['mountpoint'] + "</td>")
                         $trTemp.append("<td>" + partitionInfo['fstype'] + "</td>")
-                        if (partitionInfo['mountpoint'] == "/") {
-                            $trTemp.append("<td>不允许操作</td>")
-                        } else if (partitionInfo['mountpoint'] == "") {
-                            $trTemp.append("<td><button class='btn btn-danger btn-sm' onclick='formatPartition(\"" + item1 + "\",\"" + partitionInfo['mountpoint'] + "\")'>格式化分区</button> <button class='btn btn-success btn-sm' onclick='mountPartition(\"" + item1 + "\")'>挂载分区</button></td>")
+                        availableActions = ""
+                        if (partitionInfo['mountpoint'] == "/" || partitionInfo['mountpoint'] == "/boot") {
+                            availableActions = "禁止操作"
                         } else {
-                            $trTemp.append("<td><button class='btn btn-danger btn-sm' onclick='formatPartition(\"" + item1 + "\",\"" + partitionInfo['mountpoint'] + "\")'>格式化分区</button> <button class='btn btn-danger btn-sm' onclick='umountPartition(\"" + item1 + "\")'>卸载分区</button></td>")
+                            availableActions += " <button class='btn btn-danger btn-sm' onclick='formatPartition(\"" + item1 + "\",\"" + partitionInfo['mountpoint'] + "\")'>格式化分区</button> "
+                            if (partitionInfo['fstype'] != "") {
+                                if (partitionInfo['mountpoint'] == "") {
+                                    availableActions += " <button class='btn btn-success btn-sm' onclick='mountPartition(\"" + item1 + "\")'>挂载分区</button> "
+                                } else {
+                                    availableActions += " <button class='btn btn-danger btn-sm' onclick='umountPartition(\"" + item1 + "\")'>卸载分区</button> "
+                                }
+                            }
                         }
+                        $trTemp.append("<td>" + availableActions + "</td>")
                         $("#disksFormBody").append($trTemp);
                     }
                 }
