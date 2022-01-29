@@ -164,7 +164,7 @@ class my_toolbox_main:
         for item1 in disksInfo:
             item1 = re.sub(' +', ' ', item1)
             diskInfo = item1.replace("\"","").split(" ")
-            if(len(diskInfo) != 1 and "loop" not in diskInfo[0] and not "" == diskInfo[0]):
+            if(len(diskInfo) != 1 and "loop" not in diskInfo[0] and "sr" not in diskInfo[0] and not "" == diskInfo[0]):
                 if("├─" in diskInfo[0] or "└─" in diskInfo[0]):
                     tempDict = {}
                     diskName = diskInfo[0].replace("├─","").replace("└─","")
