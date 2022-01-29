@@ -358,7 +358,7 @@ function getPartitionList() {
                         $trTemp.append("<td class='line-limit-length' title='" + item1 + "' style='max-width:120px'>" + item1 + "</td>")
                         $trTemp.append("<td class='line-limit-length' title='分区' style='max-width:120px'>分区</td>")
                         $trTemp.append("<td class='line-limit-length' title='" + partitionInfo['mountpoint'] + "' style='max-width:40px'>" + partitionInfo['mountpoint'] + "</td>")
-                        $trTemp.append("<td>" + partitionInfo['fstype'] + " " + partitionInfo['fsver'] + "</td>")
+                        $trTemp.append("<td>" + partitionInfo['fstype'] + "</td>")
                         if (partitionInfo['mountpoint'] == "/") {
                             $trTemp.append("<td>不允许操作</td>")
                         } else if (partitionInfo['mountpoint'] == "") {
@@ -370,23 +370,6 @@ function getPartitionList() {
                     }
                 }
             }
-            /*
-            if (rdata.data.length > 0) {
-                for (var i = 0, l = rdata.data.length; i < l; i++) {
-                    var $trTemp = $("<tr></tr>")
-                    $trTemp.append("<td class='line-limit-length' title='" + rdata.data[i].partition + "' style='max-width:120px'>" + rdata.data[i].partition + "</td>")
-                    $trTemp.append("<td class='line-limit-length' title='" + rdata.data[i].mount_point + "' style='max-width:40px'>" + rdata.data[i].mount_point + "</td>")
-                    $trTemp.append("<td>" + rdata.data[i].file_system + "</td>")
-                    $trTemp.append("<td class='line-limit-length' title='" + rdata.data[i].options + "' style='max-width:40px'>" + rdata.data[i].options + "</td>")
-                    if (rdata.data[i].mount_point == "/") {
-                        $trTemp.append("<td>不允许操作</td>")
-                    } else {
-                        $trTemp.append("<td><button class='btn btn-danger btn-sm' onclick='formatPartition(\"" + rdata.data[i].partition + "\",\"" + rdata.data[i].mount_point + "\",\"" + rdata.data[i].file_system + "\")'>格式化磁盘</button> <button class='btn btn-danger btn-sm' onclick='umountPartition(\"" + rdata.data[i].partition + "\")'>卸载磁盘</button></td>")
-                    }
-                    $("#partitionFormBody").append($trTemp);
-                }
-            }
-            */
         } else {
             layer.msg(rdata.msg, {
                 icon: rdata.status ? 1 : 2
