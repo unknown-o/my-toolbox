@@ -188,6 +188,19 @@ class my_toolbox_main:
         return {'msg': '成功删除此条hosts', 'status': 1}
 
     def getDisksInfo(self, args):
+        # 这里的屎山一定抽时间优化掉
+        disksInfo=os.popen("lsblk -f -P").read().split("\n")
+        disksInfoDictT = {}
+        for item1 in disksInfo:
+            diskInfo = item1.replace("\"","").split(" ")
+            diskInfoArr = []
+            for item2 in diskInfo:
+                if(len(item2.split("="))==1):
+                    diskInfoArr.append("")
+                else:
+                    diskInfoArr.append(item2.split("=")[1])
+            if(len(diskInfoArr)==8):
+                disksInfoDictT[diskInfoArr[0]] = diskInfoArr
         disksInfo=os.popen("lsblk -f -n").read().split("\n")
         disksInfoDict = {}
         for item1 in disksInfo:
@@ -196,23 +209,15 @@ class my_toolbox_main:
             if(len(diskInfo) != 1 and "loop" not in diskInfo[0]):
                 if("├─" in diskInfo[0] or "└─" in diskInfo[0]):
                     tempDict = {}
-                    if(len(diskInfo) == 8):
-                        tempDict['fstype'] = diskInfo[1]
-                        tempDict['fsver'] = diskInfo[2]
-                        tempDict['label'] = diskInfo[3]
-                        tempDict['uuid'] = diskInfo[4]
-                        tempDict['fsavail'] = diskInfo[5]
-                        tempDict['fsuse'] = diskInfo[6]
-                        tempDict['mountpoint'] = diskInfo[7]
-                    else:
-                        tempDict['fstype'] = ""
-                        tempDict['fsver'] = ""
-                        tempDict['label'] = ""
-                        tempDict['uuid'] = ""
-                        tempDict['fsavail'] = ""
-                        tempDict['fsuse'] = ""
-                        tempDict['mountpoint'] = ""
-                    disksInfoDict[tempKey][diskInfo[0].replace("├─","").replace("└─","")] = tempDict
+                    diskName = diskInfo[0].replace("├─","").replace("└─","")
+                    tempDict['fstype'] = disksInfoDictT[diskName][1]
+                    tempDict['fsver'] = disksInfoDictT[diskName][2]
+                    tempDict['label'] = disksInfoDictT[diskName][3]
+                    tempDict['uuid'] = disksInfoDictT[diskName][4]
+                    tempDict['fsavail'] = disksInfoDictT[diskName][5]
+                    tempDict['fsuse'] = disksInfoDictT[diskName][6]
+                    tempDict['mountpoint'] = disksInfoDictT[diskName][7]
+                    disksInfoDict[tempKey][diskName] = tempDict
                 else:
                     tempKey = diskInfo[0]
                     disksInfoDict[diskInfo[0]] = {}
