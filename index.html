@@ -490,11 +490,11 @@
         })
     }
 
-    function mountNewDisk() {
+    function mountNewDisk(disk) {
         layer.open({
             title: '挂载硬盘',
             area: ['800px', '350px'],
-            content: $("#mount-disk-dialog").html().replaceAll("template-", ""),
+            content: $("#mount-disk-dialog").html().replaceAll("template-", "").replaceAll("sdb", disk),
             btn1: function (index) {
                 disk = $("#disk-1").val()
                 filesystem = $("#filesystem-1").val()

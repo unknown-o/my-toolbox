@@ -153,11 +153,11 @@ class my_toolbox_main:
         fstabFileOld.close()
         with open("/etc/fstab", 'w') as f:
             f.write(fstabNew)
-        os.popen("umount -v " + args.partition)
+        os.popen("umount -v /dev/" + args.partition)
         if(not args.partition in os.popen("df -h").read()):
             return {'msg': '成功卸载分区[' + args.partition + ']！', 'status': 1}
         else:
-            return {'msg': "出现了一个错误，卸载失败！", 'status': 1}
+            return {'msg': "出现了一个错误，卸载失败！", 'status': -1}
 
     def formatPartition(self, args):
         fileList = os.popen("ls -la " + args.mountPoint).read()
