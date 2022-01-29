@@ -187,6 +187,31 @@ class my_toolbox_main:
             f.write(hostsNew)
         return {'msg': '成功删除此条hosts', 'status': 1}
 
+    def getDisksInfo(self, args):
+        disksInfo=os.popen("lsblk -f -n").read().split("\n")
+        disksInfoDict = {}
+        for item1 in disksInfo:
+            item1 = re.sub(' +', ' ', item1)
+            diskInfo = item1.replace("\"","").split(" ")
+            if(len(diskInfo) != 1 and "loop" not in diskInfo[0]):
+                if("├─" in diskInfo[0] or "└─" in diskInfo[0]):
+                    if(len(diskInfo) == 8):
+                        tempDict = {}
+                        tempDict['fstype'] = diskInfo[1]
+                        tempDict['fsver'] = diskInfo[2]
+                        tempDict['label'] = diskInfo[3]
+                        tempDict['uuid'] = diskInfo[4]
+                        tempDict['fsavail'] = diskInfo[5]
+                        tempDict['fsuse'] = diskInfo[6]
+                        tempDict['mountpoint'] = diskInfo[7]
+                        disksInfoDict[tempKey][diskInfo[0].replace("├─","").replace("└─","")] = tempDict
+                    else:
+                        disksInfoDict[tempKey][diskInfo[0].replace("├─","").replace("└─","")] = {}
+                else:
+                    tempKey = diskInfo[0]
+                    disksInfoDict[diskInfo[0]] = {}
+        return {'msg': '查询成功！', 'status': 1, "data": disksInfoDict}
+
     def getExecuteResult(self, args):
         if(os.popen("echo $(ps -ef | grep '/www/temp.sh' | grep -v grep | awk '{print $2}')").read() == "\n"):
             if(os.path.exists("/www/server/panel/plugin/my_toolbox/tmp/executeCommand.tmp")):

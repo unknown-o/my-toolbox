@@ -485,8 +485,9 @@
     }
 
     function getDiskInfo() {
-        $("#bashCommand").val("lsblk -f")
-        executeCommand("diskTools")
+        requestPlugin("getDisksInfo", {
+        }, function (rdata) {
+        })
     }
 
     function mountNewDisk() {
