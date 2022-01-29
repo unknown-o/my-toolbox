@@ -195,8 +195,8 @@ class my_toolbox_main:
             diskInfo = item1.replace("\"","").split(" ")
             if(len(diskInfo) != 1 and "loop" not in diskInfo[0]):
                 if("├─" in diskInfo[0] or "└─" in diskInfo[0]):
+                    tempDict = {}
                     if(len(diskInfo) == 8):
-                        tempDict = {}
                         tempDict['fstype'] = diskInfo[1]
                         tempDict['fsver'] = diskInfo[2]
                         tempDict['label'] = diskInfo[3]
@@ -204,9 +204,15 @@ class my_toolbox_main:
                         tempDict['fsavail'] = diskInfo[5]
                         tempDict['fsuse'] = diskInfo[6]
                         tempDict['mountpoint'] = diskInfo[7]
-                        disksInfoDict[tempKey][diskInfo[0].replace("├─","").replace("└─","")] = tempDict
                     else:
-                        disksInfoDict[tempKey][diskInfo[0].replace("├─","").replace("└─","")] = {}
+                        tempDict['fstype'] = ""
+                        tempDict['fsver'] = ""
+                        tempDict['label'] = ""
+                        tempDict['uuid'] = ""
+                        tempDict['fsavail'] = ""
+                        tempDict['fsuse'] = ""
+                        tempDict['mountpoint'] = ""
+                    disksInfoDict[tempKey][diskInfo[0].replace("├─","").replace("└─","")] = tempDict
                 else:
                     tempKey = diskInfo[0]
                     disksInfoDict[diskInfo[0]] = {}

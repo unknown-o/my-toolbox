@@ -137,14 +137,14 @@
                             <table class="table table-hover">
                                 <thead>
                                     <tr>
-                                        <th>分区地址</th>
+                                        <th>名称</th>
+                                        <th>类型</th>
                                         <th>挂载点</th>
                                         <th>文件系统</th>
-                                        <th>挂载参数</th>
                                         <th>可用操作</th>
                                     </tr>
                                 </thead>
-                                <tbody id="partitionFormBody">
+                                <tbody id="disksFormBody">
                                 </tbody>
                             </table>
                         </div>
@@ -408,7 +408,7 @@
         <div class="col-sm-12" style="margin-top: 10px">
             <div class="input-group">
                 <span style="width: 150px;" class="input-group-addon">磁盘地址</span>
-                <input id="template-disk-1" value="" type="text" class="form-control" placeholder="sdb">
+                <input id="template-disk-1" type="text" class="form-control" value="sdb">
             </div>
             <div class="input-group">
                 <span style="width: 150px;" class="input-group-addon">文件系统</span>
@@ -531,19 +531,32 @@
         })
     }
 
-    function formatPartition(partition, mountPoint, filesystem) {
-        warning("注意！您正在格式化分区！！<br><br>本次操作将格式化分区[" + partition + "]！<br><br>进行此操作后，此分区的数据将被全部清空！<br>如果您不小心格式化了存放有重要数据的磁盘，请立即停止写入并关闭服务器，然后联系专业数据恢复公司！<br><br>是否继续操作？", function () {
-            requestPlugin("formatPartition", {
-                partition: partition,
-                mountPoint: mountPoint,
-                filesystem: filesystem
-            }, function (rdata) {
-                getPartitionList()
-                layer.msg(rdata.msg, {
-                    icon: rdata.status ? 1 : 2
+    function formatPartition(partition, mountPoint) {
+        layer.open({
+            title: '格式化分区',
+            area: ['800px', '350px'],
+            content: $("#mount-disk-dialog").html().replaceAll("template-", "").replaceAll("磁盘地址", "分区地址").replaceAll("sdb", partition),
+            btn1: function (index) {
+                partition = $("#disk-1").val()
+                filesystem = $("#filesystem-1").val()
+                mountPoint = $("#mount-point-1").val()
+                options = $("#options-1").val()
+                warning("注意！您正在格式化分区！！<br><br>本次操作将格式化分区[" + partition + "]！<br><br>进行此操作后，此分区的数据将被全部清空！<br>如果您不小心格式化了存放有重要数据的磁盘，请立即停止写入并关闭服务器，然后联系专业数据恢复公司！<br><br>是否继续操作？", function () {
+                    requestPlugin("formatPartition", {
+                        partition: partition,
+                        mountPoint: mountPoint,
+                        filesystem: filesystem
+                    }, function (rdata) {
+                        getPartitionList()
+                        layer.msg(rdata.msg, {
+                            icon: rdata.status ? 1 : 2
+                        })
+                    })
                 })
-            })
+                layer.close(index)
+            }
         })
+
     }
 
     function mountPartition() {
@@ -788,9 +801,39 @@
     }
 
     function getPartitionList() {
-        requestPlugin("getPartitionList", "", function (rdata) {
+        requestPlugin("getDisksInfo", "", function (rdata) {
             if (rdata.status) {
-                $("#partitionFormBody").empty()
+                $("#disksFormBody").empty()
+                for (item in rdata.data) {
+                    if (JSON.stringify(rdata.data[item]) == "{}") {
+                        diskInfo = rdata.data[item]
+                        var $trTemp = $("<tr></tr>")
+                        $trTemp.append("<td class='line-limit-length' title='" + item + "' style='max-width:120px'>" + item + "</td>")
+                        $trTemp.append("<td class='line-limit-length' title='硬盘' style='max-width:120px'>硬盘</td>")
+                        $trTemp.append("<td class='line-limit-length' style='max-width:40px'></td>")
+                        $trTemp.append("<td></td>")
+                        //$trTemp.append("<td class='line-limit-length' title='" + rdata.data[i].options + "' style='max-width:40px'>" + rdata.data[i].options + "</td>")
+                        $trTemp.append("<td><button class='btn btn-success btn-sm' onclick='mountNewDisk(\"" + item + "\")'>自动挂载</button>")
+                        $("#disksFormBody").append($trTemp);
+                    } else {
+                        for (item1 in rdata.data[item]) {
+                            partitionInfo = rdata.data[item][item1]
+                            var $trTemp = $("<tr></tr>")
+                            $trTemp.append("<td class='line-limit-length' title='" + item1 + "' style='max-width:120px'>" + item1 + "</td>")
+                            $trTemp.append("<td class='line-limit-length' title='分区' style='max-width:120px'>分区</td>")
+                            $trTemp.append("<td class='line-limit-length' title='" + partitionInfo['mountpoint'] + "' style='max-width:40px'>" + partitionInfo['mountpoint'] + "</td>")
+                            $trTemp.append("<td>" + partitionInfo['fstype'] + " " + partitionInfo['fsver'] + "</td>")
+                            //$trTemp.append("<td class='line-limit-length' title='" + rdata.data[i].options + "' style='max-width:40px'>" + rdata.data[i].options + "</td>")
+                            if (partitionInfo['mountpoint'] == "/") {
+                                $trTemp.append("<td>不允许操作</td>")
+                            } else {
+                                $trTemp.append("<td><button class='btn btn-danger btn-sm' onclick='formatPartition(\"" + item1 + "\",\"" + partitionInfo['mountpoint'] + "\")'>格式化分区</button> <button class='btn btn-danger btn-sm' onclick='umountPartition(\"" + item1 + "\")'>卸载分区</button></td>")
+                            }
+                            $("#disksFormBody").append($trTemp);
+                        }
+                    }
+                }
+                /*
                 if (rdata.data.length > 0) {
                     for (var i = 0, l = rdata.data.length; i < l; i++) {
                         var $trTemp = $("<tr></tr>")
@@ -806,6 +849,7 @@
                         $("#partitionFormBody").append($trTemp);
                     }
                 }
+                */
             } else {
                 layer.msg(rdata.msg, {
                     icon: rdata.status ? 1 : 2
