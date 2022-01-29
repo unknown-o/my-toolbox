@@ -157,7 +157,7 @@ class my_toolbox_main:
                     diskInfoDict[item2.split("=")[0]] = ""
                 else:
                     diskInfoDict[item2.split("=")[0]] = item2.split("=")[1]
-            if(len(diskInfoDict)>6):
+            if(len(diskInfoDict)>3):
                 disksInfoDictT[diskInfoDict["NAME"]] = diskInfoDict
         disksInfo=os.popen("lsblk -f -n").read().split("\n")
         disksInfoDict = {}
@@ -171,8 +171,6 @@ class my_toolbox_main:
                     tempDict['fstype'] = disksInfoDictT[diskName]["FSTYPE"]
                     tempDict['label'] = disksInfoDictT[diskName]["LABEL"]
                     tempDict['uuid'] = disksInfoDictT[diskName]["UUID"]
-                    tempDict['fsavail'] = disksInfoDictT[diskName]["FSAVAIL"]
-                    tempDict['fsuse'] = disksInfoDictT[diskName]["FSUSE%"]
                     tempDict['mountpoint'] = disksInfoDictT[diskName]["MOUNTPOINT"]
                     disksInfoDict[tempKey][diskName] = tempDict
                 else:
