@@ -59,6 +59,46 @@ class my_toolbox_main:
         else:
             return {'msg': '扫描中...', 'status': -1}
 
+    def getPartitionList(self, args):
+        fstabFile = open("/etc/fstab")
+        partitionsArr = []
+        try:
+            while 1:
+                line = re.sub(' +', ' ', fstabFile.readline())
+                if(not line):
+                    break
+                if(line != "\n" and line[0] != "#" and len(line.split(" ")) > 4 and "dev" in line.split(" ")[0]):
+                    partitionsArr.append({"partition":line.split(" ")[0].strip(), "mount_point":line.split(" ")[1].strip(), "file_system":line.split(" ")[2].strip(), "options":line.split(" ")[3].strip()})
+        except:
+            return {'msg': "fstab文件存在语法错误！", "data": partitionsArr, 'status': -1}
+        return {'msg': "查询成功！", "data": partitionsArr, 'status': 1}
+
+    def umountPartition(self, args):
+        fstabFileOld = open("/etc/fstab")
+        fstabNew = ''
+        while 1:
+            line = fstabFileOld.readline()
+            if(not line):
+                break
+            if(not line == '\n'):
+                if(not args.partition in line):
+                    fstabNew = fstabNew + line
+        fstabFileOld.close()
+        with open("/etc/fstab", 'w') as f:
+            f.write(fstabNew)
+        os.popen("umount -v /dev/" + args.partition)
+        if(not args.partition in os.popen("df -h").read()):
+            return {'msg': '成功卸载分区[' + args.partition + ']！', 'status': 1}
+        else:
+            return {'msg': "出现了一个错误，卸载失败！", 'status': -1}
+
+    def formatPartition(self, args):
+        fileList = os.popen("ls -la /dev/" + args.mountPoint).read()
+        os.popen('umount /dev/' + args.partition)
+        result = os.popen('mkfs -F -t ' + args.filesystem + " /dev/" + args.partition).read()
+        os.popen("mount /dev/" + args.partition + " " + args.mountPoint)
+        return {'msg': '格式化完成！', 'data':result, 'status': 1}
+
     def mountNewDisk(self, args):
         if(not args.disk in os.popen("ls /dev").read()):
             return {'msg': '不存在指定磁盘', 'status': -1}
@@ -104,90 +144,6 @@ class my_toolbox_main:
         else:
             return {'msg': "出现了一个错误，挂载失败！", 'status': -1}
 
-    def getHostsFile(self, args):
-        return {'msg': "查询成功！", "data": open("/etc/hosts").read(), 'status': 1}
-
-    def saveHostsFile(self, args):
-        os.system("cp /etc/hosts /etc/hosts.bak")
-        with open('/etc/hosts', 'w') as hostsFile:
-            hostsFile.write(args.data)
-        return {'msg': '编辑hosts成功！', 'status': 1}
-
-    def getHostsList(self, args):
-        hostsFile = open("/etc/hosts")
-        hostsArr = []
-        try:
-            while 1:
-                line = hostsFile.readline()
-                if(not line):
-                    break
-                if(line != "\n" and line[0] != "#"):
-                    hostsArr.append({"ip":line.split(" ", 1)[0].strip(), "domain":line.split(" ", 1)[1].strip(), "original":line.strip("\n")})
-        except:
-            return {'msg': "hosts文件存在语法错误！请手动修复错误！", "data": hostsArr, 'status': -1}
-        return {'msg': "查询成功！", "data": hostsArr, 'status': 1}
-
-    def getPartitionList(self, args):
-        fstabFile = open("/etc/fstab")
-        partitionsArr = []
-        try:
-            while 1:
-                line = re.sub(' +', ' ', fstabFile.readline())
-                if(not line):
-                    break
-                if(line != "\n" and line[0] != "#" and len(line.split(" ")) > 4 and "dev" in line.split(" ")[0]):
-                    partitionsArr.append({"partition":line.split(" ")[0].strip(), "mount_point":line.split(" ")[1].strip(), "file_system":line.split(" ")[2].strip(), "options":line.split(" ")[3].strip()})
-        except:
-            return {'msg': "fstab文件存在语法错误！", "data": partitionsArr, 'status': -1}
-        return {'msg': "查询成功！", "data": partitionsArr, 'status': 1}
-
-    def umountPartition(self, args):
-        fstabFileOld = open("/etc/fstab")
-        fstabNew = ''
-        while 1:
-            line = fstabFileOld.readline()
-            if(not line):
-                break
-            if(not line == '\n'):
-                if(not args.partition in line):
-                    fstabNew = fstabNew + line
-        fstabFileOld.close()
-        with open("/etc/fstab", 'w') as f:
-            f.write(fstabNew)
-        os.popen("umount -v /dev/" + args.partition)
-        if(not args.partition in os.popen("df -h").read()):
-            return {'msg': '成功卸载分区[' + args.partition + ']！', 'status': 1}
-        else:
-            return {'msg': "出现了一个错误，卸载失败！", 'status': -1}
-
-    def formatPartition(self, args):
-        fileList = os.popen("ls -la /dev/" + args.mountPoint).read()
-        os.popen('umount /dev/' + args.partition)
-        result = os.popen('mkfs -F -t ' + args.filesystem + " /dev/" + args.partition).read()
-        os.popen("mount /dev/" + args.partition + " " + args.mountPoint)
-        return {'msg': '格式化完成！', 'data':result, 'status': 1}
-
-    def addHosts(self, args):
-        with open('/etc/hosts', 'a') as hostsFile:
-            hostsFile.write('\n')
-            hostsFile.write(args.ip+' '+args.domain)
-        return {'msg': '编辑hosts成功！', 'status': 1}
-
-    def delHosts(self, args):
-        hostsFileOld = open("/etc/hosts")
-        hostsNew = ''
-        while(1):
-            line = hostsFileOld.readline()
-            if(not line):
-                break
-            if(not line == '\n'):
-                if(not args.original in line):
-                    hostsNew = hostsNew + line
-        hostsFileOld.close()
-        with open("/etc/hosts", 'w') as f:
-            f.write(hostsNew)
-        return {'msg': '成功删除此条hosts', 'status': 1}
-
     def getDisksInfo(self, args):
         # 这里的屎山一定抽时间优化掉
         disksInfo=os.popen("lsblk -f -P").read().split("\n")
@@ -224,6 +180,72 @@ class my_toolbox_main:
                     disksInfoDict[diskInfo[0]] = {}
         return {'msg': '查询成功！', 'status': 1, "data": disksInfoDict}
 
+    def addHosts(self, args):
+        with open('/etc/hosts', 'a') as hostsFile:
+            hostsFile.write('\n')
+            hostsFile.write(args.ip+' '+args.domain)
+        return {'msg': '编辑hosts成功！', 'status': 1}
+
+    def delHosts(self, args):
+        hostsFileOld = open("/etc/hosts")
+        hostsNew = ''
+        while(1):
+            line = hostsFileOld.readline()
+            if(not line):
+                break
+            if(not line == '\n'):
+                if(not args.original in line):
+                    hostsNew = hostsNew + line
+        hostsFileOld.close()
+        with open("/etc/hosts", 'w') as f:
+            f.write(hostsNew)
+        return {'msg': '成功删除此条hosts', 'status': 1}
+
+    def getHostsFile(self, args):
+        return {'msg': "查询成功！", "data": open("/etc/hosts").read(), 'status': 1}
+
+    def saveHostsFile(self, args):
+        os.system("cp /etc/hosts /etc/hosts.bak")
+        with open('/etc/hosts', 'w') as hostsFile:
+            hostsFile.write(args.data)
+        return {'msg': '编辑hosts成功！', 'status': 1}
+
+    def getHostsList(self, args):
+        hostsFile = open("/etc/hosts")
+        hostsArr = []
+        try:
+            while 1:
+                line = hostsFile.readline()
+                if(not line):
+                    break
+                if(line != "\n" and line[0] != "#"):
+                    hostsArr.append({"ip":line.split(" ", 1)[0].strip(), "domain":line.split(" ", 1)[1].strip(), "original":line.strip("\n")})
+        except:
+            return {'msg': "hosts文件存在语法错误！请手动修复错误！", "data": hostsArr, 'status': -1}
+        return {'msg': "查询成功！", "data": hostsArr, 'status': 1}
+
+    def executeCommand(self, args):
+        if(not os.path.exists("/www/server/panel/pyenv/bin/python")):
+            return {'msg': '不是python3版本的宝塔，暂时无法使用本功能！', 'status': -1}
+        if(os.path.exists("/www/server/panel/plugin/my_toolbox/tmp/executeCommand.tmp")):
+            os.remove('/www/server/panel/plugin/my_toolbox/tmp/executeCommand.tmp')
+        public.ExecShell('kill -9 ' + str(os.popen("echo $(ps -ef | grep '/www/temp.sh' | grep -v grep | awk '{print $2}')").read()))
+        with open("/www/temp.sh", 'w') as bashCommandFile:
+            bashCommandFile.write(args.bashCommand)
+            bashCommandFile.write("\necho finsh > /www/server/panel/plugin/my_toolbox/tmp/executeCommand.tmp")
+        task = panelTask.bt_task()
+        logList = os.listdir('/www/server/panel/tmp/')
+        logList.sort(key=lambda x:int(x[:-4]))
+        task.create_task("命令执行", 0, 'bash /www/temp.sh')
+        return {'msg': '成功创建任务', "logFileName":str(int(logList[-1].split(".")[0])+1)+".log", 'status': 1}
+
+    def getSitemapGenerationStatus(self, args):
+        if(os.path.exists("/www/server/panel/plugin/my_toolbox/static/sitemap.xml")):
+            data = open("/www/server/panel/plugin/my_toolbox/static/sitemap.xml").read()
+            return {'msg': "生成成功", "data": data, 'status': 1}
+        else:
+            return {'msg': '扫描中...', 'status': -1}
+
     def getExecuteResult(self, args):
         if(os.popen("echo $(ps -ef | grep '/www/temp.sh' | grep -v grep | awk '{print $2}')").read() == "\n"):
             if(os.path.exists("/www/server/panel/plugin/my_toolbox/tmp/executeCommand.tmp")):
@@ -237,13 +259,6 @@ class my_toolbox_main:
                 return {"msg": "抱歉，找不到运行结果！执行命令失败？", "result":"", "status":2}
         else:
             return {'msg': '正在执行中...', 'status': -1}
-
-    def getSitemapGenerationStatus(self, args):
-        if(os.path.exists("/www/server/panel/plugin/my_toolbox/static/sitemap.xml")):
-            data = open("/www/server/panel/plugin/my_toolbox/static/sitemap.xml").read()
-            return {'msg': "生成成功", "data": data, 'status': 1}
-        else:
-            return {'msg': '扫描中...', 'status': -1}
 
     def sitemapGeneration(self, args):
         if(not os.path.exists("/www/server/panel/pyenv/bin/python")):
@@ -269,21 +284,6 @@ class my_toolbox_main:
     def logWrite(self, args):
         public.WriteLog(args.logType,args.logDetail)
         return {'msg': '写入成功', 'status': 1}
-
-    def executeCommand(self, args):
-        if(not os.path.exists("/www/server/panel/pyenv/bin/python")):
-            return {'msg': '不是python3版本的宝塔，暂时无法使用本功能！', 'status': -1}
-        if(os.path.exists("/www/server/panel/plugin/my_toolbox/tmp/executeCommand.tmp")):
-            os.remove('/www/server/panel/plugin/my_toolbox/tmp/executeCommand.tmp')
-        public.ExecShell('kill -9 ' + str(os.popen("echo $(ps -ef | grep '/www/temp.sh' | grep -v grep | awk '{print $2}')").read()))
-        with open("/www/temp.sh", 'w') as bashCommandFile:
-            bashCommandFile.write(args.bashCommand)
-            bashCommandFile.write("\necho finsh > /www/server/panel/plugin/my_toolbox/tmp/executeCommand.tmp")
-        task = panelTask.bt_task()
-        logList = os.listdir('/www/server/panel/tmp/')
-        logList.sort(key=lambda x:int(x[:-4]))
-        task.create_task("命令执行", 0, 'bash /www/temp.sh')
-        return {'msg': '成功创建任务', "logFileName":str(int(logList[-1].split(".")[0])+1)+".log", 'status': 1}
 
     def requestPage(self, args):
         try:
