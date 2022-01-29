@@ -164,7 +164,7 @@ class my_toolbox_main:
         fileList = os.popen("ls -la /dev/" + args.mountPoint).read()
         os.popen('umount /dev/' + args.partition)
         result = os.popen('mkfs -F -t ' + args.filesystem + " /dev/" + args.partition).read()
-        os.popen("mount " + args.partition + " " + args.mountPoint)
+        os.popen("mount /dev/" + args.partition + " " + args.mountPoint)
         return {'msg': '格式化完成！', 'data':result, 'status': 1}
 
     def addHosts(self, args):
