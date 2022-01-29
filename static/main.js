@@ -97,11 +97,11 @@ function formatPartition(partition, mountPoint) {
 
 }
 
-function mountPartition() {
+function mountPartition(partition) {
     layer.open({
         title: '挂载分区',
         area: ['800px', '350px'],
-        content: $("#mount-disk-dialog").html().replaceAll("template-", "").replaceAll("磁盘地址", "分区地址").replaceAll("sdb", "sdb1"),
+        content: $("#mount-disk-dialog").html().replaceAll("template-", "").replaceAll("磁盘地址", "分区地址").replaceAll("sdb", partition),
         btn1: function (index) {
             partition = $("#disk-1").val()
             filesystem = $("#filesystem-1").val()
