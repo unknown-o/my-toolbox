@@ -150,30 +150,30 @@ class my_toolbox_main:
         disksInfoDictT = {}
         for item1 in disksInfo:
             diskInfo = item1.replace("\"","").split(" ")
-            diskInfoArr = []
+            diskInfoDict = {}
             for item2 in diskInfo:
+                keyName = item2.split("=")[0]
                 if(len(item2.split("="))==1):
-                    diskInfoArr.append("")
+                    diskInfoDict[item2.split("=")[0]] = ""
                 else:
-                    diskInfoArr.append(item2.split("=")[1])
-            if(len(diskInfoArr)==8):
-                disksInfoDictT[diskInfoArr[0]] = diskInfoArr
+                    diskInfoDict[item2.split("=")[0]] = item2.split("=")[1]
+            if(len(diskInfoDict)>6):
+                disksInfoDictT[diskInfoDict["NAME"]] = diskInfoDict
         disksInfo=os.popen("lsblk -f -n").read().split("\n")
         disksInfoDict = {}
         for item1 in disksInfo:
             item1 = re.sub(' +', ' ', item1)
             diskInfo = item1.replace("\"","").split(" ")
-            if(len(diskInfo) != 1 and "loop" not in diskInfo[0]):
+            if(len(diskInfo) != 1 and "loop" not in diskInfo[0] and not "" == diskInfo[0]):
                 if("├─" in diskInfo[0] or "└─" in diskInfo[0]):
                     tempDict = {}
                     diskName = diskInfo[0].replace("├─","").replace("└─","")
-                    tempDict['fstype'] = disksInfoDictT[diskName][1]
-                    tempDict['fsver'] = disksInfoDictT[diskName][2]
-                    tempDict['label'] = disksInfoDictT[diskName][3]
-                    tempDict['uuid'] = disksInfoDictT[diskName][4]
-                    tempDict['fsavail'] = disksInfoDictT[diskName][5]
-                    tempDict['fsuse'] = disksInfoDictT[diskName][6]
-                    tempDict['mountpoint'] = disksInfoDictT[diskName][7]
+                    tempDict['fstype'] = disksInfoDictT[diskName]["FSTYPE"]
+                    tempDict['label'] = disksInfoDictT[diskName]["LABEL"]
+                    tempDict['uuid'] = disksInfoDictT[diskName]["UUID"]
+                    tempDict['fsavail'] = disksInfoDictT[diskName]["FSAVAIL"]
+                    tempDict['fsuse'] = disksInfoDictT[diskName]["FSUSE%"]
+                    tempDict['mountpoint'] = disksInfoDictT[diskName]["MOUNTPOINT"]
                     disksInfoDict[tempKey][diskName] = tempDict
                 else:
                     tempKey = diskInfo[0]
