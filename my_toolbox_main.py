@@ -86,20 +86,21 @@ class my_toolbox_main:
     def mountPartition(self, args):
         if(not args.partition in os.popen("ls /dev").read()):
             return {'msg': '不存在指定磁盘分区', 'status': -1}
-        if(args.partition in open("/etc/fstab").read()):
-            return {'msg': '此磁盘已经被挂载！', 'status': -1}
         if(not args.filesystem in os.popen("cat /proc/filesystems").read()):
             return {'msg': '您的系统不支持文件系统[' + args.filesystem + ']', 'status': -1}
         if(args.mountPoint in os.popen("df -h").read() or args.partition in os.popen("df -h").read()):
             return {'msg': '磁盘或挂载点已被使用！', 'status': -1}
         if(not os.path.exists(args.mountPoint)):
             os.makedirs(args.mountPoint) 
-        with open("/etc/fstab", 'a') as f:
-            f.write("\n/dev/" + args.partition + "    " + args.mountPoint + "    " + args.filesystem + "    " + args.options + "    0    0")
+        returnMsg = "挂载成功！此磁盘挂载信息已在[/etc/fstab]中存在，优先使用[/etc/fstab]中的挂载信息，忽略输入的挂载信息！"
+        if(not args.partition in open("/etc/fstab").read()):
+            returnMsg = "挂载成功！"
+            with open("/etc/fstab", 'a') as f:
+                f.write("\n/dev/" + args.partition + "    " + args.mountPoint + "    " + args.filesystem + "    " + args.options + "    0    0")
         os.popen("mount -a")
         time.sleep(1)
         if(args.partition in os.popen("df -h").read()):
-            return {'msg': "挂载成功！", 'status': 1}
+            return {'msg': returnMsg, 'status': 1}
         else:
             return {'msg': "出现了一个错误，挂载失败！", 'status': -1}
 
