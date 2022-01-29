@@ -127,7 +127,7 @@
                     </ul>
                 </div>
                 <div id="diskTools" style="display: none;">
-                    <H3>磁盘工具</H3><br>
+                    <H3>磁盘工具 <button class='btn btn-success btn-sm' onclick="getPartitionList()">刷新</button></H3><br>
                     <div style="max-height:402px;overflow:auto;border:#ddd 1px solid;">
                         <div class="divtable">
                             <table class="table table-hover">
@@ -195,7 +195,7 @@
                         <li>如果上一次运行的命令还没有执行完成就执行下一个命令，上一个命令将会被强制结束</li>
                     </ul>
                 </div>
-                <div id="shortURL" style="display: none;">
+                <div id="logWrite" style="display: none;">
                     <H3>日志写入</H3><br><br>
                     <div class='line'>
                         <span class='tname'>操作类型</span>
