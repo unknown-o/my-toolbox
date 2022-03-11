@@ -266,15 +266,6 @@ class my_toolbox_main:
         task.create_task("创建网站地图",0,"/www/server/panel/pyenv/bin/python /www/server/panel/plugin/my_toolbox/sitemap.py '" + args.url + "' " + str(args.maxNumber))
         return {'msg': '成功创建任务', 'status': 1}
 
-    def displayOnce(self, args):
-        if(os.path.exists('/www/server/panel/plugin/my_toolbox/tmp/'+args.item)):
-            return {'result': 0, 'status': 1}
-        else:
-            displayOnceFlag = open('/www/server/panel/plugin/my_toolbox/tmp/'+args.item, 'a')
-            displayOnceFlag.write('showed')
-            displayOnceFlag.close()
-            return {'result': 1, 'status': 1}
-
     def logWrite(self, args):
         public.WriteLog(args.logType,args.logDetail)
         return {'msg': '写入成功', 'status': 1}
