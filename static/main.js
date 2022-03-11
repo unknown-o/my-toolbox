@@ -341,6 +341,7 @@ function getDiskInfo() {
     requestPlugin("getDiskInfo", "", function (rdata) {
         if (rdata.status) {
             $("#disksFormBody").empty()
+            systemPath = ['/etc', '/', '/root', '/var', '/boot', '/home', '/bin', '/dev', '/srv', '/usr', '/lib', '/lib64', '/sys', '/proc', '/sbin']
             for (var i = 0; i < rdata.data.length; i++) {
                 if (rdata.data[i].partition.length == 0) {
                     diskInfo = rdata.data[i]
@@ -362,8 +363,12 @@ function getDiskInfo() {
                         $trTemp.append("<td class='line-limit-length' title='" + mountpoint + "' style='max-width:40px'>" + mountpoint + "</td>")
                         $trTemp.append("<td>" + fstype + "</td>")
                         availableActions = ""
-                        if (mountpoint == "/" || mountpoint == "/boot") {
-                            availableActions = "禁止操作"
+                        if (systemPath.indexOf(mountpoint) > -1) {
+                            availableActions = "不允许操作系统目录"
+                        } else if (partitionInfo['fstype'].toLowerCase().indexOf("lvm") != -1) {
+                            availableActions = "暂不支持LVM"
+                        } else if (mountpoint == "/www") {
+                            availableActions = "暂不支持迁移宝塔"
                         } else {
                             availableActions += " <button class='btn btn-danger btn-sm' onclick='formatPartition(\"/dev/" + partitionInfo['device'] + "\",\"" + partitionInfo['mountpoint'] + "\")'>格式化分区</button> "
                             if (partitionInfo['fstype'] != "" && partitionInfo['mountpoint'] == "") {
