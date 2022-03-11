@@ -66,27 +66,23 @@ class my_toolbox_main:
         dfInfo = os.popen('df -h').read()
         lvmInfo = os.popen('pvs').read()
         diskArr = []
-        partitionsArr = []
-        # partitionsList = []
-        partitionsInfo = psutil.disk_partitions()
-        for item in partitionsInfo:
-            tmp = {}
-            tmp['device'] = item.device
-            tmp['mountpoint'] = item.mountpoint
-            tmp['fstype'] = item.fstype
-            tmp['opts'] = item.opts
-            # partitionsList.append(item.device)
-            partitionsArr.append(tmp)
-        # partitionsList = np.asarray(partitionsList)
-        # np.char.count(partitionsList,"loop").tolist()
         for item in diskInfo:
             tmp = {}
             item = item.split(' ')
             tmp['device'] = item[1].split(':')[0]
             tmp['partition'] = []
-            for item1 in partitionsArr:
-                if(tmp['device'] in item1['device']):
-                    tmp['partition'].append(item1)
+            partitionInfo = re.sub(' +', ' ', os.popen('lsblk -f -P %s'%tmp['device']).read()).strip().split('\n')
+            for item1 in partitionInfo:
+                partitionInfoP = item1.replace("\"","").split(" ")
+                partitionInfoDict = {}
+                for item2 in partitionInfoP:
+                    keyName = item2.split("=")[0].lower()
+                    keyName = (keyName, "device")[keyName == "name"]
+                    if(len(item2.split("="))==1):
+                        partitionInfoDict[keyName] = "-"
+                    else:
+                        partitionInfoDict[keyName] = item2.split("=")[1]
+                tmp['partition'].append(partitionInfoDict)
             tmp['mounted'] = tmp['device'] in dfInfo or tmp['device'] in lvmInfo
             tmp['has_lvm'] = tmp['device'] in lvmInfo
             tmp['warning'] = tmp['device'] in lvmInfo and len(tmp['partition']) == 0
