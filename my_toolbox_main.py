@@ -18,6 +18,8 @@ import json
 import time
 import requests
 import panelTask
+import psutil
+# import numpy as np
 
 os.chdir("/www/server/panel")
 
@@ -59,19 +61,40 @@ class my_toolbox_main:
         else:
             return {'msg': '扫描中...', 'status': -1}
 
-    def getPartitionList(self, args):
-        fstabFile = open("/etc/fstab")
+    def getDiskInfo(self, args):
+        diskInfo = os.popen('fdisk -l |grep -E "Disk /dev/.*?:|磁盘 /dev/.*?："|grep -v  -E "/dev/loop|/dev/mapper"').read().strip().split('\n')
+        dfInfo = os.popen('df -h').read()
+        lvmInfo = os.popen('pvs').read()
+        diskArr = []
         partitionsArr = []
-        try:
-            while 1:
-                line = re.sub(' +', ' ', fstabFile.readline())
-                if(not line):
-                    break
-                if(line != "\n" and line[0] != "#" and len(line.split(" ")) > 4 and "dev" in line.split(" ")[0]):
-                    partitionsArr.append({"partition":line.split(" ")[0].strip(), "mount_point":line.split(" ")[1].strip(), "file_system":line.split(" ")[2].strip(), "options":line.split(" ")[3].strip()})
-        except:
-            return {'msg': "fstab文件存在语法错误！", "data": partitionsArr, 'status': -1}
-        return {'msg': "查询成功！", "data": partitionsArr, 'status': 1}
+        # partitionsList = []
+        partitionsInfo = psutil.disk_partitions()
+        for item in partitionsInfo:
+            tmp = {}
+            tmp['device'] = item.device
+            tmp['mountpoint'] = item.mountpoint
+            tmp['fstype'] = item.fstype
+            tmp['opts'] = item.opts
+            # partitionsList.append(item.device)
+            partitionsArr.append(tmp)
+        # partitionsList = np.asarray(partitionsList)
+        # np.char.count(partitionsList,"loop").tolist()
+        for item in diskInfo:
+            tmp = {}
+            item = item.split(' ')
+            tmp['device'] = item[1].split(':')[0]
+            tmp['partition'] = []
+            for item1 in partitionsArr:
+                if(tmp['device'] in item1['device']):
+                    tmp['partition'].append(item1)
+            tmp['mounted'] = tmp['device'] in dfInfo or tmp['device'] in lvmInfo
+            tmp['has_lvm'] = tmp['device'] in lvmInfo
+            tmp['warning'] = tmp['device'] in lvmInfo and len(tmp['partition']) == 0
+            tmp['size_gb'] = item[2]
+            tmp['size_bytes'] = item[4]
+            tmp['sectors'] = item[6]
+            diskArr.append(tmp)
+        return diskArr
 
     def umountPartition(self, args):
         fstabFileOld = open("/etc/fstab")
@@ -143,40 +166,6 @@ class my_toolbox_main:
             return {'msg': returnMsg, 'status': 1}
         else:
             return {'msg': "出现了一个错误，挂载失败！", 'status': -1}
-
-    def getDisksInfo(self, args):
-        # 这里的屎山一定抽时间优化掉
-        disksInfo=os.popen("lsblk -f -P").read().split("\n")
-        disksInfoDictT = {}
-        for item1 in disksInfo:
-            diskInfo = item1.replace("\"","").split(" ")
-            diskInfoDict = {}
-            for item2 in diskInfo:
-                keyName = item2.split("=")[0]
-                if(len(item2.split("="))==1):
-                    diskInfoDict[item2.split("=")[0]] = ""
-                else:
-                    diskInfoDict[item2.split("=")[0]] = item2.split("=")[1]
-            if(len(diskInfoDict)>3):
-                disksInfoDictT[diskInfoDict["NAME"]] = diskInfoDict
-        disksInfo=os.popen("lsblk -f -n").read().split("\n")
-        disksInfoDict = {}
-        for item1 in disksInfo:
-            item1 = re.sub(' +', ' ', item1)
-            diskInfo = item1.replace("\"","").split(" ")
-            if(len(diskInfo) != 1 and "loop" not in diskInfo[0] and "sr" not in diskInfo[0] and not "" == diskInfo[0]):
-                if("├─" in diskInfo[0] or "└─" in diskInfo[0]):
-                    tempDict = {}
-                    diskName = diskInfo[0].replace("├─","").replace("└─","")
-                    tempDict['fstype'] = disksInfoDictT[diskName]["FSTYPE"]
-                    tempDict['label'] = disksInfoDictT[diskName]["LABEL"]
-                    tempDict['uuid'] = disksInfoDictT[diskName]["UUID"]
-                    tempDict['mountpoint'] = disksInfoDictT[diskName]["MOUNTPOINT"]
-                    disksInfoDict[tempKey][diskName] = tempDict
-                else:
-                    tempKey = diskInfo[0]
-                    disksInfoDict[diskInfo[0]] = {}
-        return {'msg': '查询成功！', 'status': 1, "data": disksInfoDict}
 
     def addHosts(self, args):
         with open('/etc/hosts', 'a') as hostsFile:
