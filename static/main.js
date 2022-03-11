@@ -338,7 +338,7 @@ function getHostsList() {
 }
 
 function getPartitionList() {
-    requestPlugin("getDisksInfo", "", function (rdata) {
+    requestPlugin("getPartitionInfo", "", function (rdata) {
         if (rdata.status) {
             $("#disksFormBody").empty()
             for (item in rdata.data) {
@@ -668,6 +668,7 @@ function requestPlugin(functionName, args, callback, timeout) {
                     return true
                 }
             } else {
+                /*
                 $("#pluginMain").hide(200)
                 $("#fatalError").show(100)
                 $('.layui-layer-page').css({
@@ -676,6 +677,7 @@ function requestPlugin(functionName, args, callback, timeout) {
                 layer.msg(rdata.msg, {
                     icon: 2
                 })
+                */
             }
         },
         error: function (ex) {
