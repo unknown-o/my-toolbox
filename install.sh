@@ -22,6 +22,7 @@ Install()
 		echo '如果安装失败，请手动安装下试试？'
 	fi
 	/www/server/panel/pyenv/bin/pip install bs4
+	/www/server/panel/pyenv/bin/pip install psutil
 	/www/server/panel/pyenv/bin/pip install requests
 	echo '================================================'
 	echo '安装完成'
