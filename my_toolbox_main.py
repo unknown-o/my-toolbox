@@ -112,6 +112,8 @@ class my_toolbox_main:
             return {'msg': "出现了一个错误，卸载失败！", 'status': -1}
 
     def formatPartition(self, args):
+        if(not args.filesystem in os.popen("cat /proc/filesystems").read()):
+            return {'msg': '您的系统不支持文件系统[' + args.filesystem + ']', 'status': -1}
         fileList = os.popen("ls -la " + args.mountPoint).read()
         os.popen('umount ' + args.partition)
         result = os.popen('mkfs -F -t ' + args.filesystem + " " + args.partition).read()
