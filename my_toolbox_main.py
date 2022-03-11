@@ -147,7 +147,7 @@ class my_toolbox_main:
             return {'msg': "出现了一个错误，挂载失败！", "data": result, 'status': -1}
 
     def mountPartition(self, args):
-        if(not args.partition in os.popen("ls /dev").read()):
+        if(not args.partition.split("/dev/")[1] in os.popen("ls /dev").read()):
             return {'msg': '不存在指定磁盘分区', 'status': -1}
         if(not args.filesystem in os.popen("cat /proc/filesystems").read()):
             return {'msg': '您的系统不支持文件系统[' + args.filesystem + ']', 'status': -1}
