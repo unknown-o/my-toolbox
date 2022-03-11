@@ -371,12 +371,14 @@ function getDiskInfo() {
                             availableActions = "暂不支持迁移宝塔"
                         } else {
                             availableActions += " <button class='btn btn-danger btn-sm' onclick='formatPartition(\"/dev/" + partitionInfo['device'] + "\",\"" + partitionInfo['mountpoint'] + "\")'>格式化分区</button> "
-                            if (partitionInfo['fstype'] != "" && partitionInfo['mountpoint'] == "") {
-                                availableActions += " <button class='btn btn-success btn-sm' onclick='mountPartition(\"/dev/" + partitionInfo['device'] + "\")'>挂载分区</button> "
-                            } else {
-                                availableActions += " <button class='btn btn-danger btn-sm' onclick='umountPartition(\"/dev/" + partitionInfo['device'] + "\")'>卸载分区</button> "
-
+                            if (partitionInfo['fstype'] != "") {
+                                if (partitionInfo['mountpoint'] == "") {
+                                    availableActions += " <button class='btn btn-success btn-sm' onclick='mountPartition(\"/dev/" + partitionInfo['device'] + "\")'>挂载分区</button> "
+                                } else {
+                                    availableActions += " <button class='btn btn-danger btn-sm' onclick='umountPartition(\"/dev/" + partitionInfo['device'] + "\")'>卸载分区</button> "
+                                }
                             }
+
                         }
                         $trTemp.append("<td>" + availableActions + "</td>")
                         $("#disksFormBody").append($trTemp);
