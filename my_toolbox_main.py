@@ -72,7 +72,7 @@ class my_toolbox_main:
             tmp['device'] = item[1].split(':')[0]
             tmp['partition'] = []
             partitionInfo = re.sub(' +', ' ', os.popen('lsblk -f -P %s'%tmp['device']).read()).strip().split('\n')
-            for item1 in partitionInfo:
+            for item1 in partitionInfo[1:]:
                 partitionInfoP = item1.replace("\"","").split(" ")
                 partitionInfoDict = {}
                 for item2 in partitionInfoP:
@@ -81,7 +81,7 @@ class my_toolbox_main:
                     if(len(item2.split("="))==1):
                         partitionInfoDict[keyName] = "-"
                     else:
-                        partitionInfoDict[keyName] = item2.split("=")[1]
+                        partitionInfoDict[keyName] = (item2.split("=")[1], "-")[item2.split("=")[1] == ""]
                 tmp['partition'].append(partitionInfoDict)
             tmp['mounted'] = tmp['device'] in dfInfo or tmp['device'] in lvmInfo
             tmp['has_lvm'] = tmp['device'] in lvmInfo
