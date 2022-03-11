@@ -471,18 +471,6 @@ function saveHostsFile() {
     })
 }
 
-function addSoftLink() {
-    requestPlugin("addSoftLink", {
-        source: $("#sourceDirectory").val(),
-        softSource: $("#softSourceDirectory").val()
-    }, function (rdata) {
-        getHostsList()
-        layer.msg(rdata.msg, {
-            icon: rdata.status ? 1 : 2
-        })
-    })
-}
-
 function executeCommand(type) {
     if ($("#bashCommand").val() == "") {
         $("#bashCommand").val("echo Vocaloid is ALIVE")

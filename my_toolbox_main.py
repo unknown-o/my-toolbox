@@ -303,9 +303,3 @@ class my_toolbox_main:
             return {'msg': '成功创建任务',"data": result ,'status': 1}
         except:
             return {'message': '错误！未知原因引起请求程序出错崩溃！', 'result': "HttpCode: "+str(response.status_code)+"\n\n"+response.text, 'status': 2}
-
-    def addSoftLink(self, args):
-        if(not (os.path.exists(args.source) and os.path.exists(args.softSource))):
-            return {'msg': '输入数据存在错误！', 'status': -1}
-        os.system('ln -s ' + args.source+' ' + args.softSource)
-        return {'msg': '成功创建软链接！', 'status': 1}
