@@ -354,20 +354,22 @@ function getDiskInfo() {
                 } else {
                     for (var j = 0; j < rdata.data[i].partition.length; j++) {
                         partitionInfo = rdata.data[i].partition[j]
+                        mountpoint = partitionInfo['mountpoint'] == "" ? "-" : partitionInfo['mountpoint']
+                        fstype = partitionInfo['fstype'] == "" ? "-" : partitionInfo['fstype']
                         var $trTemp = $("<tr></tr>")
                         $trTemp.append("<td class='line-limit-length' title='" + partitionInfo['device'] + "' style='max-width:120px'>" + partitionInfo['device'] + "</td>")
                         $trTemp.append("<td class='line-limit-length' title='分区' style='max-width:120px'>分区</td>")
-                        $trTemp.append("<td class='line-limit-length' title='" + partitionInfo['mountpoint'] + "' style='max-width:40px'>" + partitionInfo['mountpoint'] + "</td>")
-                        $trTemp.append("<td>" + partitionInfo['fstype'] + "</td>")
+                        $trTemp.append("<td class='line-limit-length' title='" + mountpoint + "' style='max-width:40px'>" + mountpoint + "</td>")
+                        $trTemp.append("<td>" + fstype + "</td>")
                         availableActions = ""
-                        if (partitionInfo['mountpoint'] == "/" || partitionInfo['mountpoint'] == "/boot") {
+                        if (mountpoint == "/" || mountpoint == "/boot") {
                             availableActions = "禁止操作"
                         } else {
-                            availableActions += " <button class='btn btn-danger btn-sm' onclick='formatPartition(\"" + partitionInfo['device'] + "\",\"" + partitionInfo['mountpoint'] + "\")'>格式化分区</button> "
+                            availableActions += " <button class='btn btn-danger btn-sm' onclick='formatPartition(\"/dev/" + partitionInfo['device'] + "\",\"" + partitionInfo['mountpoint'] + "\")'>格式化分区</button> "
                             if (partitionInfo['fstype'] != "" && partitionInfo['mountpoint'] == "") {
-                                availableActions += " <button class='btn btn-success btn-sm' onclick='mountPartition(\"" + partitionInfo['device'] + "\")'>挂载分区</button> "
+                                availableActions += " <button class='btn btn-success btn-sm' onclick='mountPartition(\"/dev/" + partitionInfo['device'] + "\")'>挂载分区</button> "
                             } else {
-                                availableActions += " <button class='btn btn-danger btn-sm' onclick='umountPartition(\"" + partitionInfo['device'] + "\")'>卸载分区</button> "
+                                availableActions += " <button class='btn btn-danger btn-sm' onclick='umountPartition(\"/dev/" + partitionInfo['device'] + "\")'>卸载分区</button> "
 
                             }
                         }

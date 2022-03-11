@@ -79,9 +79,9 @@ class my_toolbox_main:
                     keyName = item2.split("=")[0].lower()
                     keyName = (keyName, "device")[keyName == "name"]
                     if(len(item2.split("="))==1):
-                        partitionInfoDict[keyName] = "-"
+                        partitionInfoDict[keyName] = ""
                     else:
-                        partitionInfoDict[keyName] = (item2.split("=")[1], "-")[item2.split("=")[1] == ""]
+                        partitionInfoDict[keyName] = item2.split("=")[1]
                 tmp['partition'].append(partitionInfoDict)
             tmp['mounted'] = tmp['device'] in dfInfo or tmp['device'] in lvmInfo
             tmp['has_lvm'] = tmp['device'] in lvmInfo
