@@ -18,8 +18,6 @@ import json
 import time
 import requests
 import panelTask
-import psutil
-# import numpy as np
 
 os.chdir("/www/server/panel")
 
