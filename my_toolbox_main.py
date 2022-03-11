@@ -114,11 +114,13 @@ class my_toolbox_main:
     def formatPartition(self, args):
         if(not args.filesystem in os.popen("cat /proc/filesystems").read()):
             return {'msg': '您的系统不支持文件系统[' + args.filesystem + ']', 'status': -1}
-        fileList = os.popen("ls -la " + args.mountPoint).read()
         os.popen('umount ' + args.partition)
         result = os.popen('mkfs -F -t ' + args.filesystem + " " + args.partition).read()
         os.popen("mount " + args.partition + " " + args.mountPoint)
-        return {'msg': '格式化完成！', 'data':result, 'status': 1}
+        if(result == ""):
+            return {'msg': '遇到一个未知错误，格式化失败！', 'data':"", 'status': -1}
+        else:
+            return {'msg': '格式化完成！', 'data':result, 'status': 1}
 
     def mountNewDisk(self, args):
         if(not args.disk.split("/dev/")[1] in os.popen("ls /dev").read()):
