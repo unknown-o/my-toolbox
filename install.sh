@@ -23,6 +23,7 @@ Install()
 	fi
 	/www/server/panel/pyenv/bin/pip install bs4
 	/www/server/panel/pyenv/bin/pip install psutil
+	/www/server/panel/pyenv/bin/pip install numpy
 	/www/server/panel/pyenv/bin/pip install requests
 	echo '================================================'
 	echo '安装完成'
