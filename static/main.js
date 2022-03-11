@@ -45,7 +45,7 @@ function mountNewDisk(disk) {
                     mountPoint: mountPoint,
                     options: options
                 }, function (rdata) {
-                    getPartitionList()
+                    getDiskInfo()
                     layer.msg(rdata.msg, {
                         icon: rdata.status ? 1 : 2
                     })
@@ -61,7 +61,7 @@ function umountPartition(partition) {
         requestPlugin("umountPartition", {
             partition: partition
         }, function (rdata) {
-            getPartitionList()
+            getDiskInfo()
             layer.msg(rdata.msg, {
                 icon: rdata.status ? 1 : 2
             })
@@ -85,7 +85,7 @@ function formatPartition(partition, mountPoint) {
                     mountPoint: mountPoint,
                     filesystem: filesystem
                 }, function (rdata) {
-                    getPartitionList()
+                    getDiskInfo()
                     layer.msg(rdata.msg, {
                         icon: rdata.status ? 1 : 2
                     })
@@ -114,7 +114,7 @@ function mountPartition(partition) {
                     mountPoint: mountPoint,
                     options: options
                 }, function (rdata) {
-                    getPartitionList()
+                    getDiskInfo()
                     layer.msg(rdata.msg, {
                         icon: rdata.status ? 1 : 2
                     })
@@ -337,25 +337,25 @@ function getHostsList() {
     })
 }
 
-function getPartitionList() {
-    requestPlugin("getPartitionInfo", "", function (rdata) {
+function getDiskInfo() {
+    requestPlugin("getDiskInfo", "", function (rdata) {
         if (rdata.status) {
             $("#disksFormBody").empty()
-            for (item in rdata.data) {
-                if (JSON.stringify(rdata.data[item]) == "{}") {
-                    diskInfo = rdata.data[item]
+            for (var i = 0; i < rdata.data.length; i++) {
+                if (rdata.data[i].partition.length == 0) {
+                    diskInfo = rdata.data[i]
                     var $trTemp = $("<tr></tr>")
-                    $trTemp.append("<td class='line-limit-length' title='" + item + "' style='max-width:120px'>" + item + "</td>")
+                    $trTemp.append("<td class='line-limit-length' title='" + rdata.data[i].device + "' style='max-width:120px'>" + rdata.data[i].device + "</td>")
                     $trTemp.append("<td class='line-limit-length' title='硬盘' style='max-width:120px'>硬盘</td>")
-                    $trTemp.append("<td class='line-limit-length' style='max-width:40px'></td>")
-                    $trTemp.append("<td></td>")
-                    $trTemp.append("<td><button class='btn btn-success btn-sm' onclick='mountNewDisk(\"" + item + "\")'>自动挂载</button>")
+                    $trTemp.append("<td class='line-limit-length' style='max-width:40px'>-</td>")
+                    $trTemp.append("<td>-</td>")
+                    $trTemp.append("<td><button class='btn btn-success btn-sm' onclick='mountNewDisk(\"" + rdata.data[i].device + "\")'>一键挂载</button>")
                     $("#disksFormBody").append($trTemp);
                 } else {
-                    for (item1 in rdata.data[item]) {
-                        partitionInfo = rdata.data[item][item1]
+                    for (var j = 0; j < rdata.data[i].partition.length; j++) {
+                        partitionInfo = rdata.data[i].partition[j]
                         var $trTemp = $("<tr></tr>")
-                        $trTemp.append("<td class='line-limit-length' title='" + item1 + "' style='max-width:120px'>" + item1 + "</td>")
+                        $trTemp.append("<td class='line-limit-length' title='" + partitionInfo['device'] + "' style='max-width:120px'>" + partitionInfo['device'] + "</td>")
                         $trTemp.append("<td class='line-limit-length' title='分区' style='max-width:120px'>分区</td>")
                         $trTemp.append("<td class='line-limit-length' title='" + partitionInfo['mountpoint'] + "' style='max-width:40px'>" + partitionInfo['mountpoint'] + "</td>")
                         $trTemp.append("<td>" + partitionInfo['fstype'] + "</td>")
@@ -363,13 +363,12 @@ function getPartitionList() {
                         if (partitionInfo['mountpoint'] == "/" || partitionInfo['mountpoint'] == "/boot") {
                             availableActions = "禁止操作"
                         } else {
-                            availableActions += " <button class='btn btn-danger btn-sm' onclick='formatPartition(\"" + item1 + "\",\"" + partitionInfo['mountpoint'] + "\")'>格式化分区</button> "
-                            if (partitionInfo['fstype'] != "") {
-                                if (partitionInfo['mountpoint'] == "") {
-                                    availableActions += " <button class='btn btn-success btn-sm' onclick='mountPartition(\"" + item1 + "\")'>挂载分区</button> "
-                                } else {
-                                    availableActions += " <button class='btn btn-danger btn-sm' onclick='umountPartition(\"" + item1 + "\")'>卸载分区</button> "
-                                }
+                            availableActions += " <button class='btn btn-danger btn-sm' onclick='formatPartition(\"" + partitionInfo['device'] + "\",\"" + partitionInfo['mountpoint'] + "\")'>格式化分区</button> "
+                            if (partitionInfo['fstype'] != "" && partitionInfo['mountpoint'] == "") {
+                                availableActions += " <button class='btn btn-success btn-sm' onclick='mountPartition(\"" + partitionInfo['device'] + "\")'>挂载分区</button> "
+                            } else {
+                                availableActions += " <button class='btn btn-danger btn-sm' onclick='umountPartition(\"" + partitionInfo['device'] + "\")'>卸载分区</button> "
+
                             }
                         }
                         $trTemp.append("<td>" + availableActions + "</td>")

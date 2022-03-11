@@ -126,7 +126,7 @@
                     </ul>
                 </div>
                 <div id="diskTools" style="display: none;">
-                    <H3>磁盘工具 <button class='btn btn-success btn-sm' onclick="getPartitionList()">刷新</button></H3><br>
+                    <H3>磁盘工具 <button class='btn btn-success btn-sm' onclick="getDiskInfo()">刷新</button></H3><br>
                     <div style="max-height:402px;overflow:auto;border:#ddd 1px solid;">
                         <div class="divtable">
                             <table class="table table-hover">
@@ -412,7 +412,7 @@
                     $("#mainPage").show(200)
                 })
                 warning("数据无价，谨慎操作！<br>* 当前本功能处于公测阶段，可能存在未发现的问题，请谨慎使用！<br><br>本工具涉及到磁盘格式化、挂载、卸载等操作，可能导致数据丢失！<br>如果遇到数据丢失情况，请立即停止任何写入操作并关闭服务器，然后与专业的数据恢复公司联系！<br><br>由于本插件造成的数据丢失等问题，插件开发者（吴先森）和宝塔（bt.cn）不负任何责任！", function () {
-                    getPartitionList()
+                    getDiskInfo()
                     $("#mainPage").hide(200, function () {
                         $("#diskTools").show(200)
                     })

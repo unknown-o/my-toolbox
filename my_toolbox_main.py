@@ -94,7 +94,7 @@ class my_toolbox_main:
             tmp['size_bytes'] = item[4]
             tmp['sectors'] = item[6]
             diskArr.append(tmp)
-        return diskArr
+        return {'msg': "查询成功", "data": diskArr, 'status': 1}
 
     def umountPartition(self, args):
         fstabFileOld = open("/etc/fstab")
@@ -109,21 +109,21 @@ class my_toolbox_main:
         fstabFileOld.close()
         with open("/etc/fstab", 'w') as f:
             f.write(fstabNew)
-        os.popen("umount -v /dev/" + args.partition)
+        os.popen("umount -v " + args.partition)
         if(not args.partition in os.popen("df -h").read()):
             return {'msg': '成功卸载分区[' + args.partition + ']！', 'status': 1}
         else:
             return {'msg': "出现了一个错误，卸载失败！", 'status': -1}
 
     def formatPartition(self, args):
-        fileList = os.popen("ls -la /dev/" + args.mountPoint).read()
-        os.popen('umount /dev/' + args.partition)
-        result = os.popen('mkfs -F -t ' + args.filesystem + " /dev/" + args.partition).read()
-        os.popen("mount /dev/" + args.partition + " " + args.mountPoint)
+        fileList = os.popen("ls -la " + args.mountPoint).read()
+        os.popen('umount ' + args.partition)
+        result = os.popen('mkfs -F -t ' + args.filesystem + " " + args.partition).read()
+        os.popen("mount " + args.partition + " " + args.mountPoint)
         return {'msg': '格式化完成！', 'data':result, 'status': 1}
 
     def mountNewDisk(self, args):
-        if(not args.disk in os.popen("ls /dev").read()):
+        if(not args.disk.split("/dev/")[1] in os.popen("ls /dev").read()):
             return {'msg': '不存在指定磁盘', 'status': -1}
         if(args.disk in open("/etc/fstab").read()):
             return {'msg': '此磁盘已经被挂载！', 'status': -1}
@@ -133,12 +133,12 @@ class my_toolbox_main:
             return {'msg': '此硬盘已存在分区，不允许执行本操作！！', 'status': -1}
         if(args.mountPoint in os.popen("df -h").read() or args.disk in os.popen("df -h").read()):
             return {'msg': '磁盘或挂载点已被使用！', 'status': -1}
-        result = os.popen('echo -e "n\\np\\n\\n\\n\\nw\\n" | fdisk /dev/' + args.disk).read()
-        result = result + "\n" + os.popen('mkfs -F -t ' + args.filesystem + ' /dev/' + args.disk + '1').read()
+        result = os.popen('echo -e "n\\np\\n\\n\\n\\nw\\n" | fdisk ' + args.disk).read()
+        result = result + "\n" + os.popen('mkfs -F -t ' + args.filesystem + ' ' + args.disk + '1').read()
         if(not os.path.exists(args.mountPoint)):
             os.makedirs(args.mountPoint) 
         with open("/etc/fstab", 'a') as f:
-            f.write("\n/dev/" + args.disk + "1    " + args.mountPoint + "    " + args.filesystem + "    " + args.options + "    0    0")
+            f.write("\n" + args.disk + "1    " + args.mountPoint + "    " + args.filesystem + "    " + args.options + "    0    0")
         os.popen("mount -a")
         time.sleep(1)
         if(args.disk in os.popen("df -h").read()):
@@ -159,7 +159,7 @@ class my_toolbox_main:
         if(not args.partition in open("/etc/fstab").read()):
             returnMsg = "挂载成功！"
             with open("/etc/fstab", 'a') as f:
-                f.write("\n/dev/" + args.partition + "    " + args.mountPoint + "    " + args.filesystem + "    " + args.options + "    0    0")
+                f.write("\n" + args.partition + "    " + args.mountPoint + "    " + args.filesystem + "    " + args.options + "    0    0")
         os.popen("mount -a")
         time.sleep(1)
         if(args.partition in os.popen("df -h").read()):
