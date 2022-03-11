@@ -70,6 +70,9 @@ function umountPartition(partition) {
 }
 
 function formatPartition(partition, mountPoint) {
+    if (mountPoint == "") {
+        mountPoint = "/kagamine"
+    }
     layer.open({
         title: '格式化分区',
         area: ['800px', '350px'],
@@ -97,11 +100,11 @@ function formatPartition(partition, mountPoint) {
 
 }
 
-function mountPartition(partition) {
+function mountPartition(partition, fstype) {
     layer.open({
         title: '挂载分区',
         area: ['800px', '350px'],
-        content: $("#mount-disk-dialog").html().replaceAll("template-", "").replaceAll("磁盘地址", "分区地址").replaceAll("sdb", partition),
+        content: $("#mount-disk-dialog").html().replaceAll("template-", "").replaceAll("磁盘地址", "分区地址").replaceAll("ext4", fstype).replaceAll("sdb", partition),
         btn1: function (index) {
             partition = $("#disk-1").val()
             filesystem = $("#filesystem-1").val()
@@ -373,7 +376,7 @@ function getDiskInfo() {
                             availableActions += " <button class='btn btn-danger btn-sm' onclick='formatPartition(\"/dev/" + partitionInfo['device'] + "\",\"" + partitionInfo['mountpoint'] + "\")'>格式化分区</button> "
                             if (partitionInfo['fstype'] != "") {
                                 if (partitionInfo['mountpoint'] == "") {
-                                    availableActions += " <button class='btn btn-success btn-sm' onclick='mountPartition(\"/dev/" + partitionInfo['device'] + "\")'>挂载分区</button> "
+                                    availableActions += " <button class='btn btn-success btn-sm' onclick='mountPartition(\"/dev/" + partitionInfo['device'] + "\",\"" + partitionInfo['fstype'] + "\")'>挂载分区</button> "
                                 } else {
                                     availableActions += " <button class='btn btn-danger btn-sm' onclick='umountPartition(\"/dev/" + partitionInfo['device'] + "\")'>卸载分区</button> "
                                 }
