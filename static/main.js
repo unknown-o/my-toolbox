@@ -352,6 +352,7 @@ function getDiskInfo() {
                     $trTemp.append("<td class='line-limit-length' title='" + rdata.data[i].device + "' style='max-width:120px'>" + rdata.data[i].device + "</td>")
                     $trTemp.append("<td class='line-limit-length' title='硬盘' style='max-width:120px'>硬盘</td>")
                     $trTemp.append("<td class='line-limit-length' style='max-width:40px'>-</td>")
+                    $trTemp.append("<td class='line-limit-length'>" + rdata.data[i].size_gb + "GB</td>")
                     $trTemp.append("<td>-</td>")
                     $trTemp.append("<td><button class='btn btn-success btn-sm' onclick='mountNewDisk(\"" + rdata.data[i].device + "\")'>一键挂载</button>")
                     $("#disksFormBody").append($trTemp);
@@ -364,6 +365,7 @@ function getDiskInfo() {
                         $trTemp.append("<td class='line-limit-length' title='" + partitionInfo['device'] + "' style='max-width:120px'>" + partitionInfo['device'] + "</td>")
                         $trTemp.append("<td class='line-limit-length' title='分区' style='max-width:120px'>分区</td>")
                         $trTemp.append("<td class='line-limit-length' title='" + mountpoint + "' style='max-width:40px'>" + mountpoint + "</td>")
+                        $trTemp.append("<td class='line-limit-length'>" + rdata.data[i].partition_1[j].size + "</td>")
                         $trTemp.append("<td>" + fstype + "</td>")
                         availableActions = ""
                         if (systemPath.indexOf(mountpoint) > -1) {

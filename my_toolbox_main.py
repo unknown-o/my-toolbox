@@ -59,6 +59,22 @@ class my_toolbox_main:
         else:
             return {'msg': '扫描中...', 'status': -1}
 
+    def lsblk(self, args, device):
+        partition = []
+        partitionInfo = re.sub(' +', ' ', os.popen('lsblk %s %s' % (args, device)).read()).strip().split('\n')
+        for item1 in partitionInfo[1:]:
+            partitionInfoP = item1.replace("\"","").split(" ")
+            partitionInfoDict = {}
+            for item2 in partitionInfoP:
+                keyName = item2.split("=")[0].lower()
+                keyName = (keyName, "device")[keyName == "name"]
+                if(len(item2.split("="))==1):
+                    partitionInfoDict[keyName] = ""
+                else:
+                    partitionInfoDict[keyName] = item2.split("=")[1]
+            partition.append(partitionInfoDict)
+        return partition
+
     def getDiskInfo(self, args):
         diskInfo = os.popen('fdisk -l |grep -E "Disk /dev/.*?:|磁盘 /dev/.*?："|grep -v  -E "/dev/loop|/dev/mapper"').read().strip().split('\n')
         dfInfo = os.popen('df -h').read()
@@ -68,19 +84,8 @@ class my_toolbox_main:
             tmp = {}
             item = item.split(' ')
             tmp['device'] = item[1].split(':')[0]
-            tmp['partition'] = []
-            partitionInfo = re.sub(' +', ' ', os.popen('lsblk -f -P %s'%tmp['device']).read()).strip().split('\n')
-            for item1 in partitionInfo[1:]:
-                partitionInfoP = item1.replace("\"","").split(" ")
-                partitionInfoDict = {}
-                for item2 in partitionInfoP:
-                    keyName = item2.split("=")[0].lower()
-                    keyName = (keyName, "device")[keyName == "name"]
-                    if(len(item2.split("="))==1):
-                        partitionInfoDict[keyName] = ""
-                    else:
-                        partitionInfoDict[keyName] = item2.split("=")[1]
-                tmp['partition'].append(partitionInfoDict)
+            tmp['partition'] = self.lsblk("-f -P", tmp['device'])
+            tmp['partition_1'] = self.lsblk("-P", tmp['device'])
             tmp['mounted'] = tmp['device'] in dfInfo or tmp['device'] in lvmInfo
             tmp['has_lvm'] = tmp['device'] in lvmInfo
             tmp['warning'] = tmp['device'] in lvmInfo and len(tmp['partition']) == 0
