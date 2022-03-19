@@ -234,11 +234,23 @@ class my_toolbox_main:
     def getHostsFile(self, args):
         return {'msg': "查询成功！", "data": open("/etc/hosts").read(), 'status': 1}
 
+    def getFstabFile(self, args):
+        return {'msg': "查询成功！", "data": open("/etc/fstab").read(), 'status': 1}
+
     def saveHostsFile(self, args):
         os.system("cp /etc/hosts /etc/hosts.bak")
         with open('/etc/hosts', 'w') as hostsFile:
             hostsFile.write(args.data)
         return {'msg': '编辑hosts成功！', 'status': 1}
+
+    def saveFstabFile(self, args):
+        os.system("cp /etc/fstab /etc/fstab.bak")
+        with open('/etc/fstab', 'w') as fstabFile:
+            fstabFile.write(args.data)
+        if(os.system("mount -a") == 0):
+            return {'msg': '编辑成功！', 'status': 1}
+        else:
+            return {'msg': '编辑成功！但当前FSTAB中可能存在错误！', 'status': -1}
 
     def getHostsList(self, args):
         hostsFile = open("/etc/hosts")

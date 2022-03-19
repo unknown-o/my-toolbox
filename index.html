@@ -119,7 +119,11 @@
                     </ul>
                 </div>
                 <div id="diskTools" style="display: none;">
-                    <H3>磁盘工具 <button class='btn btn-success btn-sm' onclick="getDiskInfo()">刷新</button></H3><br>
+                    <H3>磁盘工具
+                        <button class='btn btn-success btn-sm' onclick="getDiskInfo()">刷新</button>
+                        <button class='btn btn-default btn-sm btn-success'
+                            onclick='switchToFstabFileEdit()'>编辑FSTAB</button>
+                    </H3><br>
                     <div style="max-height:402px;overflow:auto;border:#ddd 1px solid;">
                         <div class="divtable">
                             <table class="table table-hover">
@@ -144,7 +148,12 @@
                     </ul>
                 </div>
                 <div id="smb-mount" style="display: none;">
-                    <H3>SMB工具 <button class='btn btn-success btn-sm' onclick="smbMount()">挂载SMB</button></H3><br>
+                    <H3>SMB工具
+                        <button class='btn btn-success btn-sm' onclick="getSMBList()">刷新</button> 
+                        <button class='btn btn-success btn-sm' onclick="smbMount()">挂载SMB</button>
+                        <button class='btn btn-default btn-sm btn-success'
+                            onclick='switchToFstabFileEdit()'>编辑FSTAB</button>
+                    </H3><br>
                     <div style="max-height:402px;overflow:auto;border:#ddd 1px solid;">
                         <div class="divtable">
                             <table class="table table-hover">
@@ -352,6 +361,20 @@
                         <li>浮出的憧憬如果能像自己地吐露出浓浓渗透出的后悔的话，会该有多么轻松呢？ —— 《流星的脉搏》</li>
                     </ul>
                 </div>
+                <div id="fstabEditor" style="display: none;">
+                    <H3>FSTAB编辑</H3>
+                    <br><br>
+                    <textarea id="fstabEditTextbox" class="txtsjs bt-input-text"
+                        placeholder="/dev/sda1 /kagamine ext4 defaults 0 0" name="sBody"
+                        style='line-height:20px; width: 755px; height:310px;'></textarea>
+                    <br><br><button class='btn btn-success btn-sm' id="saveHostsFileBTN"
+                        onclick="saveFstabFile()">保存</button><br>
+                    <ul class='help-info-text c7 mtb15'>
+                        <li>此处可以直接编辑hosts源文件</li>
+                        <li>我们将那一天相同的星星做成记号，重叠声音~~</li>
+                        <li>浮出的憧憬如果能像自己地吐露出浓浓渗透出的后悔的话，会该有多么轻松呢？ —— 《流星的脉搏》</li>
+                    </ul>
+                </div>
                 <div id="hostsTemplate" style="display: none;">
                     <div class="row" style="width: 420px; margin-left:7px; margin-top:10px;">
                         <div class="col-sm-12">
@@ -425,7 +448,8 @@
             </div>
             <div class="input-group">
                 <span style="width: 150px;" class="input-group-addon">密码</span>
-                <input id="template-password-1" placeholder="kagamineYES" type="password" class="form-control" placeholder="defaults">
+                <input id="template-password-1" placeholder="kagamineYES" type="password" class="form-control"
+                    placeholder="defaults">
             </div>
             <ul class="help-info-text c7 mtb15">
                 <li>当前暂时不支持匿名登录</li>

@@ -257,6 +257,15 @@ function switchToHostsFileEdit() {
     })
 }
 
+function switchToFstabFileEdit() {
+    getFstabFile()
+    $("#smb-mount").hide(200)
+    $("#diskTools").hide(200, function () {
+        $("#fstabEditor").show(200)
+    })
+}
+
+
 function backToHostsList() {
     getHostsList()
     $("#hostsEditor").hide(200, function () {
@@ -505,10 +514,27 @@ function getHostsFile() {
     $("#bashCommand").val()
 }
 
+function getFstabFile() {
+    requestPlugin("getFstabFile", "", function (rdata) {
+        $("#fstabEditTextbox").val(rdata.data)
+    })
+    $("#bashCommand").val()
+}
+
 function saveHostsFile() {
     requestPlugin("saveHostsFile", { data: $("#hostEditTextbox").val() }, function (rdata) {
         getHostsFile()
         getHostsList()
+        layer.msg(rdata.msg, {
+            icon: rdata.status ? 1 : 2
+        })
+    })
+}
+
+function saveFstabFile() {
+    requestPlugin("saveFstabFile", { data: $("#fstabEditTextbox").val() }, function (rdata) {
+        getDiskInfo()
+        getSMBList()
         layer.msg(rdata.msg, {
             icon: rdata.status ? 1 : 2
         })
