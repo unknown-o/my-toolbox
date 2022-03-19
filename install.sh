@@ -19,6 +19,7 @@ Install()
 		apt update
 		apt install apache2-utils -y
 		apt install nmap -y
+		apt install smbclient -y
 		echo '如果安装失败，请手动安装下试试？'
 	fi
 	/www/server/panel/pyenv/bin/pip install bs4
