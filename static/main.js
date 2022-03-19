@@ -77,12 +77,21 @@ function smb_mount(disk) {
     })
 }
 
-function umountPartition(partition) {
+function umountPartition(partition, type) {
     warning("注意！此操作可能导致数据丢失！！<br><br>本次操作将卸载分区[" + partition + "]<br><br>被卸载的磁盘不会被格式化，重新挂载后数据仍然存在<br>如需重新挂载，请使用“手动挂载分区”功能挂载！<br><br>是否继续操作？", function () {
         requestPlugin("umountPartition", {
             partition: partition
         }, function (rdata) {
-            getDiskInfo()
+            switch (type) {
+                case 1:
+                    getDiskInfo()
+                    break;
+                case 2:
+                    getSMBList()
+                    break;
+                default:
+                    break;
+            }
             layer.msg(rdata.msg, {
                 icon: rdata.status ? 1 : 2
             })
@@ -401,7 +410,7 @@ function getDiskInfo() {
                                 if (partitionInfo['mountpoint'] == "") {
                                     availableActions += " <button class='btn btn-success btn-sm' onclick='mountPartition(\"/dev/" + partitionInfo['device'] + "\",\"" + partitionInfo['fstype'] + "\")'>挂载分区</button> "
                                 } else {
-                                    availableActions += " <button class='btn btn-danger btn-sm' onclick='umountPartition(\"/dev/" + partitionInfo['device'] + "\")'>卸载分区</button> "
+                                    availableActions += " <button class='btn btn-danger btn-sm' onclick='umountPartition(\"/dev/" + partitionInfo['device'] + "\", 0)'>卸载分区</button> "
                                 }
                             }
 
@@ -616,13 +625,13 @@ function getSMBList() {
             if (rdata.status) {
                 $("#smb-table-body").empty()
                 for (var i = 0; i < rdata.data.length; i++) {
-                    if (rdata.data[i].type=="cifs") {
+                    if (rdata.data[i].type == "cifs") {
                         diskInfo = rdata.data[i]
                         var $trTemp = $("<tr></tr>")
                         $trTemp.append("<td class='line-limit-length' title='" + rdata.data[i].device + "' style='max-width:110px'>" + rdata.data[i].device + "</td>")
                         $trTemp.append("<td class='line-limit-length' title='" + rdata.data[i].mountpoint + "' style='max-width:120px'>" + rdata.data[i].mountpoint + "</td>")
                         $trTemp.append("<td class='line-limit-length' title='" + rdata.data[i].optional + "' style='max-width:130px'>" + rdata.data[i].optional + "</td>")
-                        $trTemp.append("<td><button class='btn btn-success btn-sm' onclick='umountSMB(\"" + rdata.data[i].device + "\")'>卸载</button>")
+                        $trTemp.append("<td><button class='btn btn-success btn-sm' onclick='umountPartition(\"" + rdata.data[i].device + "\", 2)'>卸载</button>")
                         $("#smb-table-body").append($trTemp);
                     }
                 }
