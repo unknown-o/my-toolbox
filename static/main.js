@@ -79,7 +79,7 @@ function smbMount(disk) {
 }
 
 function umountPartition(partition, type) {
-    warning("注意！此操作可能导致数据丢失！！<br><br>本次操作将卸载分区[" + partition + "]<br><br>被卸载的磁盘不会被格式化，重新挂载后数据仍然存在<br>如需重新挂载，请使用“手动挂载分区”功能挂载！<br><br>是否继续操作？", function () {
+    warning("注意！此操作可能导致数据丢失！！<br><br>本次操作将卸载设备[" + partition + "]<br><br>被卸载的磁盘不会被格式化，重新挂载后数据仍然存在<br><br>是否继续操作？", function () {
         requestPlugin("umountPartition", {
             partition: partition
         }, function (rdata) {
