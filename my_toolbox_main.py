@@ -331,9 +331,9 @@ class my_toolbox_main:
             }
             response = requests.get(args.url, headers=headers, timeout=(60,60))
             response.encoding = "utf-8"
-            result = "HTTP状态码:" + str(response.status_code) + "\n"
+            result = "HTTP状态码:%s\n"%str(response.status_code)
             result = result + "页面打开耗时:%sms\n"%str(response.elapsed.total_seconds()*1000)
             result = result + "页面HTML内容:\n%s"%response.text
             return {'msg': '成功创建任务',"data": result ,'status': 1}
         except:
-            return {'message': '错误！未知原因引起请求程序出错崩溃！', 'result': "", 'status': 2}
+            return {'msg': '未知原因引起请求程序出错崩溃！', 'data': "请求失败！请重试！", 'status': -1}
