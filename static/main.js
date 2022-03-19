@@ -634,7 +634,7 @@ function donate() {
         type: 1,
         title: "支持作者",
         area: '800px;',
-        content: '<center><img src="https://static.llilii.cn/images/other/donate.png"/></center>',
+        content: '<center><img src="https://static.llilii.cn/images/donate.png"/></center>',
         yes: function (index) {
             callback()
             layer.close(index)
