@@ -495,7 +495,8 @@ function logWrite() {
         logType: $("#logType").val(),
         logDetail: $("#logDetail").val()
     }, function (rdata) {
-        getHostsList()
+        $("#logType").val("")
+        $("#logDetail").val("")
         layer.msg(rdata.msg, {
             icon: rdata.status ? 1 : 2
         })
