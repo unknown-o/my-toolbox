@@ -666,6 +666,7 @@ function getSMBList() {
                 layer.msg(rdata.msg, {
                     icon: rdata.status ? 1 : 2
                 })
+                switchToFstabFileEdit()
             }
         }
     )
