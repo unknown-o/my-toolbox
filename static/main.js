@@ -31,7 +31,7 @@ function getDiskInfo() {
 function mountNewDisk(disk) {
     layer.open({
         title: '挂载硬盘',
-        area: ['800px', '350px'],
+        area: ['400px', '350px'],
         content: $("#mount-disk-dialog").html().replaceAll("template-", "").replaceAll("sdb", disk),
         btn1: function (index) {
             disk = $("#disk-1").val()
@@ -96,7 +96,7 @@ function formatPartition(partition, mountPoint) {
     }
     layer.open({
         title: '格式化分区',
-        area: ['800px', '350px'],
+        area: ['400px', '350px'],
         content: $("#mount-disk-dialog").html().replaceAll("template-", "").replaceAll("磁盘地址", "分区地址").replaceAll("sdb", partition).replaceAll("/kagamine", mountPoint),
         btn1: function (index) {
             partition = $("#disk-1").val()
@@ -124,7 +124,7 @@ function formatPartition(partition, mountPoint) {
 function mountPartition(partition, fstype) {
     layer.open({
         title: '挂载分区',
-        area: ['800px', '350px'],
+        area: ['400px', '350px'],
         content: $("#mount-disk-dialog").html().replaceAll("template-", "").replaceAll("磁盘地址", "分区地址").replaceAll("ext4", fstype).replaceAll("sdb", partition),
         btn1: function (index) {
             partition = $("#disk-1").val()
