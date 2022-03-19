@@ -84,6 +84,20 @@ class my_toolbox_main:
         else:
             return {'msg': "出现了一个错误，挂载失败！", 'status': -1}
 
+    def getFstabList(self, args):
+        fstabFile = open("/etc/fstab")
+        fstabArr = []
+        try:
+            while 1:
+                fstabLine = fstabFile.readline()
+                if(not fstabLine):
+                    break
+                if(fstabLine != "\n" and fstabLine[0] != "#" and fstabLine[0] != ""):
+                    fstabLine = re.split(" |\t", re.sub(' +', ' ', fstabLine))
+                    fstabArr.append({"device":fstabLine[0], "mountpoint":fstabLine[1], "type":fstabLine[2], "optional":fstabLine[3], "dump":fstabLine[4], "pass":fstabLine[5].split("\n")[0]})
+        except IndexError as err:
+            return {'msg': "fstab文件存在语法错误！请手动修复错误！", "data": str(err), 'status': -1}
+        return {'msg': "查询成功！", "data": fstabArr, 'status': 1}
 
     def lsblk(self, args, device):
         partition = []
