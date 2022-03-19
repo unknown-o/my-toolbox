@@ -2,7 +2,7 @@
     "title": "我的工具箱",
     "name": "my_toolbox",
     "ps": "集合端口扫描、HOSTS编辑、网站地图生成、磁盘工具等功能",
-    "versions": "1.8.7",
+    "versions": "1.9.1",
     "checks": "/www/server/panel/plugin/my_toolbox",
     "author": "吴先森",
     "home": "https://www.wunote.cn"
