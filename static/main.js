@@ -371,6 +371,7 @@ function getHostsList() {
                     $("#hostsFormBody").append($trTemp);
                 }
             }
+            $("#hostsFormBody").show(300)
         } else {
             layer.msg(rdata.msg, {
                 icon: rdata.status ? 1 : 2
@@ -430,6 +431,7 @@ function getDiskInfo() {
                     }
                 }
             }
+            $("#disksFormBody").show(300)
         } else {
             layer.msg(rdata.msg, {
                 icon: rdata.status ? 1 : 2
@@ -662,6 +664,7 @@ function getSMBList() {
                         $("#smb-table-body").append($trTemp);
                     }
                 }
+                $("#smb-table-body").show(300)
             } else {
                 layer.msg(rdata.msg, {
                     icon: rdata.status ? 1 : 2
