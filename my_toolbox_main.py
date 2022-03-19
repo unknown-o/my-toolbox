@@ -49,7 +49,7 @@ class my_toolbox_main:
         if(not (int(args.portStart) > 0 and int(args.portEnd) < 65535) or args.serverIp == "" or args.portStart >= args.portEnd):
             return {'msg': '输入数据存在错误', 'status': -1}
         task = panelTask.bt_task()
-        task.create_task("扫描端口",0,"/www/server/panel/pyenv/bin/python /www/server/panel/plugin/my_toolbox/nmap.py " + args.portStart + " " + args.portEnd + " " + args.serverIp)
+        task.create_task("扫描端口",0,"/www/server/panel/pyenv/bin/python /www/server/panel/plugin/my_toolbox/nmap.py %s %s %s"%(args.portStart, args.portEnd, args.serverIp))
         return {'msg': '成功创建任务', 'status': 1}
 
     def getScanResult(self, args):
@@ -148,22 +148,21 @@ class my_toolbox_main:
         fstabFileOld.close()
         with open("/etc/fstab", 'w') as f:
             f.write(fstabNew)
-        os.popen("umount -v " + args.partition)
+        os.popen("umount -v %s"%args.partition)
         if(not args.partition in os.popen("df -h").read()):
-            return {'msg': '成功卸载分区[' + args.partition + ']！', 'status': 1}
+            return {'msg': '成功卸载分区[%s]！'%args.partition, 'status': 1}
         else:
             return {'msg': "出现了一个错误，卸载失败！", 'status': -1}
 
     def formatPartition(self, args):
         if(not args.filesystem in os.popen("cat /proc/filesystems").read()):
-            return {'msg': '您的系统不支持文件系统[' + args.filesystem + ']', 'status': -1}
-        os.popen('umount ' + args.partition)
-        result = os.popen('mkfs -F -t ' + args.filesystem + " " + args.partition).read()
-        os.popen("mount " + args.partition + " " + args.mountPoint)
-        if(result == ""):
-            return {'msg': '遇到一个未知错误，格式化失败！', 'data':"", 'status': -1}
-        else:
+            return {'msg': '您的系统不支持文件系统[%s]'%args.filesystem, 'status': -1}
+        os.popen('umount %s'%args.partition)
+        if(os.system('mkfs -F -t %s %s'%(args.filesystem, args.partition)).read() == 0):
+            os.popen("mount %s %s"%(args.partition, args.mountPoint))
             return {'msg': '格式化完成！', 'data':result, 'status': 1}
+        else:
+            return {'msg': '遇到一个未知错误，格式化失败！', 'data':"", 'status': -1}
 
     def mountNewDisk(self, args):
         if(not args.disk.split("/dev/")[1] in os.popen("ls /dev").read()):
@@ -172,16 +171,16 @@ class my_toolbox_main:
             return {'msg': '此磁盘已经被挂载！', 'status': -1}
         if(not args.filesystem in os.popen("cat /proc/filesystems").read()):
             return {'msg': '您的系统不支持文件系统[' + args.filesystem + ']', 'status': -1}
-        if(args.disk + '1' in os.popen("fdisk -l " + args.disk).read()):
+        if(args.disk + '1' in os.popen("fdisk -l %s"%args.disk).read()):
             return {'msg': '此硬盘已存在分区，不允许执行本操作！！', 'status': -1}
         if(args.mountPoint in os.popen("df -h").read() or args.disk in os.popen("df -h").read()):
             return {'msg': '磁盘或挂载点已被使用！', 'status': -1}
-        result = os.popen('echo -e "n\\np\\n\\n\\n\\nw\\n" | fdisk ' + args.disk).read()
-        result = result + "\n" + os.popen('mkfs -F -t ' + args.filesystem + ' ' + args.disk + '1').read()
+        result = os.popen('echo -e "n\\np\\n\\n\\n\\nw\\n" | fdisk %s'%args.disk).read()
+        result = result + "\n" + os.popen('mkfs -F -t %s %s1'%(args.filesystem, args.disk)).read()
         if(not os.path.exists(args.mountPoint)):
             os.makedirs(args.mountPoint) 
         with open("/etc/fstab", 'a') as f:
-            f.write("\n" + args.disk + "1    " + args.mountPoint + "    " + args.filesystem + "    " + args.options + "    0    0")
+            f.write("\n%s1 %s %s %s 0 0"%(args.disk, args.mountPoint, args.filesystem, args.options))
         os.popen("mount -a")
         time.sleep(1)
         if(args.disk in os.popen("df -h").read()):
@@ -193,7 +192,7 @@ class my_toolbox_main:
         if(not args.partition.split("/dev/")[1] in os.popen("ls /dev").read()):
             return {'msg': '不存在指定磁盘分区', 'status': -1}
         if(not args.filesystem in os.popen("cat /proc/filesystems").read()):
-            return {'msg': '您的系统不支持文件系统[' + args.filesystem + ']', 'status': -1}
+            return {'msg': '您的系统不支持文件系统[%s]'%args.filesystem, 'status': -1}
         if(args.mountPoint in os.popen("df -h").read() or args.partition in os.popen("df -h").read()):
             return {'msg': '磁盘或挂载点已被使用！', 'status': -1}
         if(not os.path.exists(args.mountPoint)):
@@ -202,7 +201,7 @@ class my_toolbox_main:
         if(not args.partition in open("/etc/fstab").read()):
             returnMsg = "挂载成功！"
             with open("/etc/fstab", 'a') as f:
-                f.write("\n" + args.partition + "    " + args.mountPoint + "    " + args.filesystem + "    " + args.options + "    0    0")
+                f.write("\n%s %s %s %s 0 0"%(args.partition, args.mountPoint, args.filesystem, args.options))
         os.popen("mount -a")
         time.sleep(1)
         if(args.partition in os.popen("df -h").read()):
@@ -213,7 +212,7 @@ class my_toolbox_main:
     def addHosts(self, args):
         with open('/etc/hosts', 'a') as hostsFile:
             hostsFile.write('\n')
-            hostsFile.write(args.ip+' '+args.domain)
+            hostsFile.write("%s %s"%(args.ip, args.domain))
         return {'msg': '编辑hosts成功！', 'status': 1}
 
     def delHosts(self, args):
@@ -271,7 +270,7 @@ class my_toolbox_main:
             return {'msg': '不是python3版本的宝塔，暂时无法使用本功能！', 'status': -1}
         if(os.path.exists("/www/server/panel/plugin/my_toolbox/tmp/executeCommand.tmp")):
             os.remove('/www/server/panel/plugin/my_toolbox/tmp/executeCommand.tmp')
-        public.ExecShell('kill -9 ' + str(os.popen("echo $(ps -ef | grep '/www/temp.sh' | grep -v grep | awk '{print $2}')").read()))
+        public.ExecShell('kill -9 %s'%str(os.popen("echo $(ps -ef | grep '/www/temp.sh' | grep -v grep | awk '{print $2}')").read()))
         with open("/www/temp.sh", 'w') as bashCommandFile:
             bashCommandFile.write(args.bashCommand)
             bashCommandFile.write("\necho finsh > /www/server/panel/plugin/my_toolbox/tmp/executeCommand.tmp")
@@ -280,7 +279,7 @@ class my_toolbox_main:
         logList.sort(key=lambda x:int(x[:-4]))
         task.create_task("命令执行", 0, 'bash /www/temp.sh')
         try:
-            return {'msg': '成功创建任务', "logFileName":str(int(logList[-1].split(".")[0])+1)+".log", 'status': 1}
+            return {'msg': '成功创建任务', "logFileName":"%s.log"%str(int(logList[-1].split(".")[0])+1), 'status': 1}
         except:
             return {'msg': '成功创建任务！获取执行日志文件名失败！', "logFileName":"", 'status': 1}
 
@@ -296,7 +295,7 @@ class my_toolbox_main:
             if(os.path.exists("/www/server/panel/plugin/my_toolbox/tmp/executeCommand.tmp")):
                 executeCommandResult = ""
                 try:
-                    executeCommandResult = open("/www/server/panel/tmp/" + args.logFileName).read()
+                    executeCommandResult = open("/www/server/panel/tmp/%s"%args.logFileName).read()
                     if(executeCommandResult == ""):
                         msg = "执行成功？但是没有任何返回！请自行检查命令是否运行成功！"
                     else:
@@ -318,11 +317,11 @@ class my_toolbox_main:
         if(int(args.maxNumber) < 15 and args.url == ""):
             return {'msg': '输入数据存在错误', 'status': -1}
         task = panelTask.bt_task()
-        task.create_task("创建网站地图",0,"/www/server/panel/pyenv/bin/python /www/server/panel/plugin/my_toolbox/sitemap.py '" + args.url + "' " + str(args.maxNumber))
+        task.create_task("创建网站地图",0,"/www/server/panel/pyenv/bin/python /www/server/panel/plugin/my_toolbox/sitemap.py '%s' %s"%(args.url, str(args.maxNumber)))
         return {'msg': '成功创建任务', 'status': 1}
 
     def logWrite(self, args):
-        public.WriteLog(args.logType,args.logDetail)
+        public.WriteLog(args.logType, args.logDetail)
         return {'msg': '写入成功', 'status': 1}
 
     def requestPage(self, args):
@@ -333,8 +332,8 @@ class my_toolbox_main:
             response = requests.get(args.url, headers=headers, timeout=(60,60))
             response.encoding = "utf-8"
             result = "HTTP状态码:" + str(response.status_code) + "\n"
-            result = result + "页面打开耗时:" + str(response.elapsed.total_seconds()*1000) + "ms\n"
-            result = result + "页面HTML内容:\n" + response.text
+            result = result + "页面打开耗时:%sms\n"%str(response.elapsed.total_seconds()*1000)
+            result = result + "页面HTML内容:\n%s"%response.text
             return {'msg': '成功创建任务',"data": result ,'status': 1}
         except:
-            return {'message': '错误！未知原因引起请求程序出错崩溃！', 'result': "HttpCode: "+str(response.status_code)+"\n\n"+response.text, 'status': 2}
+            return {'message': '错误！未知原因引起请求程序出错崩溃！', 'result': "", 'status': 2}
