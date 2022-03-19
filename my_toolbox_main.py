@@ -18,6 +18,7 @@ import json
 import time
 import requests
 import panelTask
+import platform
 
 os.chdir("/www/server/panel")
 
@@ -31,6 +32,13 @@ class my_toolbox_main:
 
     def __init__(self):
         pass
+
+    def systemDetection(self, args):
+        system_version = platform.version()
+        if(args.system in system_version.lower()):
+            return {'msg': "操作成功", 'system_version':system_version, 'status': 1}
+        else:
+            return {'msg': "操作成功", 'system_version':system_version, 'status': -1}
 
     def startScanPort(self, args):
         if(os.popen('command -v nmap').read() == '' or not os.path.exists("/www/server/panel/pyenv/bin/python")):

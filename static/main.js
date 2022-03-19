@@ -581,6 +581,14 @@ function requestPage() {
     })
 }
 
+function systemDetection(system,callback){
+    requestPlugin("systemDetection", {
+        system: system
+    }, function (rdata) {
+        callback(rdata.status)
+    })
+}
+
 function cleanRequestPageResult() {
     $("#requestPageResult").val("")
     $("#requestPageUrl").val("")

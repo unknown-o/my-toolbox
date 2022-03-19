@@ -429,7 +429,20 @@
             case 2:
                 getDiskInfo()
                 break;
-            case 8:
+            case 3:
+                systemDetection("ubuntu", function (result) {
+                    if (!result) {
+                        layer.msg("抱歉！本功能暂时不支持本系统！", {
+                            icon: 2
+                        })
+                        $("#smb-mount").hide(200, function () {
+                            $("#mainPage").show(200)
+                        })
+                        return false
+                    }
+                })
+                break;
+            case 9:
                 window.open("https://www.mr-wu.top/donate")
                 aboutPlugin()
                 break;
