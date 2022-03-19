@@ -146,8 +146,8 @@
                         </div>
                     </div>
                     <ul class='help-info-text c7 mtb15'>
-                        <li>数据无价，谨慎操作！</li>
-                        <li>当前本功能处于公测阶段，可能存在未发现的问题，请谨慎使用！</li>
+                        <li>数据无价，谨慎操作！本功能处于公测阶段，可能存在未发现的问题，请谨慎使用！</li>
+                        <li>未来旅行很多曲折，但要记得快乐。向过去手挥挥，拜拜！ —— 《提瓦特天使降临到你身边》</li>
                     </ul>
                 </div>
                 <div id="commandExecution" style="display: none;">
@@ -409,15 +409,7 @@
                 getHostsList()
                 break;
             case 2:
-                $("#diskTools").hide(200, function () {
-                    $("#mainPage").show(200)
-                })
-                warning("数据无价，谨慎操作！<br>* 当前本功能处于公测阶段，可能存在未发现的问题，请谨慎使用！<br><br>本工具涉及到磁盘格式化、挂载、卸载等操作，可能导致数据丢失！<br>如果遇到数据丢失情况，请立即停止任何写入操作并关闭服务器，然后与专业的数据恢复公司联系！<br><br>由于本插件造成的数据丢失等问题，插件开发者（吴先森）和宝塔（bt.cn）不负任何责任！", function () {
-                    getDiskInfo()
-                    $("#mainPage").hide(200, function () {
-                        $("#diskTools").show(200)
-                    })
-                })
+                getDiskInfo()
                 break;
             case 8:
                 window.open("https://www.mr-wu.top/donate")
