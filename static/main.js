@@ -107,7 +107,7 @@ function formatPartition(partition, mountPoint) {
     layer.open({
         title: '格式化分区',
         area: ['400px', '350px'],
-        content: $("#mount-disk-dialog").html().replaceAll("template-", "").replaceAll("磁盘地址", "分区地址").replaceAll("sdb", partition).replaceAll("/kagamine", mountPoint),
+        content: $("#mount-disk-dialog").html().replaceAll("template-", "").replaceAll("more", "readonly").replaceAll("磁盘地址", "分区地址").replaceAll("sdb", partition).replaceAll("/kagamine", mountPoint),
         btn1: function (index) {
             partition = $("#disk-1").val()
             filesystem = $("#filesystem-1").val()
