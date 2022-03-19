@@ -32,7 +32,7 @@ class my_toolbox_main:
 
     def __init__(self):
         pass
-
+        
     def systemDetection(self, args):
         system_version = platform.version()
         if(args.system in system_version.lower()):

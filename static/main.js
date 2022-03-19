@@ -581,7 +581,7 @@ function requestPage() {
     })
 }
 
-function systemDetection(system,callback){
+function systemDetection(system, callback) {
     requestPlugin("systemDetection", {
         system: system
     }, function (rdata) {
@@ -689,27 +689,25 @@ function requestPlugin(functionName, args, callback, timeout) {
                     return true
                 }
             } else {
-                /*
                 $("#pluginMain").hide(200)
                 $("#fatalError").show(100)
                 $('.layui-layer-page').css({
                     'width': '300px'
-                });
+                })
                 layer.msg(rdata.msg, {
                     icon: 2
                 })
-                */
             }
         },
         error: function (ex) {
-            layer.close(index)
-            if (!callback) {
-                layer.msg('请求过程发现错误!', {
-                    icon: 2
-                });
-                return;
-            }
-            return callback(ex);
+            layer.open({
+                title: "插件出错了",
+                area: '800px;',
+                content: ex.responseText,
+                yes: function (index) {
+                    layer.close(index)
+                }
+            })
         }
     });
 }
