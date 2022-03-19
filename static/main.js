@@ -56,7 +56,7 @@ function mountNewDisk(disk) {
     })
 }
 
-function smb_mount(disk) {
+function smbMount(disk) {
     layer.open({
         title: 'SMB挂载',
         area: ['400px', '360px'],
@@ -68,6 +68,7 @@ function smb_mount(disk) {
                 username: $("#username-1").val(),
                 password: $("#password-1").val()
             }, function (rdata) {
+                getSMBList()
                 layer.msg(rdata.msg, {
                     icon: rdata.status ? 1 : 2
                 })
