@@ -158,9 +158,9 @@ class my_toolbox_main:
         if(not args.filesystem in os.popen("cat /proc/filesystems").read()):
             return {'msg': '您的系统不支持文件系统[%s]'%args.filesystem, 'status': -1}
         os.popen('umount %s'%args.partition)
-        if(os.system('mkfs -F -t %s %s'%(args.filesystem, args.partition)).read() == 0):
+        if(os.system('mkfs -F -t %s %s'%(args.filesystem, args.partition)) == 0):
             os.popen("mount %s %s"%(args.partition, args.mountPoint))
-            return {'msg': '格式化完成！', 'data':result, 'status': 1}
+            return {'msg': '格式化完成！', 'status': 1}
         else:
             return {'msg': '遇到一个未知错误，格式化失败！', 'data':"", 'status': -1}
 
