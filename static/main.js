@@ -84,10 +84,10 @@ function umountPartition(partition, type) {
             partition: partition
         }, function (rdata) {
             switch (type) {
-                case 1:
+                case 0:
                     getDiskInfo()
                     break;
-                case 2:
+                case 1:
                     getSMBList()
                     break;
                 default:
@@ -661,7 +661,7 @@ function getSMBList() {
                         $trTemp.append("<td class='line-limit-length' title='" + rdata.data[i].device + "' style='max-width:110px'>" + rdata.data[i].device + "</td>")
                         $trTemp.append("<td class='line-limit-length' title='" + rdata.data[i].mountpoint + "' style='max-width:120px'>" + rdata.data[i].mountpoint + "</td>")
                         $trTemp.append("<td class='line-limit-length' title='" + rdata.data[i].optional + "' style='max-width:130px'>" + rdata.data[i].optional + "</td>")
-                        $trTemp.append("<td><button class='btn btn-success btn-sm' onclick='umountPartition(\"" + rdata.data[i].device + "\", 2)'>卸载</button>")
+                        $trTemp.append("<td><button class='btn btn-success btn-sm' onclick='umountPartition(\"" + rdata.data[i].device + "\", 1)'>卸载</button>")
                         $("#smb-table-body").append($trTemp);
                     }
                 }
