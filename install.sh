@@ -15,10 +15,10 @@ Install()
 		yum install nmap -y
 		yum install httpd-tools -y
 		echo '如果安装失败，请尝试yum update或手动安装下试试？'
-	elif [ -f "/usr/bin/apt-get" ] && [ -f "/usr/bin/dpkg" ]; then
-		apt-get update
-		apt-get install apache2-utils -y
-		apt-get install nmap -y
+	elif [ -f "/usr/bin/apt" ] && [ -f "/usr/bin/dpkg" ]; then
+		apt update
+		apt install apache2-utils -y
+		apt install nmap -y
 		echo '如果安装失败，请手动安装下试试？'
 	fi
 	/www/server/panel/pyenv/bin/pip install bs4
