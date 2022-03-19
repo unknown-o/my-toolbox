@@ -19,6 +19,7 @@
             <p>端口扫描</p>
             <p>Hosts编辑</p>
             <p>磁盘工具</p>
+            <p>SMB挂载</p>
             <p>命令执行</p>
             <p>日志写入</p>
             <p>网站压力测试</p>
@@ -139,6 +140,29 @@
                     </div>
                     <ul class='help-info-text c7 mtb15'>
                         <li>数据无价，谨慎操作！本功能处于公测阶段，可能存在未发现的问题，请谨慎使用！</li>
+                        <li>未来旅行很多曲折，但要记得快乐。向过去手挥挥，拜拜！ —— 《提瓦特天使降临到你身边》</li>
+                    </ul>
+                </div>
+                <div id="smb-mount" style="display: none;">
+                    <H3>SMB挂载 <button class='btn btn-success btn-sm' onclick="smb_mount()">挂载SMB</button></H3><br>
+                    <div style="max-height:402px;overflow:auto;border:#ddd 1px solid;">
+                        <div class="divtable">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>远程地址</th>
+                                        <th>挂载点</th>
+                                        <th>挂载参数</th>
+                                        <th>可用操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="smb-table-body">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <ul class='help-info-text c7 mtb15'>
+                        <li>当前本插件仅支持Ubuntu系统！其他系统正在努力适配中！</li>
                         <li>未来旅行很多曲折，但要记得快乐。向过去手挥挥，拜拜！ —— 《提瓦特天使降临到你身边》</li>
                     </ul>
                 </div>
