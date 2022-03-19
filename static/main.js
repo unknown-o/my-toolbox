@@ -56,6 +56,27 @@ function mountNewDisk(disk) {
     })
 }
 
+function smb_mount(disk) {
+    layer.open({
+        title: 'SMB挂载',
+        area: ['400px', '360px'],
+        content: $("#smb-mount-dialog").html().replaceAll("template-", ""),
+        btn1: function (index) {
+            requestPlugin("smbMount", {
+                addr: $("#addr-1").val(),
+                mountpoint: $("#mountpoint-1").val(),
+                username: $("#username-1").val(),
+                password: $("#password-1").val()
+            }, function (rdata) {
+                layer.msg(rdata.msg, {
+                    icon: rdata.status ? 1 : 2
+                })
+            })
+            layer.close(index)
+        }
+    })
+}
+
 function umountPartition(partition) {
     warning("注意！此操作可能导致数据丢失！！<br><br>本次操作将卸载分区[" + partition + "]<br><br>被卸载的磁盘不会被格式化，重新挂载后数据仍然存在<br>如需重新挂载，请使用“手动挂载分区”功能挂载！<br><br>是否继续操作？", function () {
         requestPlugin("umountPartition", {

@@ -67,6 +67,24 @@ class my_toolbox_main:
         else:
             return {'msg': '扫描中...', 'status': -1}
 
+    def smbMount(self, args):
+        if(args.mountpoint in os.popen("df -h").read()):
+            return {'msg': '挂载点已被使用！', 'status': -1}
+        result = os.system('smbclient -c "ls" %s -U %s'%(args.addr, args.username + "%" + args.password))
+        if(result != 0):
+            return {'msg': "SMB测试连接失败！请检查您输入的用户名或密码是否正确！", 'status': -1}
+        if(not os.path.exists(args.mountpoint)):
+            os.makedirs(args.mountpoint) 
+        with open("/etc/fstab", 'a') as f:
+            f.write("\n%s %s cifs username=%s,password=%s 0 0"%(args.addr, args.mountpoint, args.username, args.password))
+        os.popen("mount -a")
+        time.sleep(1)
+        if(args.addr in os.popen("df -h").read()):
+            return {'msg': "挂载成功！", 'status': 1}
+        else:
+            return {'msg': "出现了一个错误，挂载失败！", 'status': -1}
+
+
     def lsblk(self, args, device):
         partition = []
         partitionInfo = re.sub(' +', ' ', os.popen('lsblk %s %s' % (args, device)).read()).strip().split('\n')
