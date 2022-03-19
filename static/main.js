@@ -610,6 +610,31 @@ function systemDetection(system, callback) {
     })
 }
 
+function getSMBList() {
+    requestPlugin("getFstabList", {},
+        function (rdata) {
+            if (rdata.status) {
+                $("#smb-table-body").empty()
+                for (var i = 0; i < rdata.data.length; i++) {
+                    if (rdata.data[i].type=="cifs") {
+                        diskInfo = rdata.data[i]
+                        var $trTemp = $("<tr></tr>")
+                        $trTemp.append("<td class='line-limit-length' title='" + rdata.data[i].device + "' style='max-width:110px'>" + rdata.data[i].device + "</td>")
+                        $trTemp.append("<td class='line-limit-length' title='" + rdata.data[i].mountpoint + "' style='max-width:120px'>" + rdata.data[i].mountpoint + "</td>")
+                        $trTemp.append("<td class='line-limit-length' title='" + rdata.data[i].optional + "' style='max-width:130px'>" + rdata.data[i].optional + "</td>")
+                        $trTemp.append("<td><button class='btn btn-success btn-sm' onclick='umountSMB(\"" + rdata.data[i].device + "\")'>卸载</button>")
+                        $("#smb-table-body").append($trTemp);
+                    }
+                }
+            } else {
+                layer.msg(rdata.msg, {
+                    icon: rdata.status ? 1 : 2
+                })
+            }
+        }
+    )
+}
+
 function cleanRequestPageResult() {
     $("#requestPageResult").val("")
     $("#requestPageUrl").val("")
