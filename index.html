@@ -24,7 +24,7 @@
             <p>日志写入</p>
             <p>网站压力测试</p>
             <p>请求网页</p>
-            <p>网站地图生成</p>
+            <p id="sitemap-menu" style="display: none;">网站地图生成</p>
             <p>关于本插件</p>
         </div>
         <div class="bt-w-con pd15">
@@ -461,6 +461,8 @@
 <script type="text/javascript" src="../my_toolbox/static/main.js"></script>
 <script type="text/javascript" src="../my_toolbox/static/console-image.js"></script>
 <script type="text/javascript">
+    $("#sitemap-menu").hide()
+
     $('.layui-layer-page').css({
         'width': '900px'
     });
