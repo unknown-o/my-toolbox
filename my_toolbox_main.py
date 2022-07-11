@@ -116,24 +116,28 @@ class my_toolbox_main:
         return partition
 
     def getDiskInfo(self, args):
-        diskInfo = os.popen('fdisk -l |grep -E "Disk /dev/.*?:|磁盘 /dev/.*?："|grep -v  -E "/dev/loop|/dev/mapper"').read().strip().split('\n')
-        dfInfo = os.popen('df -h').read()
-        lvmInfo = os.popen('pvs').read()
-        diskArr = []
-        for item in diskInfo:
-            tmp = {}
-            item = item.split(' ')
-            tmp['device'] = item[1].split(':')[0]
-            tmp['partition'] = self.lsblk("-f -P", tmp['device'])
-            tmp['partition_1'] = self.lsblk("-P", tmp['device'])
-            tmp['mounted'] = tmp['device'] in dfInfo or tmp['device'] in lvmInfo
-            tmp['has_lvm'] = tmp['device'] in lvmInfo
-            tmp['warning'] = tmp['device'] in lvmInfo and len(tmp['partition']) == 0
-            tmp['size_gb'] = item[2]
-            tmp['size_bytes'] = item[4]
-            tmp['sectors'] = item[6]
-            diskArr.append(tmp)
-        return {'msg': "查询成功", "data": diskArr, 'status': 1}
+        try:
+            diskInfo = os.popen('fdisk -l |grep -E "Disk /dev/.*?:|磁盘 /dev/.*?："|grep -v  -E "/dev/loop|/dev/mapper"').read().strip().split('\n')
+            dfInfo = os.popen('df -h').read()
+            lvmInfo = os.popen('pvs').read()
+            diskArr = []
+            for item in diskInfo:
+                tmp = {}
+                item = item.split(' ')
+                tmp['device'] = item[1].split(':')[0]
+                tmp['partition'] = self.lsblk("-f -P", tmp['device'])
+                tmp['partition_1'] = self.lsblk("-P", tmp['device'])
+                tmp['mounted'] = tmp['device'] in dfInfo or tmp['device'] in lvmInfo
+                tmp['has_lvm'] = tmp['device'] in lvmInfo
+                tmp['warning'] = tmp['device'] in lvmInfo and len(tmp['partition']) == 0
+                tmp['size_gb'] = item[2]
+                tmp['size_bytes'] = item[4]
+                tmp['sectors'] = item[6]
+                diskArr.append(tmp)
+            return {'msg': "查询成功", "data": diskArr, 'status': 1}
+        except Exception as e:
+            return {'msg': f"抱歉，操作失败！暂时不支持当前系统！您可以通过邮箱向开发者反馈问题！[Exception: {str(e)}]", "data": [], 'status': -1}
+        
 
     def umountPartition(self, args):
         fstabFileOld = open("/etc/fstab")
